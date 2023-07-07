@@ -2,6 +2,14 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "exaqua:item/handsieve"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "data": 1
+      },
+      "model": "exaqua:item/handsievewater"
+    }
+  ]
 
 }

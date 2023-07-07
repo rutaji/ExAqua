@@ -47,26 +47,30 @@ public class HandSieve extends Item {
         super(p_i48487_1_);
     }
 
-    private int HoldingWater = 0;
-    private String FluidInside = "";
+    private final String HoldingWater = "HoldingWater"; //tag int
+    private final String FluidInside = "FluidInside"; //tag string
 
     private ResourceLocation customIcon = new ResourceLocation("exaqua", "extra/handsievewater");
 
-
+    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
+        stack.getOrCreateTag().putInt(HoldingWater,0);
+        stack.getOrCreateTag().putString(FluidInside,"");
+    }
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-        if(HoldingWater != 0) {
-            tooltip.add(new StringTextComponent(FluidInside + ": " + HoldingWater));
+        if(stack.getOrCreateTag().getInt(HoldingWater) != 0) {
+            tooltip.add(new StringTextComponent(stack.getOrCreateTag().getString(FluidInside) + ": " + stack.getOrCreateTag().getInt(HoldingWater)));
         }
         else{
             tooltip.add(new StringTextComponent("empty"));
         }
         super.addInformation(stack,worldIn,tooltip,flagIn);
     }
+
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-        if(HoldingWater == 0)
+        if(itemstack.getOrCreateTag().getInt(HoldingWater) == 0)
         {
             RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
             if (raytraceresult.getType() != RayTraceResult.Type.BLOCK) {
@@ -82,8 +86,8 @@ public class HandSieve extends Item {
                     Fluid fluid = ((IBucketPickupHandler) blockstate1.getBlock()).pickupFluid(worldIn, blockpos, blockstate1);
                     if (fluid != Fluids.EMPTY) {
                         if (fluid == Fluids.WATER) {
-                            HoldingWater = 20;
-                            FluidInside = "water";
+                            itemstack.getOrCreateTag().putInt(HoldingWater,20);
+                            itemstack.getOrCreateTag().putString(FluidInside, "water");
 
                         }
                     }
@@ -97,9 +101,10 @@ public class HandSieve extends Item {
                         .withRandom(worldIn.rand);
                 LootContext lootContext = lootContextBuilder.build(LootParameterSets.EMPTY);
                 List<ItemStack> lootItems = lootTable.generate(lootContext);
-                HoldingWater--;
-                if(HoldingWater == 0){
+                itemstack.getOrCreateTag().putInt(HoldingWater, itemstack.getOrCreateTag().getInt(HoldingWater) -1) ;
+                if(itemstack.getOrCreateTag().getInt(HoldingWater) == 0){
 
+                    itemstack.getOrCreateTag().putString(FluidInside ,"");
                 }
                 for (ItemStack I: lootItems) {
                     playerIn.entityDropItem(I);

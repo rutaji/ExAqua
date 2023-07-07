@@ -2,9 +2,13 @@ package com.rutaji.exaqua;
 
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.item.ModItems;
+import com.rutaji.exaqua.util.ModItemModelProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,6 +34,9 @@ public class ExAqua
     private static final Logger LOGGER = LogManager.getLogger();
 
     public ExAqua() {
+
+
+
         // Register the setup method for modloading
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -57,7 +64,7 @@ public class ExAqua
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
+        ModItemModelProperties.makeHandSieve(ModItems.HANDSIEVE.get());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
