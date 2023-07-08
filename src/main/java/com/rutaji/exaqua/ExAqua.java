@@ -1,14 +1,16 @@
 package com.rutaji.exaqua;
 
 import com.rutaji.exaqua.block.ModBlocks;
+import com.rutaji.exaqua.container.ModContainers;
+import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.item.ModItems;
+import com.rutaji.exaqua.tileentity.ModTileEntities;
+import com.rutaji.exaqua.screen.SqueezerScreen;
 import com.rutaji.exaqua.util.ModItemModelProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,6 +44,9 @@ public class ExAqua
 
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
+        ModTileEntities.register(eventBus);
+        ModContainers.register(eventBus);
+        ModRecipeTypes.register(eventBus);
 
 
         eventBus.addListener(this::setup);
@@ -65,6 +70,7 @@ public class ExAqua
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         ModItemModelProperties.makeHandSieve(ModItems.HANDSIEVE.get());
+        ScreenManager.registerFactory(ModContainers.SQUEEZERCONTAINER.get(), SqueezerScreen::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

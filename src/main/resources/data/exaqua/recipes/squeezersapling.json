@@ -1,0 +1,11 @@
+{
+  "type": "exaqua:squeezer",
+  "ingredients": [
+    {
+      "item": "minecraft:oak_sapling"
+    }
+  ],
+  "output": {
+    "item": "minecraft:water_bucket"
+  }
+}

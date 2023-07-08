@@ -33,5 +33,6 @@ public class ModBlocks {
         BLOCKS.register(eventBus);
     }
     //endregion
-    public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new Block(AbstractBlock.Properties.create(Material.WOOD)));
+    public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new Block(AbstractBlock.Properties.create(Material.IRON)));
+    public static final RegistryObject<Block> SQUEEZER =registerBlock("squeezer",() -> new squeezerBlock(AbstractBlock.Properties.create(Material.IRON)));
 }
