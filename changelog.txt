@@ -2875,7 +2875,7 @@ v8.99
               Moved Registry events to directly AFTER PreInit instead of before.
               This allows modders to register handlers for it without @EventBusSubscriber.
               It also allows you to register custom things needed before the construction of blocks or items such as Fluids.
-              TODO: Move Fluids to a real registry.
+
               @ObjectHolder can now be used on private fields.
               Reworked FMLModIdMappingEvent to include data for all registries.
               Tile Entities are now registrable.
@@ -4113,7 +4113,7 @@ v8.99
  - v8.99.640  NetworkDispatcher/FMLProxyPacket 41 more errors cleaned.
  - v8.99.639  Temporary hack to fix MCP mappings for param names we are using that is causing compile errors.
  - v8.99.638  Fishing is now a loot table no more need for FishingHooks. {LootTables still need to be evaludated if they need extra hooks, but thats later} Goodbye 44 compile errors!
- - v8.99.637  Fixed errrors in Fluids package. TODO: Make BlockLiquid implement IFluidBlock and REMOVE FluidContainerRegsitry. Everything *should* be able to use IFluidContainer directly.
+ - v8.99.637  Fixed errrors in Fluids package. Make BlockLiquid implement IFluidBlock and REMOVE FluidContainerRegsitry. Everything *should* be able to use IFluidContainer directly.
  - v8.99.636  Made OBJModel.java compile.
  - v8.99.635  Model UV lock handling from the state to the model, fixed most compile errors in ModelLoader, disabled it (and ModelBakeEvent) until it's functional, fixed some errors in ForgeHooksClient.
  - v8.99.634  Removed generics from IModel subinterfaces, add ed ModelProcessingHelper instead.
@@ -6201,7 +6201,7 @@ v99.99-pre
                    To be squashed
                    Removed Contructor
                    Added block XYZ parameters
-                   TODO, the second block overlay event’s XYZ might not be correct
+                    the second block overlay event’s XYZ might not be correct
  - v99.99-pre-3711 Merge pull request #1200 from tterrag1098/master
                    Add AchievementEvent
  - v99.99-pre-3710 Update authlib and realms to latest json data.
@@ -10824,7 +10824,7 @@ v99.99-pre
  - v99.99-pre-894  Modified the decompiler stage to:
                    Compile and run AccessTransformer during the pre-RG stage of decompilation.
                    Merge resulting sources that are identical to src/common
-                   ToDo:
+
                    Finish the common intergration:
                    -update_patches - Add common folder support
                    -apply_patches:

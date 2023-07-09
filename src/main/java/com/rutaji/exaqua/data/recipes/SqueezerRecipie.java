@@ -40,7 +40,10 @@ public class SqueezerRecipie implements ISqueezerRecipie {
     public ItemStack getCraftingResult(IInventory inv) {
         return output;
     }
-
+    @Override
+    public NonNullList<Ingredient> getIngredients(){
+        return recipeItems;
+    }
     @Override
     public ItemStack getRecipeOutput() {
         return output.copy();
@@ -64,6 +67,7 @@ public class SqueezerRecipie implements ISqueezerRecipie {
             return SqueezerRecipie.TYPE_ID.toString();
         }
     }
+
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
             implements IRecipeSerializer<SqueezerRecipie> {
 
