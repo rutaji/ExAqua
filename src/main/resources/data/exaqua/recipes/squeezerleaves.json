@@ -2,11 +2,11 @@
   "type": "exaqua:squeezer",
   "ingredients": [
     {
-      "tag": "minecraft:saplings"
+      "tag": "minecraft:leaves"
     }
   ],
   "output": {
     "fluid": "minecraft:water",
-    "amount": 50
+    "amount": 30
   }
 }

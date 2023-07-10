@@ -57,14 +57,15 @@ public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie> 
     public void setIngredients(SqueezerRecipie recipe, IIngredients ingredients) {
         ingredients.setInputIngredients(recipe.getIngredients());//
         net.minecraft.util.NonNullList<Ingredient> t = recipe.getIngredients();
-        ingredients.setOutput(VanillaTypes.ITEM,recipe.getRecipeOutput());//todo change the whole recipie => outpu = water
-        ItemStack t2 = recipe.getRecipeOutput();
+        ingredients.setOutput(VanillaTypes.FLUID,recipe.getRealOutput());
     }
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, SqueezerRecipie recipe, IIngredients ingredients) {
         recipeLayout.getItemStacks().init(0, true, 79, 30);
-        recipeLayout.getItemStacks().init(1, true, 79, 52);
+        recipeLayout.getFluidStacks().init(0,false,79,55);
         recipeLayout.getItemStacks().set(ingredients);
+        recipeLayout.getFluidStacks().set(ingredients);
+
     }
 }

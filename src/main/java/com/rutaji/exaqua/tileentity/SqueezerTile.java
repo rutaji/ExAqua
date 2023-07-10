@@ -80,12 +80,13 @@ public class SqueezerTile extends TileEntity implements IFluidTank {
 
         recipe.ifPresent(iRecipe -> {
 
-            ItemStack output = iRecipe.getRecipeOutput();
-            itemStackHandler.extractItem(0, 1, false);
-            FluidStack f = new FluidStack(Fluids.WATER,50);
-            this.fill(f,IFluidHandler.FluidAction.EXECUTE);
-            System.out.println(output);
-            markDirty();
+            if(iRecipe instanceof SqueezerRecipie) {
+                itemStackHandler.extractItem(0, 1, false);
+                FluidStack output = iRecipe.getRealOutput();
+                this.fill(output, IFluidHandler.FluidAction.EXECUTE);
+                System.out.println(output);
+                markDirty();
+            }
         });
     }
 
