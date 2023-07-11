@@ -18,12 +18,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class SqueezerTile extends TileEntity implements IFluidTank {
+public class SqueezerTile extends TileEntity implements IFluidTank,IFluidHandler {
 
     private  FluidStack FluidStored =  FluidStack.EMPTY;
     private final ItemStackHandler itemStackHandler = createHandler();
@@ -110,6 +111,27 @@ public class SqueezerTile extends TileEntity implements IFluidTank {
     @Override
     public boolean isFluidValid(FluidStack stack) {
         return stack.getFluid() == Fluids.WATER;
+    }
+
+    @Override
+    public int getTanks() {
+        return 1;
+    }
+
+    @NotNull
+    @Override
+    public FluidStack getFluidInTank(int tank) {
+        return FluidStored;
+    }
+
+    @Override
+    public int getTankCapacity(int tank) {
+        return getCapacity();
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return true;//todo change later
     }
 
     @Override

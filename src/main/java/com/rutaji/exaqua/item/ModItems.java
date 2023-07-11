@@ -4,6 +4,7 @@ import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.item.logic.HandSieve;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ShearsItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -22,6 +23,7 @@ public class ModItems {
 
 
     public static final RegistryObject<Item> HANDSIEVE = ITEMS.register("handsieve",()->new HandSieve(new Item.Properties().group(ItemGroup.BUILDING_BLOCKS).maxStackSize(1)));
+
 
 
 

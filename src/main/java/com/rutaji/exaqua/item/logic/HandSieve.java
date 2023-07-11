@@ -102,6 +102,7 @@ public class HandSieve extends Item {
                 LootContext lootContext = lootContextBuilder.build(LootParameterSets.EMPTY);
                 List<ItemStack> lootItems = lootTable.generate(lootContext);
                 itemstack.getOrCreateTag().putInt(HoldingWater, itemstack.getOrCreateTag().getInt(HoldingWater) -1) ;
+
                 if(itemstack.getOrCreateTag().getInt(HoldingWater) == 0){
 
                     itemstack.getOrCreateTag().putString(FluidInside ,"");
