@@ -17,6 +17,11 @@ group = 'com.rutaji.exaqua' // http://maven.apache.org/guides/mini/guide-naming-
 archivesBaseName = 'exaqua'
 
 repositories {
+
+    //MEKANISM
+    maven { url 'https://modmaven.dev/' }
+
+    //JEI
     maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
@@ -127,6 +132,8 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
+
+
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'org.jetbrains:annotations:20.1.0'
 
@@ -153,6 +160,20 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+
+
+    //MODS ---------------------------------------------------------------------------
+
+    //MEKANISM
+    compileOnly "mekanism:Mekanism:${mekanism_version}:api"
+
+    // If you want to test/use Mekanism & its modules during `runClient` invocation, use the following
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")// core
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")// Mekanism: Additions
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")// Mekanism: Generators
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")// Mekanism: Tools
+
+    //JEI
     // compile against the JEI API but do not include it at runtime
     compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.1.121:api")
     // at runtime, use the full JEI jar
