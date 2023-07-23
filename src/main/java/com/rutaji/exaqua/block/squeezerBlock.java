@@ -93,8 +93,8 @@ public class squeezerBlock extends Block implements IBucketPickupHandler {
     public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof SqueezerTile){
-            if(((SqueezerTile) tileEntity).getFluidAmount() >= 1000){
-                return ((SqueezerTile) tileEntity).drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
+            if(((SqueezerTile) tileEntity).Tank.getFluidAmount() >= 1000){
+                return ((SqueezerTile) tileEntity).Tank.drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
             }
             return Fluids.EMPTY;
         }

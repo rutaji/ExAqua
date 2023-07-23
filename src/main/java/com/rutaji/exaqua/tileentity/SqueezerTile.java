@@ -1,7 +1,9 @@
 package com.rutaji.exaqua.tileentity;
 
+import com.rutaji.exaqua.Fluids.OneWayTank;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
+import com.rutaji.exaqua.integration.mekanism.WaterFluidTankCapabilityAdapter;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventory;
@@ -24,9 +26,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class SqueezerTile extends TileEntity implements IFluidTank,IFluidHandler {
+import static com.rutaji.exaqua.integration.mekanism.WaterFluidTankCapabilityAdapter.MEKANISM_CAPABILITY;
 
-    private  FluidStack FluidStored =  FluidStack.EMPTY;
+public class SqueezerTile extends TileEntity  {
+
+    public OneWayTank Tank = new OneWayTank();
     private final ItemStackHandler itemStackHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemStackHandler);
     public SqueezerTile(TileEntityType<?> p_i48289_1_) {
@@ -59,18 +63,21 @@ public class SqueezerTile extends TileEntity implements IFluidTank,IFluidHandler
         return super.write(nbt) ;
     }
 
-
+    private final WaterFluidTankCapabilityAdapter CapabilityProvider = new WaterFluidTankCapabilityAdapter(Tank);
     @Nullable
     @Override
     public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
+        if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler") //todo net.minecraftforge.fluids.capability.IFluidHandler
+            return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return handler.cast();
         }
+        Capability<T> test = cap;
         return super.getCapability(cap,side);
     }
     public void craft() {
-        System.out.println(FluidStored.getAmount());
-        if(FluidStored.getAmount() == getCapacity()){return;}
+        System.out.println(Tank.FluidStored.getAmount());
+        if(Tank.FluidStored.getAmount() == Tank.getCapacity()){return;}
         Inventory inv = new Inventory(itemStackHandler.getSlots());
         for (int i = 0; i < itemStackHandler.getSlots(); i++) {
             inv.setInventorySlotContents(i, itemStackHandler.getStackInSlot(i));
@@ -84,7 +91,7 @@ public class SqueezerTile extends TileEntity implements IFluidTank,IFluidHandler
             if(iRecipe instanceof SqueezerRecipie) {
                 itemStackHandler.extractItem(0, 1, false);
                 FluidStack output = iRecipe.getRealOutput();
-                this.fill(output, IFluidHandler.FluidAction.EXECUTE);
+                this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
                 System.out.println(output);
                 markDirty();
             }
@@ -92,114 +99,5 @@ public class SqueezerTile extends TileEntity implements IFluidTank,IFluidHandler
     }
 
 
-    @Nonnull
-    @Override
-    public FluidStack getFluid() {
-        return FluidStored;
-    }
 
-    @Override
-    public int getFluidAmount() {
-        return FluidStored.getAmount();
-    }
-
-    @Override
-    public int getCapacity() {
-        return 2000;
-    }
-
-    @Override
-    public boolean isFluidValid(FluidStack stack) {
-        return stack.getFluid() == Fluids.WATER;
-    }
-
-    @Override
-    public int getTanks() {
-        return 1;
-    }
-
-    @NotNull
-    @Override
-    public FluidStack getFluidInTank(int tank) {
-        return FluidStored;
-    }
-
-    @Override
-    public int getTankCapacity(int tank) {
-        return getCapacity();
-    }
-
-    @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-        return true;//todo change later
-    }
-
-    @Override
-    public int fill(FluidStack resource, IFluidHandler.FluidAction action)
-    {
-        if (resource.isEmpty() || !isFluidValid(resource))
-        {
-            return 0;
-        }
-        if (action.simulate())
-        {
-            if (FluidStored.isEmpty())
-            {
-                return Math.min(getCapacity(), resource.getAmount());
-            }
-            if (!FluidStored.isFluidEqual(resource))
-            {
-                return 0;
-            }
-            return Math.min(getCapacity() - FluidStored.getAmount(), resource.getAmount());
-        }
-        if (FluidStored.isEmpty())
-        {
-            FluidStored = new FluidStack(resource, Math.min(getCapacity(), resource.getAmount()));
-            return FluidStored.getAmount();
-        }
-        if (!FluidStored.isFluidEqual(resource))
-        {
-            return 0;
-        }
-        int filled = getCapacity() - FluidStored.getAmount();
-
-        if (resource.getAmount() < filled)
-        {
-            FluidStored.grow(resource.getAmount());
-            filled = resource.getAmount();
-        }
-        else
-        {
-            FluidStored.setAmount(getCapacity());
-        }
-        return filled;
-    }
-
-    @Nonnull
-    @Override
-    public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
-        int drained = maxDrain;
-        if (FluidStored.getAmount() < drained)
-        {
-            drained = FluidStored.getAmount();
-        }
-        FluidStack stack = new FluidStack(FluidStored, drained);
-        if (action.execute() && drained > 0)
-        {
-            FluidStored.shrink(drained);
-
-        }
-        return stack;
-    }
-
-    @Nonnull
-    @Override
-    public FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action) {
-        if (resource.isEmpty() || !resource.isFluidEqual(FluidStored))
-        {
-            return FluidStack.EMPTY;
-        }
-        return drain(resource.getAmount(), action);
-    }
 }
