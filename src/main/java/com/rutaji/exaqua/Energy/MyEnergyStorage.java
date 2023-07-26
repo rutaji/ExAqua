@@ -16,6 +16,14 @@ import org.jetbrains.annotations.Nullable;
 
 
 public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEnergyContainer>{ //todo mabye more Interfaces will be required before it stops crashing
+    public static double CountRF(double d)
+    {
+        return (d*5)/2;
+    }
+    public static double GetdoubleFroRF(double rf)
+    {
+        return (rf*2)/5;
+    }
     FloatingLong Energy = FloatingLong.create(0);
     public MyEnergyStorage(double capacity){MaxCapacity =FloatingLong.create(capacity);}
     private static FloatingLong MaxCapacity ;

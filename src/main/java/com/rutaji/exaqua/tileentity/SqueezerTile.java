@@ -30,7 +30,7 @@ import java.util.Optional;
 
 public class SqueezerTile extends TileEntity  {
 
-    public MyLiquidTank Tank = new MyLiquidTank();
+    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange);
     private final ItemStackHandler itemStackHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemStackHandler);
     public SqueezerTile(TileEntityType<?> p_i48289_1_) {
@@ -95,12 +95,19 @@ public class SqueezerTile extends TileEntity  {
                     itemStackHandler.extractItem(0, 1, false);
                     FluidStack output = iRecipe.getRealOutput();
                     this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
-                    PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored,pos));//todo put it into tank so into contentChange
                     System.out.println(output);
                     markDirty();
                 }
             });
         }
+    }
+    public void TankChange()
+    {
+        if(!world.isRemote) {
+            System.out.println("packetsend");
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
+        }
+
     }
 
 

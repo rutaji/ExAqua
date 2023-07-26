@@ -20,7 +20,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity {
         this(ModTileEntities.SIEVERTILE.get());
     }
 
-    private final MyEnergyStorage energyStorage = new MyEnergyStorage(10000);
+    private final MyEnergyStorage energyStorage = new MyEnergyStorage(MyEnergyStorage.CountRF(10000));
+
 
 
 

@@ -1,6 +1,9 @@
 package com.rutaji.exaqua.Fluids;
 
 import com.rutaji.exaqua.integration.mekanism.WaterFluidTankCapabilityAdapter;
+import com.rutaji.exaqua.javadoesnthavedelegatesitfuckingsucks.MyDelegate;
+import com.rutaji.exaqua.networking.MyFluidStackPacket;
+import com.rutaji.exaqua.networking.PacketHandler;
 import mekanism.api.NBTConstants;
 import mekanism.api.fluid.IExtendedFluidTank;
 import net.minecraft.fluid.Fluids;
@@ -11,12 +14,21 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
 public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IFluidHandler>,IFluidHandler  {
+
+    public MyLiquidTank(MyDelegate m) {
+        Onchange = m;
+    }
+    public MyLiquidTank(MyDelegate m,int capacity) {
+        Onchange = m;
+        Capacity = capacity;
+    }
 
     // Returns the capability provider for this fluid tank
     public ICapabilityProvider getCapabilityProvider() {
@@ -30,6 +42,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
             }
         };
     }
+    public MyDelegate Onchange;
     public  FluidStack FluidStored =  FluidStack.EMPTY;
     private int Capacity = 3000;
     @Nonnull
@@ -74,7 +87,9 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
 
     @Override
     public void setStack(FluidStack stack) {
+
         FluidStored = stack;
+        SendChangeToClient();
     }
 
     @Override
@@ -100,6 +115,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         if (FluidStored.isEmpty())
         {
             FluidStored = new FluidStack(resource, Math.min(getCapacity(), resource.getAmount()));
+            SendChangeToClient();
             return FluidStored.getAmount();
         }
         if (!FluidStored.isFluidEqual(resource))
@@ -116,7 +132,9 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         else
         {
             FluidStored.setAmount(getCapacity());
+            SendChangeToClient();
         }
+        SendChangeToClient();
         return filled;
     }
 
@@ -133,6 +151,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         if (action.execute() && drained > 0)
         {
             FluidStored.shrink(drained);
+            SendChangeToClient();
 
         }
         return stack;
@@ -148,10 +167,14 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         }
         return drain(resource.getAmount(), action);
     }
+    public void SendChangeToClient()
+    {
+        Onchange.Execute();
+    }
 
     @Override
     public void onContentsChanged() {
-
+        //I dont use it. It probadly never get´s called, but it needs to be there
     }
 
     @Override

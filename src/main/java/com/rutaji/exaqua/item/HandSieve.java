@@ -1,4 +1,4 @@
-package com.rutaji.exaqua.item.logic;
+package com.rutaji.exaqua.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
