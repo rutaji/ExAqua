@@ -21,6 +21,11 @@ public class ModTileEntities {
             TILE_ENTITIES.register("squeezer", () -> TileEntityType.Builder.create(
                     SqueezerTile::new, ModBlocks.SQUEEZER.get()).build(null));
 
+    public static RegistryObject<TileEntityType<SieveTileEntity>> SIEVERTILE =
+            TILE_ENTITIES.register("sieve", () -> TileEntityType.Builder.create(
+                    SieveTileEntity::new, ModBlocks.SIEVE.get()).build(null));
+
+
 
 
 }

@@ -4,6 +4,7 @@ import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.container.ModContainers;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.item.ModItems;
+import com.rutaji.exaqua.networking.PacketHandler;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.screen.SqueezerScreen;
 import com.rutaji.exaqua.util.ModItemModelProperties;
@@ -62,6 +63,7 @@ public class ExAqua
 
     private void setup(final FMLCommonSetupEvent event)
     {
+        PacketHandler.init();
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());

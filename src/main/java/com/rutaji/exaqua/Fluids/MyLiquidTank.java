@@ -3,7 +3,6 @@ package com.rutaji.exaqua.Fluids;
 import com.rutaji.exaqua.integration.mekanism.WaterFluidTankCapabilityAdapter;
 import mekanism.api.NBTConstants;
 import mekanism.api.fluid.IExtendedFluidTank;
-import mekanism.api.fluid.IMekanismFluidHandler;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -11,26 +10,21 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class OneWayTank implements IExtendedFluidTank , Capability.IStorage<IFluidHandler>,IFluidHandler  {
-
-    @CapabilityInject(IMekanismFluidHandler.class)
-    private static Capability<IMekanismFluidHandler> MEKANISM_CAPABILITY =  null;
+public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IFluidHandler>,IFluidHandler  {
 
     // Returns the capability provider for this fluid tank
     public ICapabilityProvider getCapabilityProvider() {
         return new ICapabilityProvider() {
             @Override
             public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-                if (cap != MEKANISM_CAPABILITY) {
-                    return LazyOptional.of(() -> new WaterFluidTankCapabilityAdapter(OneWayTank.this)).cast();
+                if (cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler") {
+                    return LazyOptional.of(() -> new WaterFluidTankCapabilityAdapter(MyLiquidTank.this)).cast();
                 }
                 return LazyOptional.empty();
             }
@@ -56,7 +50,9 @@ public class OneWayTank implements IExtendedFluidTank , Capability.IStorage<IFlu
 
     @Override
     public boolean isFluidValid(FluidStack stack) {
-        return stack.getFluid() == Fluids.WATER;
+        boolean test = stack.getFluid() == Fluids.WATER;
+        System.out.println("valid" + test);
+        return test;
     }
 
     public int getTanks() {
@@ -73,7 +69,7 @@ public class OneWayTank implements IExtendedFluidTank , Capability.IStorage<IFlu
     }
 
     public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-        return true;//todo change later
+        return this.isFluidValid(FluidStored);
     }
 
     @Override
@@ -84,6 +80,7 @@ public class OneWayTank implements IExtendedFluidTank , Capability.IStorage<IFlu
     @Override
     public int fill(FluidStack resource, IFluidHandler.FluidAction action)
     {
+        System.out.println("fil");
         if (resource.isEmpty() || !isFluidValid(resource))
         {
             return 0;
@@ -126,6 +123,7 @@ public class OneWayTank implements IExtendedFluidTank , Capability.IStorage<IFlu
     @Nonnull
     @Override
     public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
+        System.out.println("drain");
         int drained = maxDrain;
         if (FluidStored.getAmount() < drained)
         {
@@ -143,6 +141,7 @@ public class OneWayTank implements IExtendedFluidTank , Capability.IStorage<IFlu
     @Nonnull
     @Override
     public FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action) {
+        System.out.println("drain fluidstack");
         if (resource.isEmpty() || !resource.isFluidEqual(FluidStored))
         {
             return FluidStack.EMPTY;
@@ -169,8 +168,8 @@ public class OneWayTank implements IExtendedFluidTank , Capability.IStorage<IFlu
     @Override
     public INBT writeNBT(Capability<IFluidHandler> capability, IFluidHandler instance, Direction side) {
         CompoundNBT nbt = new CompoundNBT();
-        if (instance instanceof OneWayTank) {
-            OneWayTank fluidTank = (OneWayTank) instance;
+        if (instance instanceof MyLiquidTank) {
+            MyLiquidTank fluidTank = (MyLiquidTank) instance;
             if (!fluidTank.isEmpty()) {
                 nbt.put(NBTConstants.STORED, fluidTank.getFluid().writeToNBT(new CompoundNBT()));
             }
@@ -180,7 +179,7 @@ public class OneWayTank implements IExtendedFluidTank , Capability.IStorage<IFlu
 
     @Override
     public void readNBT(Capability<IFluidHandler> capability, IFluidHandler instance, Direction side, INBT nbt) {
-        if (instance instanceof OneWayTank ) {
+        if (instance instanceof MyLiquidTank) {
             FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundNBT) nbt);
             if (fluidStack != null) {
                 setStack(fluidStack);

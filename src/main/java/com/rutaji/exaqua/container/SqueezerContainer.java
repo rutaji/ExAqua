@@ -35,7 +35,7 @@ public class SqueezerContainer extends Container {
         }
 
     }
-    public int GetCapacity()
+    public int GetAmount()
     {
         if (tileEntity instanceof SqueezerTile){
            return ((SqueezerTile) tileEntity).Tank.getFluidAmount();

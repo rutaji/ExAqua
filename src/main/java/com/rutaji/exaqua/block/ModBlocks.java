@@ -19,6 +19,7 @@ public class ModBlocks {
     //region register
     public  static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ExAqua.MOD_ID);
     //helper method to register block and its item
+
     private static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block){
         RegistryObject<T> toReturn = BLOCKS.register(name,block);
         registerBlockItem(name,toReturn);
@@ -33,6 +34,6 @@ public class ModBlocks {
         BLOCKS.register(eventBus);
     }
     //endregion
-    public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new Block(AbstractBlock.Properties.create(Material.IRON)));
+    public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON)));
     public static final RegistryObject<Block> SQUEEZER =registerBlock("squeezer",() -> new squeezerBlock(AbstractBlock.Properties.create(Material.IRON)));
 }

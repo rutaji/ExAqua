@@ -22,7 +22,7 @@ public class SqueezerScreen extends ContainerScreen<SqueezerContainer> {
         int i = this.guiLeft;
         int j = this.guiTop;
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
-        drawString(matrixStack,font, String.valueOf(container.GetCapacity()), i +20, j+50,0);
+        drawString(matrixStack,font, String.valueOf(container.GetAmount()), i +20, j+50,0);
 
 
 
