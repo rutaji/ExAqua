@@ -30,6 +30,7 @@ public class ExAquaJei implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager rm = Objects.requireNonNull(Minecraft.getInstance().world).getRecipeManager();
+
         registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.SQUEEZER_RECIPE).stream()
                         .filter(r -> r instanceof SqueezerRecipie).collect(Collectors.toList()),
                 SqueezerRecipeCategory.UID);

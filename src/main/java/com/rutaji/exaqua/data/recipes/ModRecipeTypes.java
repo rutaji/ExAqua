@@ -14,12 +14,17 @@ public class ModRecipeTypes {
             DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, ExAqua.MOD_ID);
     public static final RegistryObject<SqueezerRecipie.Serializer> SQUEEZER_SERIALIZER
             = RECIPE_SERIALIZER.register("squeezer", SqueezerRecipie.Serializer::new);
+    public static final RegistryObject<SieveRecipie.Serializer> SIEVE_SERIALIZER
+            = RECIPE_SERIALIZER.register("sieve", SieveRecipie.Serializer::new);
 
     public static IRecipeType<SqueezerRecipie> SQUEEZER_RECIPE
             = new SqueezerRecipie.SqueezerRecipeType();
+    public static IRecipeType<SieveRecipie> SIEVE_RECIPE
+            = new SieveRecipie.SieveRecipeType();
     public static void register(IEventBus eventBus) {
         RECIPE_SERIALIZER.register(eventBus);
 
         Registry.register(Registry.RECIPE_TYPE, SqueezerRecipie.TYPE_ID, SQUEEZER_RECIPE);
+        Registry.register(Registry.RECIPE_TYPE, SieveRecipie.TYPE_ID, SIEVE_RECIPE);
     }
 }

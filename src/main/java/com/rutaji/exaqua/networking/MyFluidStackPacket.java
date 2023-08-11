@@ -1,5 +1,6 @@
 package com.rutaji.exaqua.networking;
 
+import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import com.rutaji.exaqua.tileentity.SqueezerTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.fluid.Fluid;
@@ -33,8 +34,8 @@ public class MyFluidStackPacket {
         System.out.println("handle");
 
         TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
-        if ( tileEntity instanceof  SqueezerTile) {
-            ((SqueezerTile)tileEntity).Tank.setStack(PacketStack);
+        if ( tileEntity instanceof IMyLiquidTankTIle) {
+            ((IMyLiquidTankTIle)tileEntity).GetTank().setStack(PacketStack);
         }
     }
 }

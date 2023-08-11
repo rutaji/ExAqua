@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 
-public class SqueezerTile extends TileEntity  {
+public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
 
     public MyLiquidTank Tank = new MyLiquidTank(this::TankChange);
     private final ItemStackHandler itemStackHandler = createHandler();
@@ -71,7 +71,6 @@ public class SqueezerTile extends TileEntity  {
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return handler.cast();
         }
-        Capability<T> test = cap;
         return super.getCapability(cap,side);
     }
     public void craft() {
@@ -104,12 +103,14 @@ public class SqueezerTile extends TileEntity  {
     public void TankChange()
     {
         if(!world.isRemote) {
-            System.out.println("packetsend");
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
         }
 
     }
 
 
-
+    @Override
+    public MyLiquidTank GetTank() {
+        return this.Tank;
+    }
 }
