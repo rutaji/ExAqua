@@ -79,7 +79,7 @@ public class squeezerBlock extends Block implements IBucketPickupHandler {
         };
 
     }
-
+    //region tile entity
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
@@ -89,6 +89,7 @@ public class squeezerBlock extends Block implements IBucketPickupHandler {
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return ModTileEntities.SQUEEZERTILE.get().create();
     }
+    //endregion
 
     @Override
     public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {

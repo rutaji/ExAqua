@@ -17,13 +17,14 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class SqueezerContainer extends Container {
+public class SieveContainer extends Container {
+
     private final TileEntity tileEntity;
     private final PlayerEntity playerEntity;
     private final IItemHandler playerInvetory;
 
-    public SqueezerContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
-        super(ModContainers.SQUEEZERCONTAINER.get(),windowId);
+    public SieveContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
+        super(ModContainers.SIEVECONTAINER.get(),windowId);
         this.tileEntity = world.getTileEntity(pos);
         this.playerEntity = playerEntity;
         this.playerInvetory = new InvWrapper(playerInventory);
@@ -32,11 +33,12 @@ public class SqueezerContainer extends Container {
         if(tileEntity != null){
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
                 addSlot(new SlotItemHandler(h,0,80,31));
-                addSlot(new SlotItemHandler(h,0,90,51));
+
             });
         }
 
     }
+
     public int GetAmount()
     {
         if (tileEntity instanceof IMyLiquidTankTIle){
@@ -48,10 +50,9 @@ public class SqueezerContainer extends Container {
     @Override
     public boolean canInteractWith(PlayerEntity player){
         return  isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(),tileEntity.getPos()),
-                                                            player, ModBlocks.SQUEEZER.get());
+                player, ModBlocks.SIEVE.get());
     }
     //region inventory
-
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
             addSlot(new SlotItemHandler(handler, index, x, y));

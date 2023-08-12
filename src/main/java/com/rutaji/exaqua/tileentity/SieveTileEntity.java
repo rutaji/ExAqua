@@ -11,11 +11,13 @@ import com.rutaji.exaqua.networking.MyFluidStackPacket;
 import com.rutaji.exaqua.networking.PacketHandler;
 import mekanism.api.energy.IMekanismStrictEnergyHandler;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.WaterFluid;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -39,9 +41,10 @@ import java.util.Optional;
 public class SieveTileEntity extends TileEntity implements ITickableTileEntity,IMyLiquidTankTIle {
 
     //region Items
+    private int NumberOfInventorySlots =8;
     private ItemStackHandler createHandler()
     {
-        return new ItemStackHandler(8){
+        return new ItemStackHandler(NumberOfInventorySlots){
             @Override
             protected void onContentsChanged(int slot){
                 markDirty();
@@ -103,12 +106,12 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
         if(!world.isRemote())
         {
-            System.out.println("Sieve crafting");
-            Tank.setStack(new FluidStack(Fluids.WATER,50)); //todo delete this
+
+
             if (Tank.FluidStored.getAmount() == 0) {
                 return;
             }
-
+            System.out.println("Sieve crafting");
             InventoryWithFluids inv = new InventoryWithFluids();
             inv.setFluidStack(Tank.FluidStored);
 
@@ -120,13 +123,37 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
                 if (iRecipe instanceof SieveRecipie) {
                     Tank.drain(iRecipe.InputFluid.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                     ItemStack result = iRecipe.getRandomItemStack();
-                    itemStackHandler.insertItem(0,result,false);//todo channge
+                    for(int i =0 ;i< NumberOfInventorySlots;i++){
+                        itemStackHandler.insertItem(i,result,false);
+                        if(result == ItemStack.EMPTY){break;}
+                    }
                     markDirty();
+                    if(result != ItemStack.EMPTY){
+                        System.out.println("full");
+                        dispence(result);
+                    }
                 }
             });
 
 
         }
+    }
+    private void dispence(ItemStack stack){ dispence(stack,6);}
+    private void dispence(ItemStack stack,int speed){
+        double d0 = pos.getX();
+        double d1 = pos.getY();
+        double d2 = pos.getZ();
+        Direction facing = getBlockState().get(BlockStateProperties.FACING);
+        if (facing.getAxis() == Direction.Axis.Y) {
+            d1 = d1 - 0.125D;
+        } else {
+            d1 = d1 - 0.15625D;
+        }
+
+        ItemEntity itementity = new ItemEntity(world, d0, d1, d2, stack);
+        double d3 = world.rand.nextDouble() * 0.1D + 0.2D;
+        itementity.setMotion(world.rand.nextGaussian() * (double)0.0075F * (double)speed + (double)facing.getXOffset() * d3, world.rand.nextGaussian() * (double)0.0075F * (double)speed + (double)0.2F, world.rand.nextGaussian() * (double)0.0075F * (double)speed + (double)facing.getZOffset() * d3);
+        world.addEntity(itementity);
     }
 
     @Override

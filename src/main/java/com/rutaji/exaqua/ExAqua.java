@@ -2,9 +2,11 @@ package com.rutaji.exaqua;
 
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.container.ModContainers;
+import com.rutaji.exaqua.container.SieveContainer;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.item.ModItems;
 import com.rutaji.exaqua.networking.PacketHandler;
+import com.rutaji.exaqua.screen.SieveScreen;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.screen.SqueezerScreen;
 import com.rutaji.exaqua.util.ModItemModelProperties;
@@ -72,6 +74,8 @@ public class ExAqua
     private void doClientStuff(final FMLClientSetupEvent event) {
         ModItemModelProperties.makeHandSieve(ModItems.HANDSIEVE.get());
         ScreenManager.registerFactory(ModContainers.SQUEEZERCONTAINER.get(), SqueezerScreen::new);
+        ScreenManager.registerFactory(ModContainers.SIEVECONTAINER.get(), SieveScreen::new);
+
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
