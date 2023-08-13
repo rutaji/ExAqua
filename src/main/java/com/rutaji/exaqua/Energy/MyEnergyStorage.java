@@ -1,10 +1,11 @@
 package com.rutaji.exaqua.Energy;
 
-import com.rutaji.exaqua.Fluids.MyLiquidTank;
 import com.rutaji.exaqua.integration.mekanism.EnergyStorageAdapter;
-import com.rutaji.exaqua.integration.mekanism.WaterFluidTankCapabilityAdapter;
+import com.rutaji.exaqua.javadoesnthavedelegatesitfuckingsucks.MyDelegate;
+import mekanism.api.Action;
 import mekanism.api.NBTConstants;
 import mekanism.api.energy.IEnergyContainer;
+import mekanism.api.inventory.AutomationType;
 import mekanism.api.math.FloatingLong;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -16,17 +17,29 @@ import org.jetbrains.annotations.Nullable;
 
 
 public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEnergyContainer>{ //todo mabye more Interfaces will be required before it stops crashing
-    public static double CountRF(double d)
-    {
-        return (d*5)/2;
-    }
-    public static double GetdoubleFroRF(double rf)
-    {
-        return (rf*2)/5;
-    }
+    public static double fromRF(double d) {return (d*5)/2;}
+    public static long fromRF(long d) {return (d*5)/2;}
+    public static long ToRF(long rf) {return (rf*2)/5;}
+
     FloatingLong Energy = FloatingLong.create(0);
-    public MyEnergyStorage(double capacity){MaxCapacity =FloatingLong.create(capacity);}
+    public MyEnergyStorage(double capacity, MyDelegate m){
+        MaxCapacity =FloatingLong.create(capacity);
+        Onchange = m;
+    }
+    public MyDelegate Onchange;
     private static FloatingLong MaxCapacity ;
+    public long GetAsRF(){//todo fix
+         FloatingLong test = getEnergy();
+         return MyEnergyStorage.ToRF(test.getValue());
+    }
+    public boolean DrainRF(double rf){
+        FloatingLong totake = FloatingLong.create(fromRF(rf));
+        if(totake.smallerOrEqual(getEnergy())){
+            extract(totake, Action.EXECUTE, AutomationType.MANUAL);
+            return true;
+        }
+        return false;
+    }
     @Override
     public FloatingLong getEnergy() {
         return Energy;
@@ -35,6 +48,11 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
     @Override
     public void setEnergy(FloatingLong energy) {
         Energy = energy;
+        SendChangeToClient();
+    }
+    public void SendChangeToClient()
+    {
+        Onchange.Execute();
     }
 
     @Override

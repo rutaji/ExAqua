@@ -14,5 +14,7 @@
       "item": { "item": "minecraft:diorite"},
       "chance": 1
     }
-  ]
+  ],
+  "time": 40,
+  "rf": 10
 }

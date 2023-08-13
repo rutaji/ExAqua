@@ -32,7 +32,7 @@ public class SqueezerContainer extends Container {
         if(tileEntity != null){
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
                 addSlot(new SlotItemHandler(h,0,80,31));
-                addSlot(new SlotItemHandler(h,0,90,51));
+
             });
         }
 

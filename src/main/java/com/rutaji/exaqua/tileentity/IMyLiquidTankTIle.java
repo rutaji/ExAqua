@@ -4,4 +4,5 @@ import com.rutaji.exaqua.Fluids.MyLiquidTank;
 
 public interface IMyLiquidTankTIle {
     public MyLiquidTank GetTank();
+    public void TankChange();
 }

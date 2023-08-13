@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.container.SieveContainer;
-import com.rutaji.exaqua.container.SqueezerContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +22,8 @@ public class SieveScreen extends ContainerScreen<SieveContainer> {
         int i = this.guiLeft;
         int j = this.guiTop;
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
-        drawString(matrixStack,font, String.valueOf(container.GetAmount()), i +20, j+50,0);
+        drawString(matrixStack,font, String.valueOf(container.GetLiquidAmount()), i +20, j+50,0);
+        drawString(matrixStack,font, String.valueOf(container.GetEnergyAmount()), i +20, j+20,0);
 
 
 

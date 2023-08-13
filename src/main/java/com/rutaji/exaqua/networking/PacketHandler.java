@@ -32,6 +32,14 @@ public class PacketHandler {
                 MyFluidStackPacket::handle
 
         );
+        CHANNEL.registerMessage(
+                id(),
+                MyEnergyPacket.class,
+                MyEnergyPacket::toBytes,
+                MyEnergyPacket::fromBytes,
+                MyEnergyPacket::handle
+
+        );
     }
 
 

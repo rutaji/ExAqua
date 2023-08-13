@@ -25,14 +25,27 @@ public class SieveRecipie implements ISieveRecipie {
 
     private final ResourceLocation id;
 
-    public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output) {
+    public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output,int time,double rf) {
         this.id = id;
         this.InputFluid = input;
         this.Results = output;
+        this.TIME = time;
+        this.RF = rf;
+        int sum=0;
+        for (RoolItem r: Results)
+        {
+
+            sum+=r.chance;
+            r.chance = sum;
+        }
+        this.sum = sum;
     }
     private static final Random RANDOM = new Random();
     public final List<RoolItem> Results;
     public final FluidStack InputFluid;
+    public final int TIME;
+    public final double RF;
+    public final int sum;
 
 
     @Override
@@ -75,13 +88,7 @@ public class SieveRecipie implements ISieveRecipie {
 
     public ItemStack getRandomItemStack()
     {
-        int sum=0;
-        for (RoolItem r: Results)
-        {
 
-            sum+=r.chance;
-            r.chance = sum;
-        }
         if(sum == 0){System.out.println("Recipe doesn´t have a chance");return ItemStack.EMPTY;}
         int random = RANDOM.nextInt(sum) + 1;
         for (RoolItem r: Results)
@@ -92,14 +99,13 @@ public class SieveRecipie implements ISieveRecipie {
 
     }
 
-
-
     public static class SieveRecipeType implements IRecipeType<SieveRecipie> {
         @Override
         public String toString() {
             return SieveRecipie.TYPE_ID.toString();
         }
     }
+    //region Serializer
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
             implements IRecipeSerializer<SieveRecipie> {
 
@@ -118,8 +124,9 @@ public class SieveRecipie implements ISieveRecipie {
                  JsonObject j = OutputsJson.get(i).getAsJsonObject();
                 Outputs.add(new RoolItem( ShapedRecipe.deserializeItem(j.get("item").getAsJsonObject()),j.get("chance").getAsInt()));
             }
-
-            return new SieveRecipie(recipeId, Input,Outputs);
+            int time = json.get("time").getAsInt();
+            double rf = json.get("rf").getAsDouble();
+            return new SieveRecipie(recipeId, Input,Outputs,time,rf);
         }
 
         @Nullable
@@ -134,7 +141,9 @@ public class SieveRecipie implements ISieveRecipie {
                 Results.add(new RoolItem(buffer.readItemStack(),buffer.readInt()));
 
             }
-            return new SieveRecipie(recipeId, Input,Results);
+            int time = buffer.readInt();
+            double rf = buffer.readDouble();
+            return new SieveRecipie(recipeId, Input,Results,time,rf);
         }
 
         @Override
@@ -149,9 +158,12 @@ public class SieveRecipie implements ISieveRecipie {
                 buffer.writeItemStack(R.item);
                 buffer.writeInt(R.chance);
             }
+            buffer.writeInt(recipe.TIME);
+            buffer.writeDouble(recipe.RF);
 
 
         }
     }
+    //endregion
 
 }

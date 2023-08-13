@@ -1,8 +1,8 @@
 package com.rutaji.exaqua.container;
 
 import com.rutaji.exaqua.block.ModBlocks;
+import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
-import com.rutaji.exaqua.tileentity.SqueezerTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -32,17 +32,29 @@ public class SieveContainer extends Container {
 
         if(tileEntity != null){
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new SlotItemHandler(h,0,80,31));
-
+                addSlot(new SlotItemHandler(h,0,60,31));
+                addSlot(new SlotItemHandler(h,1,80,31));
+                addSlot(new SlotItemHandler(h,2,100,31));
+                addSlot(new SlotItemHandler(h,3,120,31));
+                addSlot(new SlotItemHandler(h,4,60,51));
+                addSlot(new SlotItemHandler(h,5,80,51));
+                addSlot(new SlotItemHandler(h,6,100,51));
+                addSlot(new SlotItemHandler(h,7,120,51));
             });
         }
 
     }
 
-    public int GetAmount()
+    public int GetLiquidAmount()
     {
         if (tileEntity instanceof IMyLiquidTankTIle){
             return ((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount();
+        }
+        return -1;
+    }
+    public long GetEnergyAmount(){
+        if (tileEntity instanceof IMYEnergyStorageTile){
+            return ((IMYEnergyStorageTile) tileEntity).GetEnergyStorage().GetAsRF();
         }
         return -1;
     }
@@ -52,7 +64,7 @@ public class SieveContainer extends Container {
         return  isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(),tileEntity.getPos()),
                 player, ModBlocks.SIEVE.get());
     }
-    //region inventory
+    //region player inventory
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
             addSlot(new SlotItemHandler(handler, index, x, y));
@@ -94,7 +106,7 @@ public class SieveContainer extends Container {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 1;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
+    private static final int TE_INVENTORY_SLOT_COUNT = 8;  //todo must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {

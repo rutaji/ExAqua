@@ -6,6 +6,7 @@ import com.rutaji.exaqua.networking.MyFluidStackPacket;
 import com.rutaji.exaqua.networking.PacketHandler;
 import mekanism.api.NBTConstants;
 import mekanism.api.fluid.IExtendedFluidTank;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -63,9 +64,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
 
     @Override
     public boolean isFluidValid(FluidStack stack) {
-        boolean test = stack.getFluid() == Fluids.WATER;
-        System.out.println("valid" + test);
-        return test;
+        return true;
     }
 
     public int getTanks() {
@@ -77,6 +76,10 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         return FluidStored;
     }
 
+    public void AddBucket(Fluid f)
+    {
+           this.fill(new FluidStack(f,1000),FluidAction.EXECUTE);
+    }
     public int getTankCapacity(int tank) {
         return getCapacity();
     }
@@ -90,6 +93,14 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
 
         FluidStored = stack;
         SendChangeToClient();
+    }
+    public boolean CanTakeFluid(Fluid f){//todo nedávat zvířátka nikdy
+        boolean test = !IsFull() && (f == FluidStored.getFluid() || FluidStored.isEmpty());
+        return test;
+    }
+    public boolean IsFull()
+    {
+        return FluidStored.getAmount() == getCapacity();
     }
 
     @Override
@@ -132,7 +143,6 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         else
         {
             FluidStored.setAmount(getCapacity());
-            SendChangeToClient();
         }
         SendChangeToClient();
         return filled;
@@ -176,7 +186,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
     public void onContentsChanged() {
         //I dont use it. It probadly never get´s called, but it needs to be there
     }
-
+    //region nbt
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         INBT fluidTag = nbt.get(NBTConstants.STORED);
@@ -209,4 +219,5 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
             }
         }
     }
+    //endregion
 }

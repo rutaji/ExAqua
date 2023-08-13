@@ -18,6 +18,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -57,6 +58,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
         itemStackHandler.deserializeNBT(nbt.getCompound("inv"));
         super.read(state,nbt);
     }
+
     @Override
     public CompoundNBT write( CompoundNBT nbt){
         nbt.put("inv",itemStackHandler.serializeNBT());
@@ -100,6 +102,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
             });
         }
     }
+    @Override
     public void TankChange()
     {
         if(!world.isRemote) {
@@ -107,7 +110,10 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
         }
 
     }
-
+    public void FluidItem(IFluidHandlerItem item){
+        FluidStack drained = item.drain(new FluidStack(this.Tank.getFluid(),this.Tank.getCapacity() - this.Tank.getFluidAmount()), IFluidHandler.FluidAction.EXECUTE);
+        this.Tank.fill(drained, IFluidHandler.FluidAction.EXECUTE);
+    }
 
     @Override
     public MyLiquidTank GetTank() {
