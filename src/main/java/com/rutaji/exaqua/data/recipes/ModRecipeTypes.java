@@ -16,9 +16,13 @@ public class ModRecipeTypes {
             = RECIPE_SERIALIZER.register("squeezer", SqueezerRecipie.Serializer::new);
     public static final RegistryObject<SieveRecipie.Serializer> SIEVE_SERIALIZER
             = RECIPE_SERIALIZER.register("sieve", SieveRecipie.Serializer::new);
+    public static final RegistryObject<HandSieveRecipie.Serializer> HANDSIEVE_SERIALIZER
+            = RECIPE_SERIALIZER.register("handsieve", HandSieveRecipie.Serializer::new);
 
     public static IRecipeType<SqueezerRecipie> SQUEEZER_RECIPE
             = new SqueezerRecipie.SqueezerRecipeType();
+    public static IRecipeType<HandSieveRecipie> HANDSIEVE_RECIPE
+            = new HandSieveRecipie.HandSieveRecipeType();
     public static IRecipeType<SieveRecipie> SIEVE_RECIPE
             = new SieveRecipie.SieveRecipeType();
     public static void register(IEventBus eventBus) {
@@ -26,5 +30,6 @@ public class ModRecipeTypes {
 
         Registry.register(Registry.RECIPE_TYPE, SqueezerRecipie.TYPE_ID, SQUEEZER_RECIPE);
         Registry.register(Registry.RECIPE_TYPE, SieveRecipie.TYPE_ID, SIEVE_RECIPE);
+        Registry.register(Registry.RECIPE_TYPE, HandSieveRecipie.TYPE_ID, HANDSIEVE_RECIPE);
     }
 }

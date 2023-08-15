@@ -16,10 +16,12 @@ public class MyEnergyPacket
 {
     public FloatingLong PacketStack;
     public BlockPos pos;
+    //region Constructor
     public MyEnergyPacket(FloatingLong energy, BlockPos p) {
         PacketStack = energy;
         pos = p;
     }
+    //endregion
 
     public static MyEnergyPacket fromBytes(PacketBuffer buffer) {
         return new MyEnergyPacket(FloatingLong.readFromBuffer(buffer),buffer.readBlockPos());

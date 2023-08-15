@@ -11,9 +11,11 @@ import net.minecraft.util.text.ITextComponent;
 
 public class SqueezerScreen extends ContainerScreen<SqueezerContainer> {
     private final ResourceLocation GUI = new ResourceLocation(ExAqua.MOD_ID,"gui/squeezer.png");
+    //region Constructor
     public SqueezerScreen(SqueezerContainer p_i51105_1_, PlayerInventory p_i51105_2_, ITextComponent p_i51105_3_) {
         super(p_i51105_1_, p_i51105_2_, p_i51105_3_);
     }
+    //endregion
 
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {

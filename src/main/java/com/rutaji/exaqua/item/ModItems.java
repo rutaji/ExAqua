@@ -19,7 +19,6 @@ public class ModItems {
     }
     //endregion
 
-
     public static final RegistryObject<Item> HANDSIEVE = ITEMS.register("handsieve",()->new HandSieve(new Item.Properties().group(ItemGroup.BUILDING_BLOCKS).maxStackSize(1)));
 
 

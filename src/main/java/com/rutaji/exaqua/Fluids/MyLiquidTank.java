@@ -1,13 +1,10 @@
 package com.rutaji.exaqua.Fluids;
 
 import com.rutaji.exaqua.integration.mekanism.WaterFluidTankCapabilityAdapter;
-import com.rutaji.exaqua.javadoesnthavedelegatesitfuckingsucks.MyDelegate;
-import com.rutaji.exaqua.networking.MyFluidStackPacket;
-import com.rutaji.exaqua.networking.PacketHandler;
+import com.rutaji.exaqua.others.MyDelegate;
 import mekanism.api.NBTConstants;
 import mekanism.api.fluid.IExtendedFluidTank;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -15,7 +12,6 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +19,7 @@ import javax.annotation.Nonnull;
 
 public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IFluidHandler>,IFluidHandler  {
 
+    // region Constructor
     public MyLiquidTank(MyDelegate m) {
         Onchange = m;
     }
@@ -30,8 +27,9 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         Onchange = m;
         Capacity = capacity;
     }
+    //endregion
 
-    // Returns the capability provider for this fluid tank
+
     public ICapabilityProvider getCapabilityProvider() {
         return new ICapabilityProvider() {
             @Override
@@ -45,7 +43,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
     }
     public MyDelegate Onchange;
     public  FluidStack FluidStored =  FluidStack.EMPTY;
-    private int Capacity = 3000;
+    private int Capacity = 3000; //default capacity
     @Nonnull
     @Override
     public FluidStack getFluid() {
@@ -94,9 +92,8 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         FluidStored = stack;
         SendChangeToClient();
     }
-    public boolean CanTakeFluid(Fluid f){//todo nedávat zvířátka nikdy
-        boolean test = !IsFull() && (f == FluidStored.getFluid() || FluidStored.isEmpty());
-        return test;
+    public boolean CanTakeFluid(Fluid f){
+        return !IsFull() && (f == FluidStored.getFluid() || FluidStored.isEmpty());
     }
     public boolean IsFull()
     {

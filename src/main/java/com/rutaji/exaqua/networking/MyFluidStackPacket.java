@@ -16,10 +16,12 @@ public class MyFluidStackPacket {
 
     public FluidStack PacketStack;
     public BlockPos pos;
+    //region Constructor
     public MyFluidStackPacket(FluidStack f,BlockPos p) {
         PacketStack = f;
         pos = p;
     }
+    //endregion
 
     public static MyFluidStackPacket fromBytes(PacketBuffer buffer) {
        return new MyFluidStackPacket(FluidStack.readFromPacket(buffer),buffer.readBlockPos());

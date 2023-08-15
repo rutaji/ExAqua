@@ -17,13 +17,12 @@ public class PacketHandler {
 
     public static void init() {
         CHANNEL = NetworkRegistry.newSimpleChannel(
-                // Create a ResourceLocation for your mod's channel
                 new ResourceLocation(ExAqua.MOD_ID, "packethandler"),
                 () -> PROTOCOL_VERSION,
                 PROTOCOL_VERSION::equals,
                 PROTOCOL_VERSION::equals
         );
-        // Register your packet class with the channel
+        // Register packets here
         CHANNEL.registerMessage(
                 id(),
                 MyFluidStackPacket.class,

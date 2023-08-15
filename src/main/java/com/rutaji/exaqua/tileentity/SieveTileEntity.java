@@ -59,16 +59,14 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
         return super.write(nbt);
     }
     //endregion
+    //region Constructor
     public SieveTileEntity(TileEntityType<?> p_i48289_1_) {
         super(p_i48289_1_);
     }
     public SieveTileEntity(){
         this(ModTileEntities.SIEVERTILE.get());
     }
-
-
-    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange,5000);
-
+    //endregion
     //region Energy
     private final MyEnergyStorage energyStorage = new MyEnergyStorage(MyEnergyStorage.fromRF(10000),this::EnergyChangePacket);
     @Override
@@ -184,6 +182,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     }
     //endregion
     //region IMyLiquidTankTile
+    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange,5000);
     @Override
     public MyLiquidTank GetTank() {
         return this.Tank;

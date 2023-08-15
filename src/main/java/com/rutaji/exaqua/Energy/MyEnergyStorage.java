@@ -1,7 +1,7 @@
 package com.rutaji.exaqua.Energy;
 
 import com.rutaji.exaqua.integration.mekanism.EnergyStorageAdapter;
-import com.rutaji.exaqua.javadoesnthavedelegatesitfuckingsucks.MyDelegate;
+import com.rutaji.exaqua.others.MyDelegate;
 import mekanism.api.Action;
 import mekanism.api.NBTConstants;
 import mekanism.api.energy.IEnergyContainer;
@@ -16,19 +16,22 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 
-public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEnergyContainer>{ //todo mabye more Interfaces will be required before it stops crashing
+public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEnergyContainer>{
+    //region RF conversion
     public static double fromRF(double d) {return (d*5)/2;}
     public static long fromRF(long d) {return (d*5)/2;}
     public static long ToRF(long rf) {return (rf*2)/5;}
-
+    //endregion
     FloatingLong Energy = FloatingLong.create(0);
+    //region Constructor
     public MyEnergyStorage(double capacity, MyDelegate m){
         MaxCapacity =FloatingLong.create(capacity);
         Onchange = m;
     }
+    //endregion
     public MyDelegate Onchange;
-    private static FloatingLong MaxCapacity ;
-    public long GetAsRF(){//todo fix
+    private static FloatingLong MaxCapacity;
+    public long GetAsRF(){
          FloatingLong test = getEnergy();
          return MyEnergyStorage.ToRF(test.getValue());
     }
@@ -64,7 +67,7 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
     public void onContentsChanged() {
 
     }
-
+    //region NBT
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         setEnergy(FloatingLong.parseFloatingLong(nbt.getString(NBTConstants.STORED)));
@@ -102,4 +105,5 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
         }
 
     }
+    //endregion
 }

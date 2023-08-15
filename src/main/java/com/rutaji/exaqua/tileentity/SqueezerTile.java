@@ -31,15 +31,18 @@ import java.util.Optional;
 
 public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
 
-    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange);
-    private final ItemStackHandler itemStackHandler = createHandler();
-    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemStackHandler);
+    //region Constructor
     public SqueezerTile(TileEntityType<?> p_i48289_1_) {
         super(p_i48289_1_);
     }
     public SqueezerTile(){
         this(ModTileEntities.SQUEEZERTILE.get());
     }
+    //endregion
+
+    //region inventory
+    private final ItemStackHandler itemStackHandler = createHandler();
+    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemStackHandler);
     private ItemStackHandler createHandler()
     {
         return new ItemStackHandler(1){
@@ -64,6 +67,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
         nbt.put("inv",itemStackHandler.serializeNBT());
         return super.write(nbt);
     }
+    //endregion
 
     @Nullable
     @Override
@@ -110,13 +114,12 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
         }
 
     }
-    public void FluidItem(IFluidHandlerItem item){
-        FluidStack drained = item.drain(new FluidStack(this.Tank.getFluid(),this.Tank.getCapacity() - this.Tank.getFluidAmount()), IFluidHandler.FluidAction.EXECUTE);
-        this.Tank.fill(drained, IFluidHandler.FluidAction.EXECUTE);
-    }
+    //region Liquid
+    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange);
 
     @Override
     public MyLiquidTank GetTank() {
         return this.Tank;
     }
+    //endregion
 }

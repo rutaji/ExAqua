@@ -38,11 +38,11 @@ import javax.annotation.Nullable;
 
 public class squeezerBlock extends Block implements IBucketPickupHandler, ILiquidContainer {
 
-
-
+    //region constructor
     public squeezerBlock(Properties p_i48440_1_) {
         super(p_i48440_1_);
     }
+    //endregion
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, @NotNull Entity entityIn) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -53,12 +53,9 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
-                                             PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(!worldIn.isRemote()) {
-
             TileEntity tileEntity = worldIn.getTileEntity(pos);
-
             if(tileEntity instanceof SqueezerTile) {
                 //region UI
                 INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
@@ -77,7 +74,6 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
             public ITextComponent getDisplayName() {
                 return new TranslationTextComponent("screen.exaqua.squeezercontainer");
             }
-
             @Nullable
             @Override
             public Container createMenu(int i, PlayerInventory inventory, PlayerEntity playerEn) {

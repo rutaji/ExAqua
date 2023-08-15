@@ -34,9 +34,11 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class SieveBlock extends Block implements ILiquidContainer, IBucketPickupHandler {
+    //region Constructor
     public SieveBlock(Properties properties) {
         super(properties);
     }
+    //endregion
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
