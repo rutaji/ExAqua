@@ -9,6 +9,7 @@ import com.rutaji.exaqua.networking.PacketHandler;
 import com.rutaji.exaqua.screen.SieveScreen;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.screen.SqueezerScreen;
+import com.rutaji.exaqua.util.ColorsToFloat;
 import com.rutaji.exaqua.util.ModItemModelProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;

@@ -1,0 +1,6 @@
+{
+  "parent": "exaqua:item/handsieve",
+  "textures": {
+    "layer0": "exaqua:item/handsieve/handsieveunknown"
+  }
+}

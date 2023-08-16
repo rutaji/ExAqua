@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 public class ModItemModelProperties {
     public static void makeHandSieve(Item item) {
         ItemModelsProperties.registerProperty(item, new ResourceLocation("color"), (itemStack, clientworld, livingEntity) -> {
-            return itemStack.getOrCreateTag().getString("FluidInside").equals("minecraft:water") ? ColorsToFloat.Blue : 0F ;
+            return ColorsToFloat.Get(itemStack.getOrCreateTag().getString("FluidInside")) ;
         });
     }
 }

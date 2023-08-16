@@ -8,7 +8,92 @@
       "predicate": {
         "color": 0.1
       },
-      "model": "exaqua:item/handsievewater"
+      "model": "exaqua:item/handsieve/handsievewater"
+    },
+    {
+      "predicate": {
+        "color": 0.2
+      },
+      "model": "exaqua:item/handsieve/handsievelava"
+    },
+
+    {
+      "predicate": {
+        "color": 0.3
+      },
+      "model": "exaqua:item/handsieve/handsievebeige"
+    },
+    {
+      "predicate": {
+        "color": 0.4
+      },
+      "model": "exaqua:item/handsieve/handsieveblack"
+    },
+    {
+      "predicate": {
+        "color": 0.5
+      },
+      "model": "exaqua:item/handsieve/handsievecyan"
+    },
+    {
+      "predicate": {
+        "color": 0.6
+      },
+      "model": "exaqua:item/handsieve/handsievedarkblue"
+    },
+    {
+      "predicate": {
+        "color": 0.7
+      },
+      "model": "exaqua:item/handsieve/handsievedargreen"
+    },
+    {
+      "predicate": {
+        "color": 0.8
+      },
+      "model": "exaqua:item/handsieve/handsievelightblue"
+    },
+    {
+      "predicate": {
+        "color": 0.9
+      },
+      "model": "exaqua:item/handsieve/handsieveorange"
+    },
+    {
+      "predicate": {
+        "color": 1
+      },
+      "model": "exaqua:item/handsieve/handsievepink"
+    },
+    {
+      "predicate": {
+        "color": 1.1
+      },
+      "model": "exaqua:item/handsieve/handsievepurple"
+    },
+    {
+      "predicate": {
+        "color": 1.2
+      },
+      "model": "exaqua:item/handsieve/handsievered"
+    },
+    {
+      "predicate": {
+        "color": 1.3
+      },
+      "model": "exaqua:item/handsieve/handsievewhite"
+    },
+    {
+      "predicate": {
+        "color": 1.4
+      },
+      "model": "exaqua:item/handsieve/handsieveyellow"
+    },
+    {
+      "predicate": {
+        "color": 2
+      },
+      "model": "exaqua:item/handsieve/handsieveunknown"
     }
   ]
 
