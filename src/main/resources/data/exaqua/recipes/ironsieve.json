@@ -7,12 +7,16 @@
     },
   "outputs": [
     {
-      "item": {"item": "minecraft:granite"},
+      "item": {"item": "minecraft:raw_iron"},
       "chance": 3
     },
     {
-      "item": { "item": "minecraft:diorite"},
+      "item": { "item": "minecraft:raw_gold"},
       "chance": 1
+    },
+    {
+      "item": { "item": "minecraft:coal"},
+      "chance": 4
     }
   ],
   "time": 40,

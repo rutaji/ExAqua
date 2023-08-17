@@ -4,11 +4,19 @@
   "fluid": "minecraft:water",
   "outputs": [
     {
-      "item": {"item": "minecraft:granite"},
+      "item": {"item": "minecraft:raw_iron"},
       "chance": 3
     },
     {
-      "item": { "item": "minecraft:diorite"},
+      "item": {"item": "minecraft:coal"},
+      "chance": 5
+    },
+    {
+      "item": {"item": "minecraft:flint"},
+      "chance": 2
+    },
+    {
+      "item": { "item": "minecraft:raw_gold"},
       "chance": 1
     }
   ]

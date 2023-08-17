@@ -2,12 +2,12 @@ package com.rutaji.exaqua.block;
 
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.item.ModItems;
+import com.rutaji.exaqua.others.CustomItemGroup;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -24,11 +24,10 @@ public class ModBlocks {
     private static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block){
         RegistryObject<T> toReturn = BLOCKS.register(name,block);
         registerBlockItem(name,toReturn);
-
         return toReturn;
     }
     private static <T extends Block> void registerBlockItem(String name,RegistryObject<T> block){
-        ModItems.ITEMS.register(name,()-> new BlockItem(block.get(),new Item.Properties().group(ItemGroup.BUILDING_BLOCKS)));
+        ModItems.ITEMS.register(name,()-> new BlockItem(block.get(),new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
     }
     public static RegistryObject<Block> GetSIEVE(Tiers t)
     {
