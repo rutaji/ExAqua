@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.function.Supplier;
 
@@ -29,11 +30,28 @@ public class ModBlocks {
     private static <T extends Block> void registerBlockItem(String name,RegistryObject<T> block){
         ModItems.ITEMS.register(name,()-> new BlockItem(block.get(),new Item.Properties().group(ItemGroup.BUILDING_BLOCKS)));
     }
+    public static RegistryObject<Block> GetSIEVE(Tiers t)
+    {
+        switch (t)
+        {
+            case iron: return  IRONSIEVE;
+            case gold: return  GOLDSIEVE;
+            case frogium: return  FROGIUMSIEVE;
+            case diamond: return  DIAMONDSIEVE;
+        }
+
+        throw new NotImplementedException("Sieve doesn´t exist");
+    }
 
     public static void register(IEventBus eventBus){
         BLOCKS.register(eventBus);
     }
     //endregion
-    public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON)));
+    //public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON)));
+    //public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.iron));
+    public static final RegistryObject<Block> IRONSIEVE =registerBlock("ironsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.iron));
+    public static final RegistryObject<Block> GOLDSIEVE =registerBlock("goldsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.gold));
+    public static final RegistryObject<Block> FROGIUMSIEVE =registerBlock("frogiumsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.frogium));
+    public static final RegistryObject<Block> DIAMONDSIEVE =registerBlock("diamondsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.diamond));
     public static final RegistryObject<Block> SQUEEZER =registerBlock("squeezer",() -> new squeezerBlock(AbstractBlock.Properties.create(Material.IRON)));
 }

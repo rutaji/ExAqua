@@ -1,8 +1,10 @@
 package com.rutaji.exaqua.container;
 
 import com.rutaji.exaqua.block.ModBlocks;
+import com.rutaji.exaqua.block.Tiers;
 import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
+import com.rutaji.exaqua.tileentity.SieveTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -62,7 +64,14 @@ public class SieveContainer extends Container {
     @Override
     public boolean canInteractWith(PlayerEntity player){
         return  isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(),tileEntity.getPos()),
-                player, ModBlocks.SIEVE.get());
+                player, ModBlocks.GetSIEVE(GetTier()).get());
+    }
+    public Tiers GetTier()
+    {
+        if(tileEntity instanceof SieveTileEntity){
+           return  ((SieveTileEntity) tileEntity).GetTier();
+        }
+        return Tiers.error;
     }
     //region player inventory
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

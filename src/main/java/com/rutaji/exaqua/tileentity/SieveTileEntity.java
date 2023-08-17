@@ -2,6 +2,7 @@ package com.rutaji.exaqua.tileentity;
 
 import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
+import com.rutaji.exaqua.block.Tiers;
 import com.rutaji.exaqua.data.recipes.InventoryWithFluids;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SieveRecipie;
@@ -103,6 +104,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
             craft();
         }
     }
+    public Tiers GetTier(){return  tier;}
+    public Tiers tier;
     //region crafting
     private boolean crafting = false;
     private ItemStack ItemTocraft;

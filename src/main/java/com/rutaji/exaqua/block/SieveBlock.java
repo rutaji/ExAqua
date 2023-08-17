@@ -35,9 +35,16 @@ import javax.annotation.Nullable;
 
 public class SieveBlock extends Block implements ILiquidContainer, IBucketPickupHandler {
     //region Constructor
-    public SieveBlock(Properties properties) {
+
+    public SieveBlock(Properties properties,Tiers t) {
         super(properties);
+        Tier = t;
+
     }
+    //endregion
+    //region tier
+    private final Tiers Tier;
+    public Tiers GetTier(){return  Tier;}
     //endregion
 
     @Override
@@ -51,7 +58,7 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
 
                 NetworkHooks.openGui(((ServerPlayerEntity)player), containerProvider, tileEntity.getPos());
             } else {
-                throw new IllegalStateException("Our Container provider is missing!");
+                throw new IllegalStateException("Container provider is missing!");
             }
         }
         return ActionResultType.SUCCESS;
@@ -114,7 +121,9 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return ModTileEntities.SIEVERTILE.get().create();
+        TileEntity t = ModTileEntities.SIEVERTILE.get().create();
+        if(t instanceof  SieveTileEntity){((SieveTileEntity) t).tier = this.GetTier();}
+        return t;
     }
     //endregion
 

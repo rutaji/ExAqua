@@ -23,7 +23,7 @@ public class ModTileEntities {
 
     public static RegistryObject<TileEntityType<SieveTileEntity>> SIEVERTILE =
             TILE_ENTITIES.register("sieve", () -> TileEntityType.Builder.create(
-                    SieveTileEntity::new, ModBlocks.SIEVE.get()).build(null));
+                    SieveTileEntity::new, ModBlocks.IRONSIEVE.get(),ModBlocks.GOLDSIEVE.get()).build(null));
 
 
 
