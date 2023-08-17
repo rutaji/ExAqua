@@ -21,6 +21,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,12 +40,12 @@ public class HandSieve extends Item {
     private final ResourceLocation customIcon = new ResourceLocation("exaqua", "extra/handsievewater");
     private static final int UsesFromBucket = 20;
 
-    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
+    public void onCreated(ItemStack stack, @NotNull World worldIn, @NotNull PlayerEntity playerIn) {
         stack.getOrCreateTag().putInt(HOLDING_WATER,0);
         stack.getOrCreateTag().putString(FLUID_INSIDE,"");
     }
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+    public void addInformation(ItemStack stack, @Nullable World worldIn, @NotNull List<ITextComponent> tooltip, @NotNull ITooltipFlag flagIn){
         if(stack.getOrCreateTag().getInt(HOLDING_WATER) != 0) {
             tooltip.add(new StringTextComponent(stack.getOrCreateTag().getString(FLUID_INSIDE) + ": " + stack.getOrCreateTag().getInt(HOLDING_WATER)));
         }
@@ -55,12 +56,12 @@ public class HandSieve extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, PlayerEntity playerIn, @NotNull Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
 
             if(itemstack.getOrCreateTag().getInt(HOLDING_WATER) == 0) //pokud prázdný
             {
-                return PickUpSourceBlock(worldIn,playerIn,itemstack);//todo maybe move to server or client
+                return PickUpSourceBlock(worldIn,playerIn,itemstack);
             }
             else
             {
@@ -74,7 +75,7 @@ public class HandSieve extends Item {
                 {
                     EmptyIt(itemstack);
                     System.out.println("Není recept !!!");
-                    return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
+                    return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
                 }
                 recipe.ifPresent(iRecipe -> {
                     if (iRecipe instanceof HandSieveRecipie) {
@@ -92,7 +93,7 @@ public class HandSieve extends Item {
             }
 
 
-        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
+        return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
     }
     private static void EmptyIt(ItemStack itemStack){
         itemStack.getOrCreateTag().putInt(HOLDING_WATER,0);
@@ -103,21 +104,20 @@ public class HandSieve extends Item {
     }
     private static void LowerWater(ItemStack itemStack,int HowMuch)
     {
-        itemStack.getOrCreateTag().putInt(HOLDING_WATER, itemStack.getOrCreateTag().getInt(HOLDING_WATER) -1);
-        if(itemStack.getOrCreateTag().getInt(HOLDING_WATER) == 0)
+        itemStack.getOrCreateTag().putInt(HOLDING_WATER, itemStack.getOrCreateTag().getInt(HOLDING_WATER) -HowMuch);
+        if(itemStack.getOrCreateTag().getInt(HOLDING_WATER) <= 0)
         {
             itemStack.getOrCreateTag().putString(FLUID_INSIDE,"");
         }
     }
     private ActionResult<ItemStack> PickUpSourceBlock(World worldIn, PlayerEntity playerIn,ItemStack itemstack)
     {
-        RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
+        BlockRayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
         if (raytraceresult.getType() != RayTraceResult.Type.BLOCK) {
-            return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
+            return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
         }
-        BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult) raytraceresult;
-        BlockPos blockpos = blockraytraceresult.getPos();
-        Direction direction = blockraytraceresult.getFace();
+        BlockPos blockpos = raytraceresult.getPos();
+        Direction direction = raytraceresult.getFace();
         BlockPos blockpos1 = blockpos.offset(direction);
         if (worldIn.isBlockModifiable(playerIn, blockpos) && playerIn.canPlayerEdit(blockpos1, direction, itemstack)) {
             BlockState blockstate1 = worldIn.getBlockState(blockpos);
@@ -130,7 +130,7 @@ public class HandSieve extends Item {
                 }
             }
         }
-        return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
+        return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 
     }
 

@@ -61,9 +61,9 @@ public class SieveRecipie implements ISieveRecipie {
         return null;
     }
 
-    @Override //todo does not provide anything claaassiicc
+    @Override // does not provide anything because this recipe doesn´t have clear output
     public ItemStack getRecipeOutput() {
-        return null;
+        return ItemStack.EMPTY;
     }
     public List<ItemStack> GetAllPossibleOutputs() {
         List<ItemStack> results  = new ArrayList<ItemStack>();

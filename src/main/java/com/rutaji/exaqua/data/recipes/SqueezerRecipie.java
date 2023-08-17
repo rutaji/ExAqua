@@ -45,7 +45,7 @@ public class SqueezerRecipie implements ISqueezerRecipie {
     public NonNullList<Ingredient> getIngredients(){
         return RECIPIEITEMS;
     }
-    @Override //todo this is fake output. looks terrible
+    @Override //Does not provide anything because this recipie doesn´t produce items
     public ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
