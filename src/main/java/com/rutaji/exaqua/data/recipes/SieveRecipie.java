@@ -2,13 +2,11 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,29 +21,29 @@ import java.util.Random;
 public class SieveRecipie implements ISieveRecipie {
 
 
-    private final ResourceLocation id;
+    private final ResourceLocation ID;
 
     public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output,int time,double rf) {
-        this.id = id;
-        this.InputFluid = input;
-        this.Results = output;
+        this.ID = id;
+        this.INPUTFLUID = input;
+        this.RESULT = output;
         this.TIME = time;
         this.RF = rf;
         int sum=0;
-        for (RoolItem r: Results)
+        for (RoolItem r: RESULT)
         {
 
             sum+=r.chance;
             r.chance = sum;
         }
-        this.sum = sum;
+        this.SUM = sum;
     }
     private static final Random RANDOM = new Random();
-    public final List<RoolItem> Results;
-    public final FluidStack InputFluid;
+    public final List<RoolItem> RESULT;
+    public final FluidStack INPUTFLUID;
     public final int TIME;
     public final double RF;
-    public final int sum;
+    public final int SUM;
 
 
     @Override
@@ -53,7 +51,7 @@ public class SieveRecipie implements ISieveRecipie {
         if(inv instanceof InventoryWithFluids)
         {
             FluidStack f = ((InventoryWithFluids) inv).getFluid();
-            return f.isFluidEqual(InputFluid) && f.getAmount() >= InputFluid.getAmount();
+            return f.isFluidEqual(INPUTFLUID) && f.getAmount() >= INPUTFLUID.getAmount();
         }
         return false;
     }
@@ -69,7 +67,7 @@ public class SieveRecipie implements ISieveRecipie {
     }
     public List<ItemStack> GetAllPossibleOutputs() {
         List<ItemStack> results  = new ArrayList<ItemStack>();
-        for (RoolItem r:Results)
+        for (RoolItem r: RESULT)
         {
             results.add(r.item);
         }
@@ -78,7 +76,7 @@ public class SieveRecipie implements ISieveRecipie {
 
     @Override
     public ResourceLocation getId() {
-        return id;
+        return ID;
     }
 
     @Override
@@ -89,9 +87,9 @@ public class SieveRecipie implements ISieveRecipie {
     public ItemStack getRandomItemStack()
     {
 
-        if(sum == 0){System.out.println("Recipe doesn´t have a chance");return ItemStack.EMPTY;}
-        int random = RANDOM.nextInt(sum) + 1;
-        for (RoolItem r: Results)
+        if(SUM == 0){System.out.println("Recipe doesn´t have a chance");return ItemStack.EMPTY;}
+        int random = RANDOM.nextInt(SUM) + 1;
+        for (RoolItem r: RESULT)
         {
             if(random <= r.chance){return r.item.copy();}
         }
@@ -148,12 +146,12 @@ public class SieveRecipie implements ISieveRecipie {
 
         @Override
         public void write(PacketBuffer buffer, SieveRecipie recipe) {
-            buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.InputFluid.getFluid()).toString());
-            buffer.writeInt(recipe.InputFluid.getAmount());
+            buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.INPUTFLUID.getFluid()).toString());
+            buffer.writeInt(recipe.INPUTFLUID.getAmount());
 
-            int size = recipe.Results.size();
+            int size = recipe.RESULT.size();
             buffer.writeInt(size);
-            for (RoolItem R: recipe.Results)
+            for (RoolItem R: recipe.RESULT)
             {
                 buffer.writeItemStack(R.item);
                 buffer.writeInt(R.chance);

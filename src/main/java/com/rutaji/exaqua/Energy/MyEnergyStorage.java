@@ -25,12 +25,12 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
     FloatingLong Energy = FloatingLong.create(0);
     //region Constructor
     public MyEnergyStorage(double capacity, MyDelegate m){
-        MaxCapacity =FloatingLong.create(capacity);
+        MAXCAPACITY =FloatingLong.create(capacity);
         Onchange = m;
     }
     //endregion
     public MyDelegate Onchange;
-    private static FloatingLong MaxCapacity;
+    private final FloatingLong MAXCAPACITY;
     public long GetAsRF(){
          FloatingLong test = getEnergy();
          return MyEnergyStorage.ToRF(test.getValue());
@@ -60,7 +60,7 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
 
     @Override
     public FloatingLong getMaxEnergy() {
-        return MaxCapacity;
+        return MAXCAPACITY;
     }
 
     @Override

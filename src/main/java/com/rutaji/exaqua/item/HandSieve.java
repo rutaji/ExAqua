@@ -33,20 +33,20 @@ public class HandSieve extends Item {
     }
     //endregion
     //region Tags Constants
-    public static final String HoldingWater = "HoldingWater"; //tag int
-    public static final String FluidInside = "FluidInside"; //tag string
+    public static final String HOLDING_WATER = "HoldingWater"; //tag int
+    public static final String FLUID_INSIDE = "FluidInside"; //tag string
     //endregion
     private final ResourceLocation customIcon = new ResourceLocation("exaqua", "extra/handsievewater");
     private static final int UsesFromBucket = 20;
 
     public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
-        stack.getOrCreateTag().putInt(HoldingWater,0);
-        stack.getOrCreateTag().putString(FluidInside,"");
+        stack.getOrCreateTag().putInt(HOLDING_WATER,0);
+        stack.getOrCreateTag().putString(FLUID_INSIDE,"");
     }
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-        if(stack.getOrCreateTag().getInt(HoldingWater) != 0) {
-            tooltip.add(new StringTextComponent(stack.getOrCreateTag().getString(FluidInside) + ": " + stack.getOrCreateTag().getInt(HoldingWater)));
+        if(stack.getOrCreateTag().getInt(HOLDING_WATER) != 0) {
+            tooltip.add(new StringTextComponent(stack.getOrCreateTag().getString(FLUID_INSIDE) + ": " + stack.getOrCreateTag().getInt(HOLDING_WATER)));
         }
         else{
             tooltip.add(new StringTextComponent("empty"));
@@ -58,7 +58,7 @@ public class HandSieve extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
 
-            if(itemstack.getOrCreateTag().getInt(HoldingWater) == 0) //pokud prázdný
+            if(itemstack.getOrCreateTag().getInt(HOLDING_WATER) == 0) //pokud prázdný
             {
                 return PickUpSourceBlock(worldIn,playerIn,itemstack);//todo maybe move to server or client
             }
@@ -66,7 +66,7 @@ public class HandSieve extends Item {
             {
 
                 InventoryWithFluids inv = new InventoryWithFluids();
-                inv.setFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemstack.getOrCreateTag().getString(FluidInside))),5));
+                inv.setFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemstack.getOrCreateTag().getString(FLUID_INSIDE))),5));
 
                 Optional<HandSieveRecipie> recipe = worldIn.getRecipeManager()
                         .getRecipe(ModRecipeTypes.HANDSIEVE_RECIPE, inv, worldIn);
@@ -95,18 +95,18 @@ public class HandSieve extends Item {
         return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
     }
     private static void EmptyIt(ItemStack itemStack){
-        itemStack.getOrCreateTag().putInt(HoldingWater,0);
-        itemStack.getOrCreateTag().putString(FluidInside ,"");
+        itemStack.getOrCreateTag().putInt(HOLDING_WATER,0);
+        itemStack.getOrCreateTag().putString(FLUID_INSIDE,"");
     }
     private static void LowerWater(ItemStack itemStack){
         LowerWater(itemStack,1);
     }
     private static void LowerWater(ItemStack itemStack,int HowMuch)
     {
-        itemStack.getOrCreateTag().putInt(HoldingWater, itemStack.getOrCreateTag().getInt(HoldingWater) -1);
-        if(itemStack.getOrCreateTag().getInt(HoldingWater) == 0)
+        itemStack.getOrCreateTag().putInt(HOLDING_WATER, itemStack.getOrCreateTag().getInt(HOLDING_WATER) -1);
+        if(itemStack.getOrCreateTag().getInt(HOLDING_WATER) == 0)
         {
-            itemStack.getOrCreateTag().putString(FluidInside ,"");
+            itemStack.getOrCreateTag().putString(FLUID_INSIDE,"");
         }
     }
     private ActionResult<ItemStack> PickUpSourceBlock(World worldIn, PlayerEntity playerIn,ItemStack itemstack)
@@ -124,8 +124,8 @@ public class HandSieve extends Item {
             if (blockstate1.getBlock() instanceof IBucketPickupHandler) {
                 Fluid fluid = ((IBucketPickupHandler) blockstate1.getBlock()).pickupFluid(worldIn, blockpos, blockstate1);
                 if (fluid != Fluids.EMPTY) {
-                    itemstack.getOrCreateTag().putInt(HoldingWater,UsesFromBucket);
-                    itemstack.getOrCreateTag().putString(FluidInside, fluid.getRegistryName().toString());
+                    itemstack.getOrCreateTag().putInt(HOLDING_WATER,UsesFromBucket);
+                    itemstack.getOrCreateTag().putString(FLUID_INSIDE, fluid.getRegistryName().toString());
 
                 }
             }

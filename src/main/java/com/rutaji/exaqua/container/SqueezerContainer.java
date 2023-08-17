@@ -2,7 +2,6 @@ package com.rutaji.exaqua.container;
 
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
-import com.rutaji.exaqua.tileentity.SqueezerTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -18,19 +17,19 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class SqueezerContainer extends Container {
-    private final TileEntity tileEntity;
-    private final PlayerEntity playerEntity;
-    private final IItemHandler playerInvetory;
+    private final TileEntity TILEEMTITY;
+    private final PlayerEntity PLAYERENTITY;
+    private final IItemHandler PLAYERINVENTORY;
 
     public SqueezerContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
         super(ModContainers.SQUEEZERCONTAINER.get(),windowId);
-        this.tileEntity = world.getTileEntity(pos);
-        this.playerEntity = playerEntity;
-        this.playerInvetory = new InvWrapper(playerInventory);
+        this.TILEEMTITY = world.getTileEntity(pos);
+        this.PLAYERENTITY = playerEntity;
+        this.PLAYERINVENTORY = new InvWrapper(playerInventory);
         layoutPlayerInventorySlots(8,86);
 
-        if(tileEntity != null){
-            tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
+        if(TILEEMTITY != null){
+            TILEEMTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
                 addSlot(new SlotItemHandler(h,0,80,31));
 
             });
@@ -39,15 +38,15 @@ public class SqueezerContainer extends Container {
     }
     public int GetAmount()
     {
-        if (tileEntity instanceof IMyLiquidTankTIle){
-            return ((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount();
+        if (TILEEMTITY instanceof IMyLiquidTankTIle){
+            return ((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluidAmount();
         }
         return -1;
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity player){
-        return  isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(),tileEntity.getPos()),
+        return  isWithinUsableDistance(IWorldPosCallable.of(TILEEMTITY.getWorld(), TILEEMTITY.getPos()),
                                                             player, ModBlocks.SQUEEZER.get());
     }
     //region inventory
@@ -71,10 +70,10 @@ public class SqueezerContainer extends Container {
         return index;
     }
     private void layoutPlayerInventorySlots(int leftCol, int topRow) {
-        addSlotBox(playerInvetory, 9, leftCol, topRow, 9, 18, 3, 18);
+        addSlotBox(PLAYERINVENTORY, 9, leftCol, topRow, 9, 18, 3, 18);
 
         topRow += 58;
-        addSlotRange(playerInvetory, 0, leftCol, topRow, 9, 18);
+        addSlotRange(PLAYERINVENTORY, 0, leftCol, topRow, 9, 18);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -124,7 +123,7 @@ public class SqueezerContainer extends Container {
         } else {
             sourceSlot.onSlotChanged();
         }
-        sourceSlot.onTake(playerEntity, sourceStack);
+        sourceSlot.onTake(PLAYERENTITY, sourceStack);
         return copyOfSourceStack;
     }
     //endregion

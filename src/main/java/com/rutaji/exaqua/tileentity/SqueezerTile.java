@@ -3,11 +3,9 @@ package com.rutaji.exaqua.tileentity;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
-import com.rutaji.exaqua.integration.mekanism.WaterFluidTankCapabilityAdapter;
 import com.rutaji.exaqua.networking.MyFluidStackPacket;
 import com.rutaji.exaqua.networking.PacketHandler;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,7 +16,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -41,8 +38,8 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
     //endregion
 
     //region inventory
-    private final ItemStackHandler itemStackHandler = createHandler();
-    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemStackHandler);
+    private final ItemStackHandler ITEM_STACK_HANDLER = createHandler();
+    private final LazyOptional<IItemHandler> HANDLER = LazyOptional.of(() -> ITEM_STACK_HANDLER);
     private ItemStackHandler createHandler()
     {
         return new ItemStackHandler(1){
@@ -58,13 +55,13 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
     }
     @Override
     public void read(BlockState state, CompoundNBT nbt){
-        itemStackHandler.deserializeNBT(nbt.getCompound("inv"));
+        ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         super.read(state,nbt);
     }
 
     @Override
     public CompoundNBT write( CompoundNBT nbt){
-        nbt.put("inv",itemStackHandler.serializeNBT());
+        nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         return super.write(nbt);
     }
     //endregion
@@ -75,7 +72,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
         if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler" )
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-            return handler.cast();
+            return HANDLER.cast();
         }
         return super.getCapability(cap,side);
     }
@@ -86,9 +83,9 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
             if (Tank.FluidStored.getAmount() == Tank.getCapacity()) {
                 return;
             }
-            Inventory inv = new Inventory(itemStackHandler.getSlots());
-            for (int i = 0; i < itemStackHandler.getSlots(); i++) {
-                inv.setInventorySlotContents(i, itemStackHandler.getStackInSlot(i));
+            Inventory inv = new Inventory(ITEM_STACK_HANDLER.getSlots());
+            for (int i = 0; i < ITEM_STACK_HANDLER.getSlots(); i++) {
+                inv.setInventorySlotContents(i, ITEM_STACK_HANDLER.getStackInSlot(i));
             }
 
             Optional<SqueezerRecipie> recipe = world.getRecipeManager()
@@ -97,7 +94,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
             recipe.ifPresent(iRecipe -> {
 
                 if (iRecipe instanceof SqueezerRecipie) {
-                    itemStackHandler.extractItem(0, 1, false);
+                    ITEM_STACK_HANDLER.extractItem(0, 1, false);
                     FluidStack output = iRecipe.getRealOutput();
                     this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
                     System.out.println(output);

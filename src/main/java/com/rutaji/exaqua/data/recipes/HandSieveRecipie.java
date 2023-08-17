@@ -24,26 +24,26 @@ import java.util.Random;
 public class HandSieveRecipie implements IHandSieveRecipie {
     //region Constructor
     public HandSieveRecipie(ResourceLocation id, Fluid input, List<RoolItem> output,int chance) {
-        this.id = id;
-        this.InputFluid = input;
-        this.Results = output;
-        this.successChance = chance;
+        this.ID = id;
+        this.INPUTFLUID = input;
+        this.RESULTS = output;
+        this.SUCCESCHANCE = chance;
         int sum=0;
-        for (RoolItem r: Results)
+        for (RoolItem r: RESULTS)
         {
 
             sum+=r.chance;
             r.chance = sum;
         }
-        this.sum = sum;
+        this.SUM = sum;
     }
     //endregion
-    private final ResourceLocation id;
+    private final ResourceLocation ID;
     private static final Random RANDOM = new Random();
-    public final List<RoolItem> Results;
-    public final Fluid InputFluid;
-    public final int sum;
-    public final int successChance;
+    public final List<RoolItem> RESULTS;
+    public final Fluid INPUTFLUID;
+    public final int SUM;
+    public final int SUCCESCHANCE;
 
 
     @Override
@@ -51,14 +51,14 @@ public class HandSieveRecipie implements IHandSieveRecipie {
         if(inv instanceof InventoryWithFluids)
         {
             FluidStack f = ((InventoryWithFluids) inv).getFluid();
-            return f.getFluid() == InputFluid;
+            return f.getFluid() == INPUTFLUID;
         }
         return false;
     }
     public boolean IsSucces()
     {
         int random = RANDOM.nextInt(100)+1;
-        return random <= successChance;
+        return random <= SUCCESCHANCE;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
     public List<ItemStack> GetAllPossibleOutputs() {
         List<ItemStack> results  = new ArrayList<ItemStack>();
-        for (RoolItem r:Results)
+        for (RoolItem r: RESULTS)
         {
             results.add(r.item);
         }
@@ -82,15 +82,15 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
     @Override
     public ResourceLocation getId() {
-        return id;
+        return ID;
     }
 
     public ItemStack GetRandomItemStack()
     {
 
-        if(sum == 0){System.out.println("Recipe doesn´t have a chance");return ItemStack.EMPTY;}
-        int random = RANDOM.nextInt(sum) + 1;
-        for (RoolItem r: Results)
+        if(SUM == 0){System.out.println("Recipe doesn´t have a chance");return ItemStack.EMPTY;}
+        int random = RANDOM.nextInt(SUM) + 1;
+        for (RoolItem r: RESULTS)
         {
             if(random <= r.chance){return r.item.copy();}
         }
@@ -145,15 +145,15 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
         @Override
         public void write(PacketBuffer buffer, HandSieveRecipie recipe) {
-            buffer.writeString(recipe.InputFluid.getRegistryName().toString());
-            int size = recipe.Results.size();
+            buffer.writeString(recipe.INPUTFLUID.getRegistryName().toString());
+            int size = recipe.RESULTS.size();
             buffer.writeInt(size);
-            for (RoolItem R: recipe.Results)
+            for (RoolItem R: recipe.RESULTS)
             {
                 buffer.writeItemStack(R.item);
                 buffer.writeInt(R.chance);
             }
-            buffer.writeInt(recipe.successChance);
+            buffer.writeInt(recipe.SUCCESCHANCE);
 
         }
     }

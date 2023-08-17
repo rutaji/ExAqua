@@ -19,7 +19,7 @@ public class ColorsToFloat {
     public static float RED = 1.2F;
     public static float WHITE = 1.3F;
     public static float YELLOW = 1.4F;
-    public static float unknown = 2f;
+    public static float UNKNOWN = 2f;
     public static Hashtable<String,Float> NameToColor = new Hashtable<String,Float>(){
         {put("",EMPTY);}
         {put("minecraft:water",Blue);}
@@ -29,7 +29,7 @@ public class ColorsToFloat {
     public static float Get(String s)
     {
         if(NameToColor.containsKey(s)){return  NameToColor.get(s);}
-        return unknown;
+        return UNKNOWN;
     }
 
    /* public static void Load()  {

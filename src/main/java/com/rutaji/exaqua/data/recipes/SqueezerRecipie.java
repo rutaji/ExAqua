@@ -3,13 +3,11 @@ package com.rutaji.exaqua.data.recipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.rutaji.exaqua.block.ModBlocks;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -23,20 +21,20 @@ import javax.annotation.Nullable;
 
 public class SqueezerRecipie implements ISqueezerRecipie {
 
-    private final ResourceLocation id;
-    private final FluidStack output;
-    private final NonNullList<Ingredient> recipeItems;
+    private final ResourceLocation ID;
+    private final FluidStack OUTPUT;
+    private final NonNullList<Ingredient> RECIPIEITEMS;
 
     public SqueezerRecipie(ResourceLocation id, FluidStack output,
                                     NonNullList<Ingredient> recipeItems) {
-        this.id = id;
-        this.output = output;
-        this.recipeItems = recipeItems;
+        this.ID = id;
+        this.OUTPUT = output;
+        this.RECIPIEITEMS = recipeItems;
 
     }
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        return recipeItems.get(0).test(inv.getStackInSlot(0));
+        return RECIPIEITEMS.get(0).test(inv.getStackInSlot(0));
     }
 
     @Override
@@ -45,14 +43,14 @@ public class SqueezerRecipie implements ISqueezerRecipie {
     }
     @Override
     public NonNullList<Ingredient> getIngredients(){
-        return recipeItems;
+        return RECIPIEITEMS;
     }
     @Override //todo this is fake output. looks terrible
     public ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
     public FluidStack getRealOutput(){
-        return output.copy();
+        return OUTPUT.copy();
     }
 
     public ItemStack getIcon() {
@@ -61,7 +59,7 @@ public class SqueezerRecipie implements ISqueezerRecipie {
 
     @Override
     public ResourceLocation getId() {
-        return id;
+        return ID;
     }
 
     @Override
@@ -116,8 +114,8 @@ public class SqueezerRecipie implements ISqueezerRecipie {
             for (Ingredient ing : recipe.getIngredients()) {
                 ing.write(buffer);
             }
-            buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.output.getFluid()).toString());
-            buffer.writeInt(recipe.output.getAmount());
+            buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.OUTPUT.getFluid()).toString());
+            buffer.writeInt(recipe.OUTPUT.getAmount());
 
         }
     }

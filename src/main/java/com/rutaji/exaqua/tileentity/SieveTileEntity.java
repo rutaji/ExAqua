@@ -32,10 +32,10 @@ import java.util.Optional;
 public class SieveTileEntity extends TileEntity implements ITickableTileEntity,IMyLiquidTankTIle,IMYEnergyStorageTile {
 
     //region Items
-    private int NumberOfInventorySlots =8;
+    private int NUMBER_OF_INVENTORY_SLOTS =8;
     private ItemStackHandler createHandler()
     {
-        return new ItemStackHandler(NumberOfInventorySlots){
+        return new ItemStackHandler(NUMBER_OF_INVENTORY_SLOTS){
             @Override
             protected void onContentsChanged(int slot){
                 markDirty();
@@ -46,17 +46,17 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
             }
         };
     }
-    private final ItemStackHandler itemStackHandler = createHandler();
-    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemStackHandler);
+    private final ItemStackHandler ITEM_STACK_HANDLER = createHandler();
+    private final LazyOptional<IItemHandler> HANDLER = LazyOptional.of(() -> ITEM_STACK_HANDLER);
 
     @Override
     public void read(BlockState state, CompoundNBT nbt){
-        itemStackHandler.deserializeNBT(nbt.getCompound("inv"));
+        ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         super.read(state,nbt);
     }
     @Override
     public CompoundNBT write( CompoundNBT nbt){
-        nbt.put("inv",itemStackHandler.serializeNBT());
+        nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         return super.write(nbt);
     }
     //endregion
@@ -69,10 +69,10 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     }
     //endregion
     //region Energy
-    private final MyEnergyStorage energyStorage = new MyEnergyStorage(MyEnergyStorage.fromRF(10000),this::EnergyChangePacket);
+    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(MyEnergyStorage.fromRF(10000),this::EnergyChangePacket);
     @Override
     public MyEnergyStorage GetEnergyStorage() {
-        return this.energyStorage;
+        return this.MY_ENERGY_STORAGE;
     }
 
 
@@ -88,12 +88,12 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     @Override
     public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
         if(cap.getName() == "mekanism.api.energy.IStrictEnergyHandler"){
-            return energyStorage.getCapabilityProvider().getCapability(cap,side);
+            return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
         }
         if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler" )
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-            return handler.cast();
+            return HANDLER.cast();
         }
         return super.getCapability(cap,side);
     }
@@ -104,8 +104,10 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
             craft();
         }
     }
+    //region Tiers
     public Tiers GetTier(){return  tier;}
     public Tiers tier;
+    //endregion
     //region crafting
     private boolean crafting = false;
     private ItemStack ItemTocraft;
@@ -131,7 +133,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
                 recipe.ifPresent(iRecipe -> {
 
                     if (iRecipe instanceof SieveRecipie) {
-                        Tank.drain(iRecipe.InputFluid.getAmount(), IFluidHandler.FluidAction.EXECUTE);
+                        Tank.drain(iRecipe.INPUTFLUID.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                         ItemTocraft = iRecipe.getRandomItemStack();
                         craftingTime = 0;
                         craftingTimeDone = iRecipe.TIME;
@@ -143,9 +145,9 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
             else if(craftingTime == craftingTimeDone)
             {
                 ItemStack result = ItemTocraft;
-                for (int i = 0; i < NumberOfInventorySlots; i++) {
+                for (int i = 0; i < NUMBER_OF_INVENTORY_SLOTS; i++) {
 
-                    result = itemStackHandler.insertItem(i, result, false);
+                    result = ITEM_STACK_HANDLER.insertItem(i, result, false);
                     if (result == ItemStack.EMPTY) {
                         break;
                     }

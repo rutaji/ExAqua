@@ -11,19 +11,18 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie> {
     public final static ResourceLocation UID = new ResourceLocation(ExAqua.MOD_ID,"squeezer");
     public final static ResourceLocation TEXTURE = new ResourceLocation(ExAqua.MOD_ID,"gui/squeezer.png");
 
-    private final IDrawable background;
-    private final  IDrawable icon;
+    private final IDrawable BACKGROUND;
+    private final  IDrawable ICON;
 
     public SqueezerRecipeCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(TEXTURE,0,0,176,85);
-        this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.SQUEEZER.get()));
+        this.BACKGROUND = helper.createDrawable(TEXTURE,0,0,176,85);
+        this.ICON = helper.createDrawableIngredient(new ItemStack(ModBlocks.SQUEEZER.get()));
 
     }
 
@@ -45,12 +44,12 @@ public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie> 
 
     @Override
     public IDrawable getBackground() {
-        return background;
+        return BACKGROUND;
     }
 
     @Override
     public IDrawable getIcon() {
-        return icon;
+        return ICON;
     }
 
     @Override

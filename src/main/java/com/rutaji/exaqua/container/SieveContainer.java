@@ -21,19 +21,19 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class SieveContainer extends Container {
 
-    private final TileEntity tileEntity;
-    private final PlayerEntity playerEntity;
-    private final IItemHandler playerInvetory;
+    private final TileEntity TILEENTITY;
+    private final PlayerEntity PLAYERENTITY;
+    private final IItemHandler PLAYERINVENTORY;
 
     public SieveContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
         super(ModContainers.SIEVECONTAINER.get(),windowId);
-        this.tileEntity = world.getTileEntity(pos);
-        this.playerEntity = playerEntity;
-        this.playerInvetory = new InvWrapper(playerInventory);
+        this.TILEENTITY = world.getTileEntity(pos);
+        this.PLAYERENTITY = playerEntity;
+        this.PLAYERINVENTORY = new InvWrapper(playerInventory);
         layoutPlayerInventorySlots(8,86);
 
-        if(tileEntity != null){
-            tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
+        if(TILEENTITY != null){
+            TILEENTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
                 addSlot(new SlotItemHandler(h,0,60,31));
                 addSlot(new SlotItemHandler(h,1,80,31));
                 addSlot(new SlotItemHandler(h,2,100,31));
@@ -49,27 +49,27 @@ public class SieveContainer extends Container {
 
     public int GetLiquidAmount()
     {
-        if (tileEntity instanceof IMyLiquidTankTIle){
-            return ((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount();
+        if (TILEENTITY instanceof IMyLiquidTankTIle){
+            return ((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluidAmount();
         }
         return -1;
     }
     public long GetEnergyAmount(){
-        if (tileEntity instanceof IMYEnergyStorageTile){
-            return ((IMYEnergyStorageTile) tileEntity).GetEnergyStorage().GetAsRF();
+        if (TILEENTITY instanceof IMYEnergyStorageTile){
+            return ((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().GetAsRF();
         }
         return -1;
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity player){
-        return  isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(),tileEntity.getPos()),
+        return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(),TILEENTITY.getPos()),
                 player, ModBlocks.GetSIEVE(GetTier()).get());
     }
     public Tiers GetTier()
     {
-        if(tileEntity instanceof SieveTileEntity){
-           return  ((SieveTileEntity) tileEntity).GetTier();
+        if(TILEENTITY instanceof SieveTileEntity){
+           return  ((SieveTileEntity) TILEENTITY).GetTier();
         }
         return Tiers.error;
     }
@@ -93,10 +93,10 @@ public class SieveContainer extends Container {
         return index;
     }
     private void layoutPlayerInventorySlots(int leftCol, int topRow) {
-        addSlotBox(playerInvetory, 9, leftCol, topRow, 9, 18, 3, 18);
+        addSlotBox(PLAYERINVENTORY, 9, leftCol, topRow, 9, 18, 3, 18);
 
         topRow += 58;
-        addSlotRange(playerInvetory, 0, leftCol, topRow, 9, 18);
+        addSlotRange(PLAYERINVENTORY, 0, leftCol, topRow, 9, 18);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -146,7 +146,7 @@ public class SieveContainer extends Container {
         } else {
             sourceSlot.onSlotChanged();
         }
-        sourceSlot.onTake(playerEntity, sourceStack);
+        sourceSlot.onTake(PLAYERENTITY, sourceStack);
         return copyOfSourceStack;
     }
     //endregion
