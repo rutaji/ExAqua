@@ -23,21 +23,22 @@ public class ModItems {
 
     public static final RegistryObject<Item> HANDSIEVE = ITEMS.register("handsieve",()->new HandSieve(new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP).maxStackSize(1)));
     public static final RegistryObject<Item> FROGIUM = ITEMS.register("frogium",()->new Item(new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
+    public static final RegistryObject<Item> FROGIUM_DUST = ITEMS.register("frogium_dust",()->new Item(new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
 
     public static final RegistryObject<Item> FROGIUM_BOOTS = ITEMS.register("frogium_boots",
-            () -> new ArmorItem(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.FEET,
+            () -> new FrogiumBoots(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.FEET,
                     new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
 
     public static final RegistryObject<Item> FROGIUM_CHESTPLATE = ITEMS.register("frogium_chestplate",
-            () -> new ArmorItem(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.CHEST,
+            () -> new FrogiumChestplate(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.CHEST,
                     new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
 
     public static final RegistryObject<Item> FROGIUM_LEEGINS = ITEMS.register("frogium_leggins",
-            () -> new ArmorItem(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.LEGS,
+            () -> new FrogiumLeggins(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.LEGS,
                     new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
 
     public static final RegistryObject<Item> FROGIUM_HELMET = ITEMS.register("frogium_helmet",
-            () -> new ArmorItem(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.HEAD,
+            () -> new FrogiumHelmet(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.HEAD,
                     new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
 
 
