@@ -5,7 +5,6 @@ import com.rutaji.exaqua.item.ModItems;
 import com.rutaji.exaqua.others.CustomItemGroup;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.OreBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -30,7 +29,7 @@ public class ModBlocks {
     private static <T extends Block> void registerBlockItem(String name,RegistryObject<T> block){
         ModItems.ITEMS.register(name,()-> new BlockItem(block.get(),new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
     }
-    public static RegistryObject<Block> GetSIEVE(Tiers t)
+    public static RegistryObject<Block> GetSIEVE(SieveTiers t)
     {
         switch (t)
         {
@@ -47,14 +46,12 @@ public class ModBlocks {
         BLOCKS.register(eventBus);
     }
     //endregion
-    //public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON)));
-    //public static final RegistryObject<Block> SIEVE =registerBlock("sieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.iron));
-    public static final RegistryObject<Block> IRONSIEVE =registerBlock("ironsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.iron));
-    public static final RegistryObject<Block> GOLDSIEVE =registerBlock("goldsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.gold));
-    public static final RegistryObject<Block> FROGIUMSIEVE =registerBlock("frogiumsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.frogium));
-    public static final RegistryObject<Block> DIAMONDSIEVE =registerBlock("diamondsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON),Tiers.diamond));
+    public static final RegistryObject<Block> IRONSIEVE =registerBlock("ironsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON), SieveTiers.iron));
+    public static final RegistryObject<Block> GOLDSIEVE =registerBlock("goldsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON), SieveTiers.gold));
+    public static final RegistryObject<Block> FROGIUMSIEVE =registerBlock("frogiumsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON), SieveTiers.frogium));
+    public static final RegistryObject<Block> DIAMONDSIEVE =registerBlock("diamondsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON), SieveTiers.diamond));
     public static final RegistryObject<Block> SQUEEZER =registerBlock("squeezer",() -> new squeezerBlock(AbstractBlock.Properties.create(Material.IRON)));
-    public static final RegistryObject<Block> F_ORE_END =registerBlock("frogium_ore_end",() -> new OreBlock(AbstractBlock.Properties.create(Material.ROCK)));
-    public static final RegistryObject<Block> F_ORE_STONE =registerBlock("frogium_ore_stone",() -> new Block(AbstractBlock.Properties.create(Material.ROCK)));
+    public static final RegistryObject<Block> F_ORE_END =registerBlock("frogium_ore_end",() -> new Block(AbstractBlock.Properties.create(Material.ROCK)));
+    public static final RegistryObject<Block> F_ORE_STONE =registerBlock("frogium_ore_stone",() -> new FrogiumOre(AbstractBlock.Properties.create(Material.ROCK)));
 
 }

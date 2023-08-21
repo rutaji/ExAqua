@@ -1,6 +1,6 @@
 package com.rutaji.exaqua.block;
 
-public enum Tiers {
+public enum SieveTiers {
     error,
     iron,
     gold,

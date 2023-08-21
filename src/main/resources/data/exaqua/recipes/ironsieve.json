@@ -7,11 +7,11 @@
     },
   "outputs": [
     {
-      "item": {"item": "minecraft:raw_iron"},
+      "item": {"item": "minecraft:iron_ore"},
       "chance": 3
     },
     {
-      "item": { "item": "minecraft:raw_gold"},
+      "item": { "item": "minecraft:gold_ore"},
       "chance": 1
     },
     {
@@ -20,5 +20,6 @@
     }
   ],
   "time": 40,
-  "rf": 10
+  "rf": 10,
+  "tier":"iron"
 }

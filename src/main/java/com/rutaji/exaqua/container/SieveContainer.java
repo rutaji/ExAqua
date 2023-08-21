@@ -1,7 +1,7 @@
 package com.rutaji.exaqua.container;
 
 import com.rutaji.exaqua.block.ModBlocks;
-import com.rutaji.exaqua.block.Tiers;
+import com.rutaji.exaqua.block.SieveTiers;
 import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import com.rutaji.exaqua.tileentity.SieveTileEntity;
@@ -66,12 +66,12 @@ public class SieveContainer extends Container {
         return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(),TILEENTITY.getPos()),
                 player, ModBlocks.GetSIEVE(GetTier()).get());
     }
-    public Tiers GetTier()
+    public SieveTiers GetTier()
     {
         if(TILEENTITY instanceof SieveTileEntity){
            return  ((SieveTileEntity) TILEENTITY).GetTier();
         }
-        return Tiers.error;
+        return SieveTiers.error;
     }
     //region player inventory
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

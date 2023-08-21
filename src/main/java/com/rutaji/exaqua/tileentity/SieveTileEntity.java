@@ -2,7 +2,7 @@ package com.rutaji.exaqua.tileentity;
 
 import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
-import com.rutaji.exaqua.block.Tiers;
+import com.rutaji.exaqua.block.SieveTiers;
 import com.rutaji.exaqua.data.recipes.InventoryWithFluids;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SieveRecipie;
@@ -105,8 +105,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
         }
     }
     //region Tiers
-    public Tiers GetTier(){return  tier;}
-    public Tiers tier;
+    public SieveTiers GetTier(){return  tier;}
+    public SieveTiers tier;
     //endregion
     //region crafting
     private boolean crafting = false;
@@ -126,6 +126,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
             if(crafting == false) {
                 InventoryWithFluids inv = new InventoryWithFluids();
                 inv.setFluidStack(Tank.FluidStored);
+                inv.setTier(GetTier());
 
                 Optional<SieveRecipie> recipe = world.getRecipeManager()
                         .getRecipe(ModRecipeTypes.SIEVE_RECIPE, inv, world);

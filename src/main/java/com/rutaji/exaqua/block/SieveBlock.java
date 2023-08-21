@@ -1,11 +1,9 @@
 package com.rutaji.exaqua.block;
 
 import com.rutaji.exaqua.container.SieveContainer;
-import com.rutaji.exaqua.container.SqueezerContainer;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.tileentity.SieveTileEntity;
-import com.rutaji.exaqua.tileentity.SqueezerTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
@@ -36,15 +34,15 @@ import javax.annotation.Nullable;
 public class SieveBlock extends Block implements ILiquidContainer, IBucketPickupHandler {
     //region Constructor
 
-    public SieveBlock(Properties properties,Tiers t) {
+    public SieveBlock(Properties properties, SieveTiers t) {
         super(properties);
         Tier = t;
 
     }
     //endregion
     //region tier
-    private final Tiers Tier;
-    public Tiers GetTier(){return  Tier;}
+    private final SieveTiers Tier;
+    public SieveTiers GetTier(){return  Tier;}
     //endregion
 
     @Override

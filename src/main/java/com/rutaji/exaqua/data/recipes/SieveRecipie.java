@@ -2,6 +2,7 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.rutaji.exaqua.block.SieveTiers;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -23,7 +24,7 @@ public class SieveRecipie implements ISieveRecipie {
 
     private final ResourceLocation ID;
 
-    public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output,int time,double rf) {
+    public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output,int time,double rf,SieveTiers tier) {
         this.ID = id;
         this.INPUTFLUID = input;
         this.RESULT = output;
@@ -37,6 +38,7 @@ public class SieveRecipie implements ISieveRecipie {
             r.chance = sum;
         }
         this.SUM = sum;
+        this.TIER = tier;
     }
     private static final Random RANDOM = new Random();
     public final List<RoolItem> RESULT;
@@ -44,6 +46,7 @@ public class SieveRecipie implements ISieveRecipie {
     public final int TIME;
     public final double RF;
     public final int SUM;
+    public final SieveTiers TIER;
 
 
     @Override
@@ -51,7 +54,7 @@ public class SieveRecipie implements ISieveRecipie {
         if(inv instanceof InventoryWithFluids)
         {
             FluidStack f = ((InventoryWithFluids) inv).getFluid();
-            return f.isFluidEqual(INPUTFLUID) && f.getAmount() >= INPUTFLUID.getAmount();
+            return f.isFluidEqual(INPUTFLUID) && f.getAmount() >= INPUTFLUID.getAmount() && TIER.equals(((InventoryWithFluids) inv).GetTier());
         }
         return false;
     }
@@ -124,7 +127,9 @@ public class SieveRecipie implements ISieveRecipie {
             }
             int time = json.get("time").getAsInt();
             double rf = json.get("rf").getAsDouble();
-            return new SieveRecipie(recipeId, Input,Outputs,time,rf);
+            String tier = json.get("tier").getAsString();
+
+            return new SieveRecipie(recipeId, Input,Outputs,time,rf,SieveTiers.valueOf(tier));
         }
 
         @Nullable
@@ -141,7 +146,8 @@ public class SieveRecipie implements ISieveRecipie {
             }
             int time = buffer.readInt();
             double rf = buffer.readDouble();
-            return new SieveRecipie(recipeId, Input,Results,time,rf);
+            SieveTiers tier = buffer.readEnumValue(SieveTiers.class);
+            return new SieveRecipie(recipeId, Input,Results,time,rf,tier);
         }
 
         @Override
@@ -158,6 +164,7 @@ public class SieveRecipie implements ISieveRecipie {
             }
             buffer.writeInt(recipe.TIME);
             buffer.writeDouble(recipe.RF);
+            buffer.writeEnumValue(recipe.TIER);
 
 
         }
