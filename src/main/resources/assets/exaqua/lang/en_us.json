@@ -2,5 +2,6 @@
   "item.exaqua.handsieve": "Hand Sieve",
   "block.exaqua.sieve": "Sieve",
   "block.exaqua.squeezer": "squeezer",
-  "screen.exaqua.squeezercontainer": "squeezer",
+  "screen.exaqua.squeezercontainer": "",
+  "screen.exaqua.sievecontainer": ""
 }

@@ -46,12 +46,12 @@ public class ModBlocks {
         BLOCKS.register(eventBus);
     }
     //endregion
-    public static final RegistryObject<Block> IRONSIEVE =registerBlock("ironsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON), SieveTiers.iron));
-    public static final RegistryObject<Block> GOLDSIEVE =registerBlock("goldsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON), SieveTiers.gold));
-    public static final RegistryObject<Block> FROGIUMSIEVE =registerBlock("frogiumsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON), SieveTiers.frogium));
-    public static final RegistryObject<Block> DIAMONDSIEVE =registerBlock("diamondsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON), SieveTiers.diamond));
-    public static final RegistryObject<Block> SQUEEZER =registerBlock("squeezer",() -> new squeezerBlock(AbstractBlock.Properties.create(Material.IRON)));
-    public static final RegistryObject<Block> F_ORE_END =registerBlock("frogium_ore_end",() -> new Block(AbstractBlock.Properties.create(Material.ROCK)));
-    public static final RegistryObject<Block> F_ORE_STONE =registerBlock("frogium_ore_stone",() -> new FrogiumOre(AbstractBlock.Properties.create(Material.ROCK)));
+    public static final RegistryObject<Block> IRONSIEVE =registerBlock("ironsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6), SieveTiers.iron));
+    public static final RegistryObject<Block> GOLDSIEVE =registerBlock("goldsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6), SieveTiers.gold));
+    public static final RegistryObject<Block> FROGIUMSIEVE =registerBlock("frogiumsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6), SieveTiers.frogium));
+    public static final RegistryObject<Block> DIAMONDSIEVE =registerBlock("diamondsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6), SieveTiers.diamond));
+    public static final RegistryObject<Block> SQUEEZER =registerBlock("squeezer",() -> new squeezerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6)));
+    public static final RegistryObject<Block> F_ORE_END =registerBlock("frogium_ore_end",() -> new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(4)));
+    public static final RegistryObject<Block> F_ORE_STONE =registerBlock("frogium_ore_stone",() -> new FrogiumOre(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2)));
 
 }

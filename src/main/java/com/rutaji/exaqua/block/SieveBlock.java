@@ -4,6 +4,7 @@ import com.rutaji.exaqua.container.SieveContainer;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.tileentity.SieveTileEntity;
+import mekanism.api.math.FloatingLong;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
@@ -48,10 +49,13 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
                                              PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        TileEntity tileEntity = worldIn.getTileEntity(pos);//todo move into if after debuging
         if(!worldIn.isRemote()) {
-            TileEntity tileEntity = worldIn.getTileEntity(pos);
+
+
 
             if(tileEntity instanceof SieveTileEntity) {
+
                 INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
 
                 NetworkHooks.openGui(((ServerPlayerEntity)player), containerProvider, tileEntity.getPos());

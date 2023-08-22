@@ -1,5 +1,6 @@
 package com.rutaji.exaqua.integration.jei;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
@@ -9,21 +10,24 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 
-public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie> {
+public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie>{
     public final static ResourceLocation UID = new ResourceLocation(ExAqua.MOD_ID,"squeezer");
-    public final static ResourceLocation TEXTURE = new ResourceLocation(ExAqua.MOD_ID,"gui/squeezer.png");
+    public final static ResourceLocation TEXTURE = new ResourceLocation(ExAqua.MOD_ID,"gui/squeezerjei.png");
 
     private final IDrawable BACKGROUND;
     private final  IDrawable ICON;
+    private final IGuiHelper HELPER;
 
     public SqueezerRecipeCategory(IGuiHelper helper) {
         this.BACKGROUND = helper.createDrawable(TEXTURE,0,0,176,85);
         this.ICON = helper.createDrawableIngredient(new ItemStack(ModBlocks.SQUEEZER.get()));
-
+        HELPER = helper;
     }
 
 
@@ -54,17 +58,30 @@ public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie> 
 
     @Override
     public void setIngredients(SqueezerRecipie recipe, IIngredients ingredients) {
-        ingredients.setInputIngredients(recipe.getIngredients());//
-        net.minecraft.util.NonNullList<Ingredient> t = recipe.getIngredients();
-        ingredients.setOutput(VanillaTypes.FLUID,recipe.getRealOutput());
+        ingredients.setInputIngredients(recipe.getIngredients());
+        FluidStack f = recipe.getRealOutput();
+        f.setAmount(1000);
+        ingredients.setOutput(VanillaTypes.FLUID,f);
+
+
     }
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, SqueezerRecipie recipe, IIngredients ingredients) {
-        recipeLayout.getItemStacks().init(0, true, 79, 30);
-        recipeLayout.getFluidStacks().init(0,false,79,55);
+        recipeLayout.getItemStacks().init(0, true, 80, 29);
+        recipeLayout.getFluidStacks().init(0,false,80,55);
+
+
         recipeLayout.getItemStacks().set(ingredients);
         recipeLayout.getFluidStacks().set(ingredients);
 
     }
+    @Override
+    public void draw(SqueezerRecipie recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    {
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.getRealOutput().getAmount() + " mB") , 97 , 64, 0xFFFFFF);
+    }
+
+
+
 }

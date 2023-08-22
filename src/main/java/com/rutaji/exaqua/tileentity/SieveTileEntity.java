@@ -17,6 +17,8 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -49,17 +51,39 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     private final ItemStackHandler ITEM_STACK_HANDLER = createHandler();
     private final LazyOptional<IItemHandler> HANDLER = LazyOptional.of(() -> ITEM_STACK_HANDLER);
 
+
+    //endregion
+    //region nbt
     @Override
     public void read(BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
+        tier = SieveTiers.valueOf(nbt.getString("tier"));
+        Tank.deserializeNBT(nbt);
+        GetEnergyStorage().deserializeNBT(nbt);
         super.read(state,nbt);
     }
     @Override
     public CompoundNBT write( CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
+        nbt.putString("tier",tier.name());
+        nbt = Tank.serializeNBT(nbt);
+        nbt = GetEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
+    @Override //server send on chung load
+    public CompoundNBT getUpdateTag(){
+        CompoundNBT nbt = new CompoundNBT();
+        return write(nbt);
+    }
+    //clients receives getUpdateTag
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT nbt){
+        read(state,nbt);
+    }
+
     //endregion
+
+
     //region Constructor
     public SieveTileEntity(TileEntityType<?> p_i48289_1_) {
         super(p_i48289_1_);
@@ -78,7 +102,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
     public void EnergyChangePacket()
     {
-        if(!world.isRemote) {
+        if(world != null && !world.isRemote) {
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergy(), pos));
         }
     }
@@ -100,13 +124,13 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     @Override
     public void tick() {
         if (!world.isRemote) {
-            // Your machine's logic here. Consume energy based on its functionality.
+
             craft();
         }
     }
     //region Tiers
     public SieveTiers GetTier(){return  tier;}
-    public SieveTiers tier;
+    public SieveTiers tier = SieveTiers.error;
     //endregion
     //region crafting
     private boolean crafting = false;
@@ -140,6 +164,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
                         craftingTimeDone = iRecipe.TIME;
                         crafting = true;
                         rf=iRecipe.RF;
+                        markDirty();
                     }
                 });
             }
@@ -163,6 +188,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
             else{
                 if(this.GetEnergyStorage().DrainRF(rf)) {
                     craftingTime++;
+                    markDirty();
                 }
             }
         }
@@ -196,12 +222,15 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     @Override
     public void TankChange()
     {
-        if(!world.isRemote) {
+        if(world != null && !world.isRemote) {
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
         }
 
     }
     //endregion
+    //region save/load
+
+
 
 
 }

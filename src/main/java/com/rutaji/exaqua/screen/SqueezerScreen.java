@@ -24,9 +24,13 @@ public class SqueezerScreen extends ContainerScreen<SqueezerContainer> {
         int i = this.guiLeft;
         int j = this.guiTop;
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
-        drawString(matrixStack,font, String.valueOf(container.GetAmount()), i +20, j+50,0);
+        DrawLiquid(i,j,matrixStack);
 
-
+    }
+    private void DrawLiquid(int i,int j,MatrixStack matrixStack){
+        String liguid = container.GetLiquid();
+        drawCenteredString(matrixStack,font, liguid, i +87, j+10,0);
+        if(!liguid.equals("Empty")) {drawCenteredString(matrixStack,font,String.valueOf(container.GetLiquidAmount()) +" mB" , i +87, j+20,0);}
 
     }
     @Override

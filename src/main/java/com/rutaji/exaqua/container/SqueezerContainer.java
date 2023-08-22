@@ -30,18 +30,26 @@ public class SqueezerContainer extends Container {
 
         if(TILEEMTITY != null){
             TILEEMTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new SlotItemHandler(h,0,80,31));
+                addSlot(new SlotItemHandler(h,0,80,43));
 
             });
         }
 
     }
-    public int GetAmount()
+    public int GetLiquidAmount()
     {
         if (TILEEMTITY instanceof IMyLiquidTankTIle){
             return ((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluidAmount();
         }
         return -1;
+    }
+    public String GetLiquid()
+    {
+        if (TILEEMTITY instanceof IMyLiquidTankTIle){
+            if(((IMyLiquidTankTIle) TILEEMTITY).GetTank().isEmpty()){return "Empty";}
+            return ((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluid().getFluid().getRegistryName().toString();
+        }
+        return "Doesnt have a container";
     }
 
     @Override

@@ -53,16 +53,30 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
             }
         };
     }
+    //endregion
+    //region nbt
     @Override
     public void read(BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
+        Tank.deserializeNBT(nbt);
         super.read(state,nbt);
     }
 
     @Override
     public CompoundNBT write( CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
+        nbt = Tank.serializeNBT(nbt);
         return super.write(nbt);
+    }
+    @Override //server send on chung load
+    public CompoundNBT getUpdateTag(){
+        CompoundNBT nbt = new CompoundNBT();
+        return write(nbt);
+    }
+    //clients receives getUpdateTag
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT nbt){
+        read(state,nbt);
     }
     //endregion
 
@@ -106,7 +120,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
     @Override
     public void TankChange()
     {
-        if(!world.isRemote) {
+        if(world != null &&!world.isRemote) {
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
         }
 

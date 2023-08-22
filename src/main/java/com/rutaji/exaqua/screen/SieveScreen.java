@@ -24,12 +24,22 @@ public class SieveScreen extends ContainerScreen<SieveContainer> {
         int i = this.guiLeft;
         int j = this.guiTop;
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
-        drawString(matrixStack,font, String.valueOf(container.GetLiquidAmount()), i +20, j+50,0);
-        drawString(matrixStack,font, String.valueOf(container.GetEnergyAmount()), i +20, j+20,0);
 
 
+        DrawLiquid(i,j,matrixStack);
+        drawRF(i,j,matrixStack);
 
     }
+    private void DrawLiquid(int i,int j,MatrixStack matrixStack){
+        String liguid = container.GetLiquid();
+        drawCenteredString(matrixStack,font, liguid, i +87, j+10,0);
+        if(!liguid.equals("Empty")) {drawCenteredString(matrixStack,font,String.valueOf(container.GetLiquidAmount()) +" mB" , i +87, j+20,0);}
+
+    }
+    private void drawRF(int i,int j,MatrixStack matrixStack){
+        drawCenteredString(matrixStack,font,container.GetEnergyAmount()  + " RF",i+20,j+40,0);
+    }
+
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
