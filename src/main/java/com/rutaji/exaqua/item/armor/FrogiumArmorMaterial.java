@@ -1,6 +1,7 @@
-package com.rutaji.exaqua.item;
+package com.rutaji.exaqua.item.armor;
 
 import com.rutaji.exaqua.ExAqua;
+import com.rutaji.exaqua.item.ModItems;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.crafting.Ingredient;

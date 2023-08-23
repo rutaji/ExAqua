@@ -1,4 +1,4 @@
-package com.rutaji.exaqua.item;
+package com.rutaji.exaqua.item.armor;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;

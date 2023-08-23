@@ -48,12 +48,10 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
-                                             PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);//todo move into if after debuging
+                                             PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    {
         if(!worldIn.isRemote()) {
-
-
-
+            TileEntity tileEntity = worldIn.getTileEntity(pos);
             if(tileEntity instanceof SieveTileEntity) {
 
                 INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);

@@ -1,9 +1,9 @@
 package com.rutaji.exaqua.item;
 
 import com.rutaji.exaqua.ExAqua;
+import com.rutaji.exaqua.item.armor.*;
 import com.rutaji.exaqua.others.CustomItemGroup;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;

@@ -1,7 +1,19 @@
 {
   "item.exaqua.handsieve": "Hand Sieve",
-  "block.exaqua.sieve": "Sieve",
-  "block.exaqua.squeezer": "squeezer",
+  "block.exaqua.squeezer": "Squeezer",
   "screen.exaqua.squeezercontainer": "",
-  "screen.exaqua.sievecontainer": ""
+  "screen.exaqua.sievecontainer": "",
+  "item.exaqua.frogium_dust": "Frogium dust",
+  "item.exaqua.frogium": "Frogium ingot",
+  "item.exaqua.frogium_boots": "Frogium boots",
+  "item.exaqua.frogium_helmet": "Frogium helmet",
+  "item.exaqua.frogium_leggins": "Frogium leggins",
+  "item.exaqua.frogium_chestplate": "Frogium chestplate",
+  "block.exaqua.frogium_ore_end": "End frogium ore",
+  "block.exaqua.frogium_ore_stone": "Frogium ore",
+  "block.exaqua.ironsieve": "Iron Sieve",
+  "block.exaqua.goldsieve": "Gold Sieve",
+  "block.exaqua.frogiumsieve": "Frogium Sieve",
+  "block.exaqua.diamondsieve": "Diamond Sieve",
+  "block.exaqua.frogium_block": "Frogium block"
 }

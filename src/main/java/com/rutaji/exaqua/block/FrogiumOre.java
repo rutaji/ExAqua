@@ -22,7 +22,8 @@ public class FrogiumOre extends Block {
     public FrogiumOre(Properties properties) {
         super(properties);
     }
-    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
+    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state)
+    {
         worldIn.setBlockState(pos, Blocks.WATER.getDefaultState(),1);
     }
 
