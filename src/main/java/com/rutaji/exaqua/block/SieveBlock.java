@@ -4,7 +4,6 @@ import com.rutaji.exaqua.container.SieveContainer;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.tileentity.SieveTileEntity;
-import mekanism.api.math.FloatingLong;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
@@ -22,6 +21,10 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -31,6 +34,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 public class SieveBlock extends Block implements ILiquidContainer, IBucketPickupHandler {
     //region Constructor
@@ -39,6 +43,24 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
         super(properties);
         Tier = t;
 
+    }
+    //endregion
+    //region model
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.makeCuboidShape(0, 0, 0, 2, 10, 2),
+            Block.makeCuboidShape(14, 0, 0, 16, 10, 2),
+            Block.makeCuboidShape(14, 0, 14, 16, 10, 16),
+            Block.makeCuboidShape(0, 0, 14, 2, 10, 16),
+            Block.makeCuboidShape(1, 10, 1, 15, 15, 15),
+            Block.makeCuboidShape(14, 10, 0, 16, 16, 2),
+            Block.makeCuboidShape(0, 10, 0, 2, 16, 2),
+            Block.makeCuboidShape(0, 10, 14, 2, 16, 16),
+            Block.makeCuboidShape(14, 10, 14, 16, 16, 16)
+    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
+    @Override
+    public VoxelShape getShape(BlockState blockState, IBlockReader worlIn, BlockPos pos, ISelectionContext context)
+    {
+        return SHAPE;
     }
     //endregion
     //region tier

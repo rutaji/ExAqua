@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 
-public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
+public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity {
 
     //region Constructor
     public SqueezerTile(TileEntityType<?> p_i48289_1_) {
@@ -90,6 +91,20 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
         }
         return super.getCapability(cap,side);
     }
+    private int Tocraft = 0;
+    @Override
+    public void tick()
+    {
+            if(Tocraft > 1)
+            {
+                craft();
+                Tocraft--;
+            }
+    }
+    public void squeez()
+    {
+        Tocraft += 5;
+    }
     public void craft() {
 
         if(!world.isRemote()) {
@@ -132,5 +147,9 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
     public MyLiquidTank GetTank() {
         return this.Tank;
     }
+
+
+
+
     //endregion
 }

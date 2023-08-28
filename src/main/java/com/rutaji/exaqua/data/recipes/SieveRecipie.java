@@ -39,7 +39,10 @@ public class SieveRecipie implements ISieveRecipie {
         }
         this.SUM = sum;
         this.TIER = tier;
+        Chances = CountChances();
     }
+    private final List<Double> Chances;
+    public List<Double> GetChances(){return  Chances;}
     private static final Random RANDOM = new Random();
     public final List<RoolItem> RESULT;
     public final FluidStack INPUTFLUID;
@@ -49,6 +52,9 @@ public class SieveRecipie implements ISieveRecipie {
     public final SieveTiers TIER;
 
 
+    public int GetSize(){
+        return  RESULT.size();
+    }
     @Override
     public boolean matches(IInventory inv, World worldIn) {
         if(inv instanceof InventoryWithFluids)
@@ -67,6 +73,18 @@ public class SieveRecipie implements ISieveRecipie {
     @Override // does not provide anything because this recipe doesn´t have clear output
     public ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
+    }
+
+    public List<Double> CountChances()
+    {
+        List<Double> result = new ArrayList();
+        int i =0;
+        for (RoolItem r : RESULT)
+        {
+            result.add(((double)(r.chance - i)/SUM)*100);
+            i = r.chance;
+        }
+        return result;
     }
     public List<ItemStack> GetAllPossibleOutputs() {
         List<ItemStack> results  = new ArrayList<ItemStack>();

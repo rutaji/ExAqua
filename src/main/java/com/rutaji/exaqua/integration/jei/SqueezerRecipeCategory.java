@@ -79,7 +79,7 @@ public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie>{
     @Override
     public void draw(SqueezerRecipie recipe, MatrixStack matrixStack, double mouseX, double mouseY)
     {
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.getRealOutput().getAmount() + " mB") , 97 , 64, 0xFFFFFF);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.getRealOutput().getAmount() + " mB") , 97 , 64, 0x111111);
     }
 
 

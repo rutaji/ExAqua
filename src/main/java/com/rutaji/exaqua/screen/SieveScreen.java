@@ -37,7 +37,7 @@ public class SieveScreen extends ContainerScreen<SieveContainer> {
 
     }
     private void drawRF(int i,int j,MatrixStack matrixStack){
-        drawCenteredString(matrixStack,font,container.GetEnergyAmount()  + " RF",i+20,j+40,0);
+        drawCenteredString(matrixStack,font,container.GetEnergyAmount()  + " RF",i+24,j+40,0);
     }
 
     @Override

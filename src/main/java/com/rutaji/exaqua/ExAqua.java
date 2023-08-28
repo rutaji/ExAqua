@@ -14,6 +14,8 @@ import com.rutaji.exaqua.util.ModItemModelProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -76,6 +78,7 @@ public class ExAqua
         ModItemModelProperties.makeHandSieve(ModItems.HANDSIEVE.get());
         ScreenManager.registerFactory(ModContainers.SQUEEZERCONTAINER.get(), SqueezerScreen::new);
         ScreenManager.registerFactory(ModContainers.SIEVECONTAINER.get(), SieveScreen::new);
+        RenderTypeLookup.setRenderLayer(ModBlocks.DIAMONDSIEVE.get(),RenderType.getCutout());
 
     }
 
