@@ -24,6 +24,9 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<SieveTileEntity>> SIEVERTILE =
             TILE_ENTITIES.register("sieve", () -> TileEntityType.Builder.create(
                     SieveTileEntity::new, ModBlocks.IRONSIEVE.get(),ModBlocks.GOLDSIEVE.get()).build(null));
+    public static RegistryObject<TileEntityType<CauldronEntity>> CAULDRON_ENTITY =
+            TILE_ENTITIES.register("cauldron", () -> TileEntityType.Builder.create(
+                    CauldronEntity::new,ModBlocks.CAULDRON.get()).build(null));
 
 
 

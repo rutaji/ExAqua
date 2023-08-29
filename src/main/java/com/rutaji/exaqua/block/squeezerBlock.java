@@ -66,6 +66,7 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
         super.onEntityCollision(state,worldIn,pos,entity);
 
     }
+    //region model
     public void changeBlockModel(World world, BlockPos pos, boolean value) {
         world.setBlockState(pos, world.getBlockState(pos).with(SQUEEZED, value));
     }
@@ -108,6 +109,7 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
         }
         return SHAPE;
     }
+    //endregion
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {

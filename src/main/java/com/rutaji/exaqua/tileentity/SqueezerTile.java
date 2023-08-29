@@ -95,7 +95,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     @Override
     public void tick()
     {
-            if(Tocraft > 1)
+            if(Tocraft > 0)
             {
                 craft();
                 Tocraft--;

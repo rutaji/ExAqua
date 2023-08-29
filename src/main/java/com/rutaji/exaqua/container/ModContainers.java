@@ -28,6 +28,13 @@ public class ModContainers {
                 World world = inv.player.getEntityWorld();
                 return new SieveContainer(windowId, world, pos, inv, inv.player);
             })));
+    public static final RegistryObject<ContainerType<CauldronContainer>> CAULDRON_CONTAINER
+            = CONTAINERS.register("cauldroncontainer",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> {
+                BlockPos pos = data.readBlockPos();
+                World world = inv.player.getEntityWorld();
+                return new CauldronContainer(windowId, world, pos, inv, inv.player);
+            })));
 
 
     public static void register(IEventBus eventBus) {
