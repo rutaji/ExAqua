@@ -4,8 +4,8 @@ import com.rutaji.exaqua.block.SieveTiers;
 import net.minecraft.inventory.Inventory;
 import net.minecraftforge.fluids.FluidStack;
 
-public class InventoryWithFluids extends Inventory {
-    public InventoryWithFluids(){
+public class InventorySieve extends Inventory {
+    public InventorySieve(){
         super(1);
     }
     //region fluidstack

@@ -51,9 +51,9 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        if(inv instanceof InventoryWithFluids)
+        if(inv instanceof InventorySieve)
         {
-            FluidStack f = ((InventoryWithFluids) inv).getFluid();
+            FluidStack f = ((InventorySieve) inv).getFluid();
             return f.getFluid() == INPUTFLUID;
         }
         return false;

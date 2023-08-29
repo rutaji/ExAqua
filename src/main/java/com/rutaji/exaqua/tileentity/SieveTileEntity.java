@@ -3,7 +3,7 @@ package com.rutaji.exaqua.tileentity;
 import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
 import com.rutaji.exaqua.block.SieveTiers;
-import com.rutaji.exaqua.data.recipes.InventoryWithFluids;
+import com.rutaji.exaqua.data.recipes.InventorySieve;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SieveRecipie;
 import com.rutaji.exaqua.networking.MyEnergyPacket;
@@ -17,8 +17,6 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -148,7 +146,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
                 return;
             }
             if(crafting == false) {
-                InventoryWithFluids inv = new InventoryWithFluids();
+                InventorySieve inv = new InventorySieve();
                 inv.setFluidStack(Tank.FluidStored);
                 inv.setTier(GetTier());
 
