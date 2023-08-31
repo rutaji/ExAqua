@@ -1,5 +1,6 @@
 package com.rutaji.exaqua;
 
+import com.rutaji.exaqua.Fluids.ModFluids;
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.container.ModContainers;
 import com.rutaji.exaqua.container.SieveContainer;
@@ -54,6 +55,7 @@ public class ExAqua
         ModTileEntities.register(eventBus);
         ModContainers.register(eventBus);
         ModRecipeTypes.register(eventBus);
+        ModFluids.register(eventBus);
 
         eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -77,10 +79,15 @@ public class ExAqua
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         ModItemModelProperties.makeHandSieve(ModItems.HANDSIEVE.get());
+
         ScreenManager.registerFactory(ModContainers.SQUEEZERCONTAINER.get(), SqueezerScreen::new);
         ScreenManager.registerFactory(ModContainers.SIEVECONTAINER.get(), SieveScreen::new);
         ScreenManager.registerFactory(ModContainers.CAULDRON_CONTAINER.get(), CauldronScreen::new);
         RenderTypeLookup.setRenderLayer(ModBlocks.DIAMONDSIEVE.get(),RenderType.getCutout());
+
+        RenderTypeLookup.setRenderLayer(ModFluids.MUD_BLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLUID.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLOWING.get(), RenderType.getTranslucent());
 
     }
 

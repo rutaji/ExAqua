@@ -1,9 +1,11 @@
 package com.rutaji.exaqua.item;
 
 import com.rutaji.exaqua.ExAqua;
+import com.rutaji.exaqua.Fluids.ModFluids;
 import com.rutaji.exaqua.item.armor.*;
 import com.rutaji.exaqua.others.CustomItemGroup;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -40,6 +42,9 @@ public class ModItems {
     public static final RegistryObject<Item> FROGIUM_HELMET = ITEMS.register("frogium_helmet",
             () -> new FrogiumHelmet(FrogiumArmorMaterial.FROGIUM, EquipmentSlotType.HEAD,
                     new Item.Properties().group(CustomItemGroup.EX_AQUA_GROUP)));
+    public static final RegistryObject<Item> MUD_BUCKET = ITEMS.register("mud_bucket",
+            () -> new BucketItem(()-> ModFluids.MUD_FLUID.get(),
+                    new Item.Properties().maxStackSize(1).group(CustomItemGroup.EX_AQUA_GROUP)));
 
 
 

@@ -1,0 +1,10 @@
+{
+  "type": "exaqua:cauldron",
+  "fluidi": "exaqua:mud_fluid",
+  "outputtype": "item",
+  "output": {"item": "exaqua:mud"},
+  "temp": "hot",
+  "amount": 500
+
+
+}

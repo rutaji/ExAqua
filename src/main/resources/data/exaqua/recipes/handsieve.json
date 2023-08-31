@@ -1,6 +1,6 @@
 {
   "type": "exaqua:handsieve",
-  "success": 30,
+  "success": 10,
   "fluid": "minecraft:water",
   "outputs": [
     {

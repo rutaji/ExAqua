@@ -16,5 +16,9 @@
   "block.exaqua.frogiumsieve": "Frogium Sieve",
   "block.exaqua.diamondsieve": "Diamond Sieve",
   "block.exaqua.frogium_block": "Frogium block",
-  "itemGroup.ExAquaModTab": "ExAqua"
+  "itemGroup.ExAquaModTab": "ExAqua",
+  "block.exaqua.mud": "Mud",
+  "block.exaqua.cauldron": "Crafting Cauldron",
+  "item.exaqua.mud_bucket": "Mud Bucket",
+  "fluid.exaqua.mud_fluid":"Liquid Mud"
 }

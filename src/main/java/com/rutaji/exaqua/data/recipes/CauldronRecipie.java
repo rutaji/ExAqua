@@ -3,6 +3,7 @@ package com.rutaji.exaqua.data.recipes;
 import com.google.gson.JsonObject;
 import com.rutaji.exaqua.others.CauldronTemperature;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -52,8 +53,8 @@ public class CauldronRecipie implements ICauldronRecipie {
     public boolean matches(IInventory inv, World worldIn) {
         if(inv instanceof InventoryCauldron)
         {
-            return  ((INPUT == null && ( ((InventoryCauldron) inv).getFluid() == null || ((InventoryCauldron) inv).getFluid() == OUTPUT ))||( ((InventoryCauldron) inv).amount >= AMOUNT &&(((InventoryCauldron) inv).getFluid().isEquivalentTo(INPUT)))) &&
-                    (INPUT_ITEM == null || (inv.getStackInSlot(0).isItemEqual(INPUT_ITEM) && inv.getStackInSlot(0).getCount() >= INPUT_ITEM.getCount())) &&
+            return  ((INPUT == Fluids.EMPTY && ( ((InventoryCauldron) inv).getFluid() == Fluids.EMPTY || ((InventoryCauldron) inv).getFluid() == OUTPUT ))||( ((InventoryCauldron) inv).amount >= AMOUNT &&(((InventoryCauldron) inv).getFluid().isEquivalentTo(INPUT)))) &&
+                    (INPUT_ITEM == ItemStack.EMPTY || (inv.getStackInSlot(0).isItemEqual(INPUT_ITEM) && inv.getStackInSlot(0).getCount() >= INPUT_ITEM.getCount())) &&
                     TEMP == ((InventoryCauldron) inv).getTemp() ;
         }
         return false;
@@ -99,8 +100,8 @@ public class CauldronRecipie implements ICauldronRecipie {
         @Override
         public CauldronRecipie read(ResourceLocation recipeId, JsonObject json) {
 
-            Fluid InputF = null;
-            ItemStack InputI = null;
+            Fluid InputF = Fluids.EMPTY;
+            ItemStack InputI = ItemStack.EMPTY;
 
             if(json.has("fluidi"))
             {
@@ -114,8 +115,8 @@ public class CauldronRecipie implements ICauldronRecipie {
 
 
 
-            Fluid outputF = null;
-            ItemStack OutputI = null;
+            Fluid outputF = Fluids.EMPTY;
+            ItemStack OutputI = ItemStack.EMPTY;
             String output = json.get("outputtype").getAsString();
             int amount = 0;
             switch (output)
@@ -125,8 +126,9 @@ public class CauldronRecipie implements ICauldronRecipie {
                     break;
                 case "item":
                     OutputI = ShapedRecipe.deserializeItem(json.get("output").getAsJsonObject());
-                    amount = json.get("amount").getAsInt();
+
             }
+            amount = json.get("amount").getAsInt();
             CauldronTemperature temp = CauldronTemperature.valueOf(json.get("temp").getAsString());
 
             return new CauldronRecipie(recipeId, InputF,InputI,outputF,OutputI,temp,amount);
@@ -135,17 +137,17 @@ public class CauldronRecipie implements ICauldronRecipie {
         @Nullable
         @Override
         public CauldronRecipie read(ResourceLocation recipeId, PacketBuffer buffer) {
-            Fluid InputF = null;
-            ItemStack InputI = null;
+            Fluid InputF;
+            ItemStack InputI;
 
             String inputf = buffer.readString();
-            if(!inputf.equals("null")){InputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(inputf));}
-            if(buffer.readBoolean()){InputI = buffer.readItemStack();}
+            InputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(inputf));
+            InputI = buffer.readItemStack();
 
 
 
-            Fluid outputF = null;
-            ItemStack OutputI = null;
+            Fluid outputF = Fluids.EMPTY;
+            ItemStack OutputI = ItemStack.EMPTY;
             int amount = 0;
             String output = buffer.readString();
             switch (output)
@@ -155,8 +157,9 @@ public class CauldronRecipie implements ICauldronRecipie {
                     break;
                 case "item":
                     OutputI = buffer.readItemStack();
-                    amount = buffer.readInt();
+
             }
+            amount = buffer.readInt();
             CauldronTemperature temp = buffer.readEnumValue(CauldronTemperature.class);
 
 
@@ -166,21 +169,15 @@ public class CauldronRecipie implements ICauldronRecipie {
         @Override
         public void write(PacketBuffer buffer, CauldronRecipie recipe) {
 
-           buffer.writeString(recipe.INPUT == null ? "null" : ForgeRegistries.FLUIDS.getKey(recipe.INPUT).toString());
+           buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.INPUT).toString());
 
-            if(recipe.INPUT_ITEM == null)
-            {
-                buffer.writeBoolean(false);
-            }
-            else
-            {
-                buffer.writeBoolean(true);
-                buffer.writeItemStack(recipe.INPUT_ITEM);
-            }
+
+           buffer.writeItemStack(recipe.INPUT_ITEM);
 
 
 
-           String output = recipe.OUTPUT != null ? "fluid" : "item";
+
+           String output = recipe.OUTPUT != Fluids.EMPTY ? "fluid" : "item";
            buffer.writeString(output);
             switch (output)
             {
@@ -189,8 +186,9 @@ public class CauldronRecipie implements ICauldronRecipie {
                     break;
                 case "item":
                     buffer.writeItemStack(recipe.OUTPUT_ITEM);
-                    buffer.writeInt(recipe.AMOUNT);
+
             }
+            buffer.writeInt(recipe.AMOUNT);
             buffer.writeEnumValue(recipe.TEMP);
 
         }

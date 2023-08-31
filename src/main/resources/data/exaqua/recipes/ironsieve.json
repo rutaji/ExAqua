@@ -3,7 +3,7 @@
   "input":
     {
       "fluid": "minecraft:water",
-      "amount": 50
+      "amount": 150
     },
   "outputs": [
     {
@@ -19,7 +19,7 @@
       "chance": 4
     }
   ],
-  "time": 40,
+  "time": 50,
   "rf": 10,
   "tier":"iron"
 }

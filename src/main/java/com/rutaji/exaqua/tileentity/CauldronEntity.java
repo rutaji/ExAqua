@@ -1,5 +1,6 @@
 package com.rutaji.exaqua.tileentity;
 
+import com.mojang.realmsclient.client.Request;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
 import com.rutaji.exaqua.data.recipes.CauldronRecipie;
 import com.rutaji.exaqua.data.recipes.InventoryCauldron;
@@ -110,52 +111,82 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     @Override
     public void tick() {
         craft();
+        if (world.isRainingAt(pos))
+        {
+           if( world.rand.nextInt(31) == 30)
+           {
+               Tank.fill(new FluidStack(Fluids.WATER,20), IFluidHandler.FluidAction.EXECUTE);
+           }
+        }
     }
+    //region crefting region
+    private final int  CraftCooldownMax = 50;
+    private int CraftCooldown = CraftCooldownMax;
+    private CauldronRecipie RecipieOnCooldown;
     private void craft()
     {
         if(!world.isRemote())
         {
-            InventoryCauldron inv = new InventoryCauldron();
-            for (int i = 0; i < ITEM_STACK_HANDLER.getSlots(); i++) {
-                inv.setInventorySlotContents(i, ITEM_STACK_HANDLER.getStackInSlot(i));
+            if ( RecipieOnCooldown == null)
+            {
+                InventoryCauldron inv = GetInventory();
+                Optional<CauldronRecipie> recipe = world.getRecipeManager()
+                        .getRecipe(ModRecipeTypes.CAULDRON_RECIPE, inv, world);
+                if(recipe.isPresent()){RecipieOnCooldown = recipe.get();CraftCooldown = CraftCooldownMax;}
+            } else if (CraftCooldown > 0 )
+            {
+                CraftCooldown--;
+            } else
+            //region crafting recipie
+            {
+                InventoryCauldron inv = GetInventory();
+                if(RecipieOnCooldown.matches(inv,world))
+                {
+                    if (RecipieOnCooldown.OUTPUT != null)//output is fluid
+                        {
+                            if (RecipieOnCooldown.INPUT == null) {
+                                if (Tank.IsFull()) return;
+                                Tank.fill(new FluidStack(RecipieOnCooldown.OUTPUT, RecipieOnCooldown.AMOUNT), IFluidHandler.FluidAction.EXECUTE);
+                            } else {
+                                Tank.setStack(new FluidStack(RecipieOnCooldown.OUTPUT, Tank.getFluidAmount()));
+                            }
+                            if (RecipieOnCooldown.INPUT_ITEM != null) {
+                                ITEM_STACK_HANDLER.extractItem(0, RecipieOnCooldown.INPUT_ITEM.getCount(), false);
+                            }
+
+                        } else if (RecipieOnCooldown.OUTPUT_ITEM != null) //output is item
+                        {
+                            if (RecipieOnCooldown.INPUT_ITEM != null) {
+                                ITEM_STACK_HANDLER.extractItem(0, RecipieOnCooldown.INPUT_ITEM.getCount(), false);
+                            }
+                            if (RecipieOnCooldown.INPUT != null) {
+                                Tank.drain(new FluidStack(RecipieOnCooldown.INPUT, RecipieOnCooldown.AMOUNT), IFluidHandler.FluidAction.EXECUTE);
+                            }
+                            ItemStack result = ITEM_STACK_HANDLER.insertItem(0, RecipieOnCooldown.OUTPUT_ITEM.copy(), false);
+                            if (result != ItemStack.EMPTY) {
+                                dispence(result);
+                            }
+
+                        }
+                    markDirty();
+                }
+                RecipieOnCooldown = null;
             }
-            inv.setFluid(Tank.getFluid().getFluid() == Fluids.EMPTY ? null:Tank.getFluid().getFluid());//todo rework null Empty !!!!
-            inv.setTemp(this.GetTemp());
-            inv.amount = Tank.getFluidAmount();
-
-            Optional<CauldronRecipie> recipe = world.getRecipeManager()
-                    .getRecipe(ModRecipeTypes.CAULDRON_RECIPE, inv, world);
-
-
-            recipe.ifPresent(iRecipe -> {
-                if(iRecipe.OUTPUT != null)//output is fluid
-                {
-                    if(iRecipe.OUTPUT == Tank.getFluid().getFluid() || Tank.isEmpty()) {
-                        if (Tank.IsFull()) return;
-                        Tank.fill(new FluidStack(iRecipe.OUTPUT, 50), IFluidHandler.FluidAction.EXECUTE);
-                    }
-                    else
-                    {
-                        Tank.setStack(new FluidStack(iRecipe.OUTPUT,Tank.getFluidAmount()));
-                    }
-                    if (iRecipe.INPUT_ITEM != null) {ITEM_STACK_HANDLER.extractItem(0,iRecipe.INPUT_ITEM.getCount(),false);}
-
-                }
-                else if (iRecipe.OUTPUT_ITEM != null) //output is item
-                {
-                    if (iRecipe.INPUT_ITEM != null) {ITEM_STACK_HANDLER.extractItem(0,iRecipe.INPUT_ITEM.getCount(),false);}
-                    if(iRecipe.INPUT != null){Tank.drain(new FluidStack(iRecipe.INPUT,iRecipe.AMOUNT), IFluidHandler.FluidAction.EXECUTE);}
-                    ItemStack result = ITEM_STACK_HANDLER.insertItem(0, iRecipe.OUTPUT_ITEM, false);
-                    if(result != ItemStack.EMPTY)
-                    {
-                        dispence(result);
-                    }
-
-                }
-
-            });
+            //endregion
         }
     }
+    private InventoryCauldron GetInventory()
+    {
+        InventoryCauldron inv = new InventoryCauldron();
+        for (int i = 0; i < ITEM_STACK_HANDLER.getSlots(); i++) {
+            inv.setInventorySlotContents(i, ITEM_STACK_HANDLER.getStackInSlot(i));
+        }
+        inv.setFluid(Tank.getFluid().getFluid());
+        inv.setTemp(this.GetTemp());
+        inv.amount = Tank.getFluidAmount();
+        return  inv;
+    }
+    //endregion
     //region dispence
     private void dispence(ItemStack stack){ dispence(stack,6);}
     private void dispence(ItemStack stack,int speed){

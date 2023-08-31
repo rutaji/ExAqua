@@ -110,7 +110,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
         }
         x = X;
         y = Y;
-        HELPER.createDrawableIngredient(new ItemStack(ModBlocks.GetSIEVE(recipe.TIER).get())).draw(matrixStack,10,10);
+        HELPER.createDrawableIngredient(new ItemStack(recipe.TIER.GetSymbol())).draw(matrixStack,10,10);
         String s;
         for(double d : recipe.GetChances())
         {

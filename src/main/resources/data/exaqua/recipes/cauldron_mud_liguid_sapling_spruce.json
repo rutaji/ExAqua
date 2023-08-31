@@ -1,0 +1,11 @@
+{
+  "type": "exaqua:cauldron",
+  "fluidi": "minecraft:water",
+  "itemi": {"item": "minecraft:spruce_sapling" ,"count": 6},
+  "outputtype": "fluid",
+  "output": "exaqua:mud_fluid",
+  "temp": "neutral",
+  "amount": 0
+
+
+}

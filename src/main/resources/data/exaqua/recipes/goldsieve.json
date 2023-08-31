@@ -3,53 +3,18 @@
   "input":
     {
       "fluid": "minecraft:water",
-      "amount": 50
+      "amount": 100
     },
   "outputs": [
     {
-      "item": {"item": "minecraft:granite"},
-      "chance": 3
+      "item": {"item": "minecraft:sand"},
+      "chance": 6
     },
     {
-      "item": { "item": "minecraft:gold_ore"},
-      "chance": 1
-    },
-    {
-      "item": { "item": "minecraft:coal"},
-      "chance": 4
-    },
-    {
-      "item": {"item": "minecraft:granite"},
-      "chance": 3
-    },
-    {
-      "item": {"item": "minecraft:grass_block"},
-      "chance": 3
-    },
-    {
-      "item": {"item": "minecraft:granite"},
-      "chance": 3
-    },
-    {
-      "item": {"item": "minecraft:cobblestone"},
-      "chance": 50
-    },
-    {
-      "item": {"item": "minecraft:granite"},
-      "chance": 3
-    },
-    {
-      "item": {"item": "minecraft:acacia_planks"},
-      "chance": 3
-    },
-    {
-      "item": {"item": "minecraft:granite"},
-      "chance": 3
-    },
-    {
-      "item": {"item": "minecraft:oak_sapling"},
-      "chance": 3
+      "item": { "item": "minecraft:gravel"},
+      "chance": 7
     }
+
   ],
   "time": 40,
   "rf": 10,
