@@ -35,6 +35,13 @@ public class ModContainers {
                 World world = inv.player.getEntityWorld();
                 return new CauldronContainer(windowId, world, pos, inv, inv.player);
             })));
+    public static final RegistryObject<ContainerType<AutoSqueezerContainer>> AUTO_SQUEEZER_CONTAINER
+            = CONTAINERS.register("auto_squeezer_container",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> {
+                BlockPos pos = data.readBlockPos();
+                World world = inv.player.getEntityWorld();
+                return new AutoSqueezerContainer(windowId, world, pos, inv, inv.player);
+            })));
 
 
     public static void register(IEventBus eventBus) {

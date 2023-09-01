@@ -20,6 +20,8 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -111,12 +113,15 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     @Override
     public void tick() {
         craft();
-        if (world.isRainingAt(pos))
-        {
-           if( world.rand.nextInt(31) == 30)
-           {
-               Tank.fill(new FluidStack(Fluids.WATER,20), IFluidHandler.FluidAction.EXECUTE);
-           }
+        GetRain();
+    }
+    private void GetRain()
+    {
+        if (world.isRaining() && world.canSeeSky(pos) && world.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN) {
+            if( world.rand.nextInt(31) == 30)
+            {
+                Tank.fill(new FluidStack(Fluids.WATER,20), IFluidHandler.FluidAction.EXECUTE);
+            }
         }
     }
     //region crefting region
@@ -142,24 +147,25 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
                 InventoryCauldron inv = GetInventory();
                 if(RecipieOnCooldown.matches(inv,world))
                 {
-                    if (RecipieOnCooldown.OUTPUT != null)//output is fluid
+                    if (RecipieOnCooldown.OUTPUT != Fluids.EMPTY)//output is fluid
                         {
-                            if (RecipieOnCooldown.INPUT == null) {
+                            if (RecipieOnCooldown.INPUT == Fluids.EMPTY) {
                                 if (Tank.IsFull()) return;
                                 Tank.fill(new FluidStack(RecipieOnCooldown.OUTPUT, RecipieOnCooldown.AMOUNT), IFluidHandler.FluidAction.EXECUTE);
-                            } else {
+                            }
+                            else {
                                 Tank.setStack(new FluidStack(RecipieOnCooldown.OUTPUT, Tank.getFluidAmount()));
                             }
-                            if (RecipieOnCooldown.INPUT_ITEM != null) {
+                            if (RecipieOnCooldown.INPUT_ITEM != ItemStack.EMPTY) {
                                 ITEM_STACK_HANDLER.extractItem(0, RecipieOnCooldown.INPUT_ITEM.getCount(), false);
                             }
 
-                        } else if (RecipieOnCooldown.OUTPUT_ITEM != null) //output is item
+                        } else if (RecipieOnCooldown.OUTPUT_ITEM != ItemStack.EMPTY) //output is item
                         {
-                            if (RecipieOnCooldown.INPUT_ITEM != null) {
+                            if (RecipieOnCooldown.INPUT_ITEM != ItemStack.EMPTY) {
                                 ITEM_STACK_HANDLER.extractItem(0, RecipieOnCooldown.INPUT_ITEM.getCount(), false);
                             }
-                            if (RecipieOnCooldown.INPUT != null) {
+                            if (RecipieOnCooldown.INPUT != Fluids.EMPTY) {
                                 Tank.drain(new FluidStack(RecipieOnCooldown.INPUT, RecipieOnCooldown.AMOUNT), IFluidHandler.FluidAction.EXECUTE);
                             }
                             ItemStack result = ITEM_STACK_HANDLER.insertItem(0, RecipieOnCooldown.OUTPUT_ITEM.copy(), false);

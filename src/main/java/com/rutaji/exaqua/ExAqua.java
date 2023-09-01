@@ -7,6 +7,7 @@ import com.rutaji.exaqua.container.SieveContainer;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.item.ModItems;
 import com.rutaji.exaqua.networking.PacketHandler;
+import com.rutaji.exaqua.screen.AutoSqueezerScreen;
 import com.rutaji.exaqua.screen.CauldronScreen;
 import com.rutaji.exaqua.screen.SieveScreen;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
@@ -83,7 +84,9 @@ public class ExAqua
         ScreenManager.registerFactory(ModContainers.SQUEEZERCONTAINER.get(), SqueezerScreen::new);
         ScreenManager.registerFactory(ModContainers.SIEVECONTAINER.get(), SieveScreen::new);
         ScreenManager.registerFactory(ModContainers.CAULDRON_CONTAINER.get(), CauldronScreen::new);
-        RenderTypeLookup.setRenderLayer(ModBlocks.DIAMONDSIEVE.get(),RenderType.getCutout());
+        ScreenManager.registerFactory(ModContainers.AUTO_SQUEEZER_CONTAINER.get(), AutoSqueezerScreen::new);
+
+        //RenderTypeLookup.setRenderLayer(ModBlocks.DIAMONDSIEVE.get(),RenderType.getCutout());
 
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_BLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLUID.get(), RenderType.getTranslucent());

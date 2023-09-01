@@ -91,6 +91,12 @@
     },
     {
       "predicate": {
+        "color": 1.5
+      },
+      "model": "exaqua:item/handsieve/handsievebrown"
+    },
+    {
+      "predicate": {
         "color": 2
       },
       "model": "exaqua:item/handsieve/handsieveunknown"

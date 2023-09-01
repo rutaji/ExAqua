@@ -104,7 +104,6 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
     @Override
     public int fill(FluidStack resource, IFluidHandler.FluidAction action)
     {
-        System.out.println("fil");
         if (resource.isEmpty() || !isFluidValid(resource))
         {
             return 0;

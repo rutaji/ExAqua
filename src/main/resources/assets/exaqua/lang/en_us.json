@@ -20,5 +20,7 @@
   "block.exaqua.mud": "Mud",
   "block.exaqua.cauldron": "Crafting Cauldron",
   "item.exaqua.mud_bucket": "Mud Bucket",
-  "fluid.exaqua.mud_fluid":"Liquid Mud"
+  "fluid.exaqua.mud_fluid":"Liquid Mud",
+  "block.exaqua.auto_squeezer": "Auto Squeezer",
+  "screen.exaqua.autosqueezercontainer": ""
 }

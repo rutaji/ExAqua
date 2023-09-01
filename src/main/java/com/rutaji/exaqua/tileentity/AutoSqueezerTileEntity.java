@@ -1,8 +1,10 @@
 package com.rutaji.exaqua.tileentity;
 
+import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
+import com.rutaji.exaqua.networking.MyEnergyPacket;
 import com.rutaji.exaqua.networking.MyFluidStackPacket;
 import com.rutaji.exaqua.networking.PacketHandler;
 import net.minecraft.block.BlockState;
@@ -26,15 +28,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-
-public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity {
+public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity ,IMYEnergyStorageTile{
 
     //region Constructor
-    public SqueezerTile(TileEntityType<?> p_i48289_1_) {
+    public AutoSqueezerTileEntity(TileEntityType<?> p_i48289_1_) {
         super(p_i48289_1_);
     }
-    public SqueezerTile(){
-        this(ModTileEntities.SQUEEZERTILE.get());
+    public AutoSqueezerTileEntity(){
+        this(ModTileEntities.AUTO_SQUEEZER_ENTITY.get());
     }
     //endregion
 
@@ -60,6 +61,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     public void read(BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         Tank.deserializeNBT(nbt);
+        GetEnergyStorage().deserializeNBT(nbt);
         super.read(state,nbt);
     }
 
@@ -67,6 +69,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     public CompoundNBT write( CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         nbt = Tank.serializeNBT(nbt);
+        nbt = GetEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
     @Override //server send on chung load
@@ -80,6 +83,22 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
         read(state,nbt);
     }
     //endregion
+    //region Energy
+    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(MyEnergyStorage.fromRF(9000),this::EnergyChangePacket);
+    @Override
+    public MyEnergyStorage GetEnergyStorage() {
+        return this.MY_ENERGY_STORAGE;
+    }
+
+
+    public void EnergyChangePacket()
+    {
+        if(world != null && !world.isRemote) {
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergy(), pos));
+        }
+    }
+
+    //endregion
 
     @Nullable
     @Override
@@ -89,21 +108,28 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();
         }
+        if(cap.getName() == "mekanism.api.energy.IStrictEnergyHandler"){
+            return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
+        }
         return super.getCapability(cap,side);
     }
-    private int Tocraft = 0;
+    private final int CraftingCooldownMax = 20;
+    private int CraftingCooldown = CraftingCooldownMax;
+    private final int CraftingRF = 5;
     @Override
     public void tick()
     {
-            if(Tocraft > 0)
-            {
-                craft();
-                Tocraft--;
-            }
-    }
-    public void squeez()
-    {
-        Tocraft += 5;
+        if(CraftingCooldown > 0 )
+        {
+           if( GetEnergyStorage().DrainRF(5))
+           {
+               CraftingCooldown--;
+           }
+        }
+        else{
+            craft();
+        }
+
     }
     public void craft() {
 
@@ -122,6 +148,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
                 ITEM_STACK_HANDLER.extractItem(0, 1, false);
 
                 this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
+                CraftingCooldown = CraftingCooldownMax;
                 markDirty();
             });
         }

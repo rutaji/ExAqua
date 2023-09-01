@@ -27,6 +27,9 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<CauldronEntity>> CAULDRON_ENTITY =
             TILE_ENTITIES.register("cauldron", () -> TileEntityType.Builder.create(
                     CauldronEntity::new,ModBlocks.CAULDRON.get()).build(null));
+    public static RegistryObject<TileEntityType<AutoSqueezerTileEntity>> AUTO_SQUEEZER_ENTITY =
+            TILE_ENTITIES.register("auto_squeezer", () -> TileEntityType.Builder.create(
+                    AutoSqueezerTileEntity::new,ModBlocks.AUTO_SQUEEZER.get()).build(null));
 
 
 
