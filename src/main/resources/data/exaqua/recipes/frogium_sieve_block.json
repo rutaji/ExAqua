@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "msm",
+    "isi",
+    "i i"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "s": {
+      "item": "minecraft:string"
+    },
+    "m": {
+      "item": "exaqua:frogium_block"
+    }
+  },
+
+  "result": {
+    "item": "exaqua:frogiumsieve"
+  }
+}
