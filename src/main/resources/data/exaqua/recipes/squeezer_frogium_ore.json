@@ -1,0 +1,12 @@
+{
+  "type": "exaqua:squeezer",
+  "ingredients": [
+    {
+      "item": "exaqua:frogium_block"
+    }
+  ],
+  "output": {
+    "fluid": "minecraft:water",
+    "amount": 400
+  }
+}

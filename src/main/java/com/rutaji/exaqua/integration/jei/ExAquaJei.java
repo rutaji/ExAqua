@@ -1,10 +1,7 @@
 package com.rutaji.exaqua.integration.jei;
 
 import com.rutaji.exaqua.ExAqua;
-import com.rutaji.exaqua.data.recipes.HandSieveRecipie;
-import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
-import com.rutaji.exaqua.data.recipes.SieveRecipie;
-import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
+import com.rutaji.exaqua.data.recipes.*;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -31,6 +28,8 @@ public class ExAquaJei implements IModPlugin {
                 new SieveRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(
                 new HandSieveRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(
+                new CauldronRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
 
 
     }
@@ -49,5 +48,8 @@ public class ExAquaJei implements IModPlugin {
         registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.HANDSIEVE_RECIPE).stream()
                         .filter(r -> r instanceof HandSieveRecipie).collect(Collectors.toList()),
                 HandSieveRecipeCategory.UID);
+        registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.CAULDRON_RECIPE).stream()
+                        .filter(r -> r instanceof CauldronRecipie).collect(Collectors.toList()),
+                CauldronRecipeCategory.UID);
     }
 }

@@ -101,7 +101,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
         int x = X;
         int y = Y;
 
-
+        //drawing tiless
         for(int i =0;i < recipe.GetSize();i++ )
         {
             Minecraft.getInstance().currentScreen.blit(matrixStack,x,y,201,0,18,18);
@@ -112,6 +112,10 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
         y = Y;
         HELPER.createDrawableIngredient(new ItemStack(recipe.TIER.GetSymbol())).draw(matrixStack,10,10);
         String s;
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.INPUTFLUID.getAmount()) + " mb" , 110 , 18, 0x111111);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.RF) + " rf/t" , 110 , 28, 0x111111);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.TIME) + " t" , 110 , 38, 0x111111);
+        //drawing procents
         for(double d : recipe.GetChances())
         {
             if(d < 10){

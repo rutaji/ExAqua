@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.container.AutoSqueezerContainer;
 import com.rutaji.exaqua.container.SqueezerContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -31,12 +32,14 @@ public class AutoSqueezerScreen extends ContainerScreen<AutoSqueezerContainer> {
     }
     private void DrawLiquid(int i,int j,MatrixStack matrixStack){
         String liguid = container.GetLiquid();
-        drawCenteredString(matrixStack,font, liguid, i +87, j+10,0);
-        if(!liguid.equals("Empty")) {drawCenteredString(matrixStack,font,String.valueOf(container.GetLiquidAmount()) +" mB" , i +87, j+20,0);}
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,liguid , i +87 - font.getStringWidth(liguid)/2 , j+10, 0x111111);
+        String toDraw = container.GetLiquidAmount() +" mB";
+        if(!liguid.equals("Empty")) {Minecraft.getInstance().fontRenderer.drawString(matrixStack,toDraw, i +87 - font.getStringWidth(toDraw)/2 , j+20, 0x111111);}
 
     }
     private void drawRF(int i,int j,MatrixStack matrixStack){
-        drawCenteredString(matrixStack,font,container.GetEnergyAmount()  + " RF",i+24,j+40,0);
+        String toDraw = container.GetEnergyAmount()  + " RF";
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,toDraw , i +24 - font.getStringWidth(toDraw)/2 , j+40, 0x111111);
     }
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
