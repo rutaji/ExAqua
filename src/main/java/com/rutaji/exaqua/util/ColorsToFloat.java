@@ -19,11 +19,13 @@ public class ColorsToFloat {
     public static float RED = 1.2F;
     public static float WHITE = 1.3F;
     public static float YELLOW = 1.4F;
+    public static float BROWN = 1.5F;
     public static float UNKNOWN = 2f;
     public static Hashtable<String,Float> NameToColor = new Hashtable<String,Float>(){
         {put("",EMPTY);}
         {put("minecraft:water",Blue);}
         {put("minecraft:lava", LAVA);}
+        {put("exaqua:mud_fluid",BROWN);}
     };
 
     public static float Get(String s)

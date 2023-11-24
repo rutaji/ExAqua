@@ -1,7 +1,7 @@
 package com.rutaji.exaqua.container;
 
 import com.rutaji.exaqua.block.ModBlocks;
-import com.rutaji.exaqua.block.Tiers;
+import com.rutaji.exaqua.block.SieveTiers;
 import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import com.rutaji.exaqua.tileentity.SieveTileEntity;
@@ -34,18 +34,19 @@ public class SieveContainer extends Container {
 
         if(TILEENTITY != null){
             TILEENTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new SlotItemHandler(h,0,60,31));
-                addSlot(new SlotItemHandler(h,1,80,31));
-                addSlot(new SlotItemHandler(h,2,100,31));
-                addSlot(new SlotItemHandler(h,3,120,31));
-                addSlot(new SlotItemHandler(h,4,60,51));
-                addSlot(new SlotItemHandler(h,5,80,51));
-                addSlot(new SlotItemHandler(h,6,100,51));
-                addSlot(new SlotItemHandler(h,7,120,51));
+                addSlot(new SlotItemHandler(h,0,49,35));
+                addSlot(new SlotItemHandler(h,1,69,35));
+                addSlot(new SlotItemHandler(h,2,89,35));
+                addSlot(new SlotItemHandler(h,3,109,35));
+                addSlot(new SlotItemHandler(h,4,49,55));
+                addSlot(new SlotItemHandler(h,5,69,55));
+                addSlot(new SlotItemHandler(h,6,89,55));
+                addSlot(new SlotItemHandler(h,7,109,55));
             });
         }
 
     }
+    //region Get
 
     public int GetLiquidAmount()
     {
@@ -53,6 +54,14 @@ public class SieveContainer extends Container {
             return ((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluidAmount();
         }
         return -1;
+    }
+    public String GetLiquid()
+    {
+        if (TILEENTITY instanceof IMyLiquidTankTIle){
+            if(((IMyLiquidTankTIle) TILEENTITY).GetTank().isEmpty()){return "Empty";}
+            return ((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluid().getFluid().getRegistryName().toString();
+        }
+        return "Does not contain storage";
     }
     public long GetEnergyAmount(){
         if (TILEENTITY instanceof IMYEnergyStorageTile){
@@ -66,13 +75,14 @@ public class SieveContainer extends Container {
         return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(),TILEENTITY.getPos()),
                 player, ModBlocks.GetSIEVE(GetTier()).get());
     }
-    public Tiers GetTier()
+    public SieveTiers GetTier()
     {
         if(TILEENTITY instanceof SieveTileEntity){
            return  ((SieveTileEntity) TILEENTITY).GetTier();
         }
-        return Tiers.error;
+        return SieveTiers.error;
     }
+    //endregion
     //region player inventory
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sws",
+    "s s",
+    "sws"
+  ],
+  "key": {
+    "w": {
+      "item": "minecraft:iron_ingot"
+    },
+    "s": {
+      "item": "minecraft:iron_bars"
+    }
+    
+  },
+
+  "result": {
+    "item": "exaqua:auto_squeezer"
+  }
+}

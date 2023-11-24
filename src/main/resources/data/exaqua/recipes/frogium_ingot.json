@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "exaqua:frogium_dust"
+  },
+  "result": "exaqua:frogium",
+  "experience": 2.0,
+  "cookingtime": 500
+}

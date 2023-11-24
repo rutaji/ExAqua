@@ -2,6 +2,7 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.rutaji.exaqua.block.SieveTiers;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -23,7 +24,7 @@ public class SieveRecipie implements ISieveRecipie {
 
     private final ResourceLocation ID;
 
-    public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output,int time,double rf) {
+    public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output,int time,double rf,SieveTiers tier) {
         this.ID = id;
         this.INPUTFLUID = input;
         this.RESULT = output;
@@ -37,21 +38,29 @@ public class SieveRecipie implements ISieveRecipie {
             r.chance = sum;
         }
         this.SUM = sum;
+        this.TIER = tier;
+        Chances = CountChances();
     }
+    private final List<Double> Chances;
+    public List<Double> GetChances(){return  Chances;}
     private static final Random RANDOM = new Random();
     public final List<RoolItem> RESULT;
     public final FluidStack INPUTFLUID;
     public final int TIME;
     public final double RF;
     public final int SUM;
+    public final SieveTiers TIER;
 
 
+    public int GetSize(){
+        return  RESULT.size();
+    }
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        if(inv instanceof InventoryWithFluids)
+        if(inv instanceof InventorySieve)
         {
-            FluidStack f = ((InventoryWithFluids) inv).getFluid();
-            return f.isFluidEqual(INPUTFLUID) && f.getAmount() >= INPUTFLUID.getAmount();
+            FluidStack f = ((InventorySieve) inv).getFluid();
+            return f.isFluidEqual(INPUTFLUID) && f.getAmount() >= INPUTFLUID.getAmount() && TIER.equals(((InventorySieve) inv).GetTier());
         }
         return false;
     }
@@ -64,6 +73,18 @@ public class SieveRecipie implements ISieveRecipie {
     @Override // does not provide anything because this recipe doesn´t have clear output
     public ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
+    }
+
+    public List<Double> CountChances()
+    {
+        List<Double> result = new ArrayList();
+        int i =0;
+        for (RoolItem r : RESULT)
+        {
+            result.add(((double)(r.chance - i)/SUM)*100);
+            i = r.chance;
+        }
+        return result;
     }
     public List<ItemStack> GetAllPossibleOutputs() {
         List<ItemStack> results  = new ArrayList<ItemStack>();
@@ -124,7 +145,9 @@ public class SieveRecipie implements ISieveRecipie {
             }
             int time = json.get("time").getAsInt();
             double rf = json.get("rf").getAsDouble();
-            return new SieveRecipie(recipeId, Input,Outputs,time,rf);
+            String tier = json.get("tier").getAsString();
+
+            return new SieveRecipie(recipeId, Input,Outputs,time,rf,SieveTiers.valueOf(tier));
         }
 
         @Nullable
@@ -141,7 +164,8 @@ public class SieveRecipie implements ISieveRecipie {
             }
             int time = buffer.readInt();
             double rf = buffer.readDouble();
-            return new SieveRecipie(recipeId, Input,Results,time,rf);
+            SieveTiers tier = buffer.readEnumValue(SieveTiers.class);
+            return new SieveRecipie(recipeId, Input,Results,time,rf,tier);
         }
 
         @Override
@@ -158,6 +182,7 @@ public class SieveRecipie implements ISieveRecipie {
             }
             buffer.writeInt(recipe.TIME);
             buffer.writeDouble(recipe.RF);
+            buffer.writeEnumValue(recipe.TIER);
 
 
         }

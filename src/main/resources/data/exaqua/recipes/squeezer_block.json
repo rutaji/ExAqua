@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sws",
+    "s s",
+    "sws"
+  ],
+  "key": {
+    "w": {
+      "tag": "minecraft:logs"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    }
+
+  },
+
+  "result": {
+    "item": "exaqua:squeezer"
+  }
+}

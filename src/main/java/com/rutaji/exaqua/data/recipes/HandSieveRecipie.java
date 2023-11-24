@@ -36,8 +36,11 @@ public class HandSieveRecipie implements IHandSieveRecipie {
             r.chance = sum;
         }
         this.SUM = sum;
+        Chances = CountChances();
     }
     //endregion
+    public List<Double> GetChances(){return  Chances;}
+    private final List<Double> Chances;
     private final ResourceLocation ID;
     private static final Random RANDOM = new Random();
     public final List<RoolItem> RESULTS;
@@ -48,9 +51,9 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        if(inv instanceof InventoryWithFluids)
+        if(inv instanceof InventorySieve)
         {
-            FluidStack f = ((InventoryWithFluids) inv).getFluid();
+            FluidStack f = ((InventorySieve) inv).getFluid();
             return f.getFluid() == INPUTFLUID;
         }
         return false;
@@ -83,6 +86,19 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     @Override
     public ResourceLocation getId() {
         return ID;
+    }
+
+    public int GetSize(){return RESULTS.size();}
+    public List<Double> CountChances()
+    {
+        List<Double> result = new ArrayList();
+        int i =0;
+        for (RoolItem r : RESULTS)
+        {
+            result.add(((double)(r.chance - i)/SUM)*100);
+            i = r.chance;
+        }
+        return result;
     }
 
     public ItemStack GetRandomItemStack()

@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 
-public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
+public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity {
 
     //region Constructor
     public SqueezerTile(TileEntityType<?> p_i48289_1_) {
@@ -53,16 +54,30 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
             }
         };
     }
+    //endregion
+    //region nbt
     @Override
     public void read(BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
+        Tank.deserializeNBT(nbt);
         super.read(state,nbt);
     }
 
     @Override
     public CompoundNBT write( CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
+        nbt = Tank.serializeNBT(nbt);
         return super.write(nbt);
+    }
+    @Override //server send on chung load
+    public CompoundNBT getUpdateTag(){
+        CompoundNBT nbt = new CompoundNBT();
+        return write(nbt);
+    }
+    //clients receives getUpdateTag
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT nbt){
+        read(state,nbt);
     }
     //endregion
 
@@ -76,13 +91,23 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
         }
         return super.getCapability(cap,side);
     }
+    private int Tocraft = 0;
+    @Override
+    public void tick()
+    {
+            if(Tocraft > 0)
+            {
+                craft();
+                Tocraft--;
+            }
+    }
+    public void squeez()
+    {
+        Tocraft += 5;
+    }
     public void craft() {
 
-        if(!world.isRemote()) {
-            System.out.println(Tank.FluidStored.getAmount());
-            if (Tank.FluidStored.getAmount() == Tank.getCapacity()) {
-                return;
-            }
+        if(!world.isRemote() && !Tank.IsFull()) {
             Inventory inv = new Inventory(ITEM_STACK_HANDLER.getSlots());
             for (int i = 0; i < ITEM_STACK_HANDLER.getSlots(); i++) {
                 inv.setInventorySlotContents(i, ITEM_STACK_HANDLER.getStackInSlot(i));
@@ -92,21 +117,19 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
                     .getRecipe(ModRecipeTypes.SQUEEZER_RECIPE, inv, world);
 
             recipe.ifPresent(iRecipe -> {
+                FluidStack output = iRecipe.getRealOutput();
+                if(!Tank.CanTakeFluid(output.getFluid())){return;}
+                ITEM_STACK_HANDLER.extractItem(0, 1, false);
 
-                if (iRecipe instanceof SqueezerRecipie) {
-                    ITEM_STACK_HANDLER.extractItem(0, 1, false);
-                    FluidStack output = iRecipe.getRealOutput();
-                    this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
-                    System.out.println(output);
-                    markDirty();
-                }
+                this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
+                markDirty();
             });
         }
     }
     @Override
     public void TankChange()
     {
-        if(!world.isRemote) {
+        if(world != null &&!world.isRemote) {
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
         }
 
@@ -118,5 +141,9 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle {
     public MyLiquidTank GetTank() {
         return this.Tank;
     }
+
+
+
+
     //endregion
 }

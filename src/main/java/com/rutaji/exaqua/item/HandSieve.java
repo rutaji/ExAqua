@@ -1,7 +1,7 @@
 package com.rutaji.exaqua.item;
 
 import com.rutaji.exaqua.data.recipes.HandSieveRecipie;
-import com.rutaji.exaqua.data.recipes.InventoryWithFluids;
+import com.rutaji.exaqua.data.recipes.InventorySieve;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
@@ -66,7 +66,7 @@ public class HandSieve extends Item {
             else
             {
 
-                InventoryWithFluids inv = new InventoryWithFluids();
+                InventorySieve inv = new InventorySieve();
                 inv.setFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemstack.getOrCreateTag().getString(FLUID_INSIDE))),5));
 
                 Optional<HandSieveRecipie> recipe = worldIn.getRecipeManager()

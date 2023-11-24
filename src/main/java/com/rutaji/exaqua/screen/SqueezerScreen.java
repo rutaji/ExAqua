@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.container.SqueezerContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -24,9 +25,14 @@ public class SqueezerScreen extends ContainerScreen<SqueezerContainer> {
         int i = this.guiLeft;
         int j = this.guiTop;
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
-        drawString(matrixStack,font, String.valueOf(container.GetAmount()), i +20, j+50,0);
+        DrawLiquid(i,j,matrixStack);
 
-
+    }
+    private void DrawLiquid(int i,int j,MatrixStack matrixStack){
+        String liguid = container.GetLiquid();
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,liguid , i +87 - font.getStringWidth(liguid)/2 , j+10, 0x111111);
+        String toDraw = container.GetLiquidAmount() +" mB";
+        if(!liguid.equals("Empty")) {Minecraft.getInstance().fontRenderer.drawString(matrixStack,toDraw, i +87 - font.getStringWidth(toDraw)/2 , j+20, 0x111111);}
 
     }
     @Override

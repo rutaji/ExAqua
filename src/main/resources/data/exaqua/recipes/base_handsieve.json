@@ -1,0 +1,23 @@
+{
+  "type": "exaqua:handsieve",
+  "success": 10,
+  "fluid": "minecraft:water",
+  "outputs": [
+    {
+      "item": {"item": "minecraft:iron_ore"},
+      "chance": 3
+    },
+    {
+      "item": {"item": "minecraft:coal"},
+      "chance": 5
+    },
+    {
+      "item": {"item": "minecraft:flint"},
+      "chance": 2
+    },
+    {
+      "item": { "item": "minecraft:gold_ore"},
+      "chance": 1
+    }
+  ]
+}

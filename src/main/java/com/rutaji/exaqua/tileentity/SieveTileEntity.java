@@ -2,8 +2,8 @@ package com.rutaji.exaqua.tileentity;
 
 import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
-import com.rutaji.exaqua.block.Tiers;
-import com.rutaji.exaqua.data.recipes.InventoryWithFluids;
+import com.rutaji.exaqua.block.SieveTiers;
+import com.rutaji.exaqua.data.recipes.InventorySieve;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SieveRecipie;
 import com.rutaji.exaqua.networking.MyEnergyPacket;
@@ -49,17 +49,39 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     private final ItemStackHandler ITEM_STACK_HANDLER = createHandler();
     private final LazyOptional<IItemHandler> HANDLER = LazyOptional.of(() -> ITEM_STACK_HANDLER);
 
+
+    //endregion
+    //region nbt
     @Override
     public void read(BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
+        tier = SieveTiers.valueOf(nbt.getString("tier"));
+        Tank.deserializeNBT(nbt);
+        GetEnergyStorage().deserializeNBT(nbt);
         super.read(state,nbt);
     }
     @Override
     public CompoundNBT write( CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
+        nbt.putString("tier",tier.name());
+        nbt = Tank.serializeNBT(nbt);
+        nbt = GetEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
+    @Override //server send on chung load
+    public CompoundNBT getUpdateTag(){
+        CompoundNBT nbt = new CompoundNBT();
+        return write(nbt);
+    }
+    //clients receives getUpdateTag
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT nbt){
+        read(state,nbt);
+    }
+
     //endregion
+
+
     //region Constructor
     public SieveTileEntity(TileEntityType<?> p_i48289_1_) {
         super(p_i48289_1_);
@@ -69,7 +91,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     }
     //endregion
     //region Energy
-    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(MyEnergyStorage.fromRF(10000),this::EnergyChangePacket);
+    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(MyEnergyStorage.fromRF(9000),this::EnergyChangePacket);
     @Override
     public MyEnergyStorage GetEnergyStorage() {
         return this.MY_ENERGY_STORAGE;
@@ -78,7 +100,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
     public void EnergyChangePacket()
     {
-        if(!world.isRemote) {
+        if(world != null && !world.isRemote) {
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergy(), pos));
         }
     }
@@ -100,13 +122,13 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     @Override
     public void tick() {
         if (!world.isRemote) {
-            // Your machine's logic here. Consume energy based on its functionality.
+
             craft();
         }
     }
     //region Tiers
-    public Tiers GetTier(){return  tier;}
-    public Tiers tier;
+    public SieveTiers GetTier(){return  tier;}
+    public SieveTiers tier = SieveTiers.error;
     //endregion
     //region crafting
     private boolean crafting = false;
@@ -124,8 +146,9 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
                 return;
             }
             if(crafting == false) {
-                InventoryWithFluids inv = new InventoryWithFluids();
+                InventorySieve inv = new InventorySieve();
                 inv.setFluidStack(Tank.FluidStored);
+                inv.setTier(GetTier());
 
                 Optional<SieveRecipie> recipe = world.getRecipeManager()
                         .getRecipe(ModRecipeTypes.SIEVE_RECIPE, inv, world);
@@ -139,6 +162,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
                         craftingTimeDone = iRecipe.TIME;
                         crafting = true;
                         rf=iRecipe.RF;
+                        markDirty();
                     }
                 });
             }
@@ -162,6 +186,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
             else{
                 if(this.GetEnergyStorage().DrainRF(rf)) {
                     craftingTime++;
+                    markDirty();
                 }
             }
         }
@@ -195,12 +220,15 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     @Override
     public void TankChange()
     {
-        if(!world.isRemote) {
+        if(world != null && !world.isRemote) {
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
         }
 
     }
     //endregion
+
+
+
 
 
 }

@@ -1,0 +1,12 @@
+{
+  "type": "exaqua:squeezer",
+  "ingredients": [
+    {
+      "item": "minecraft:nether_wart"
+    }
+  ],
+  "output": {
+    "fluid": "minecraft:lava",
+    "amount": 50
+  }
+}

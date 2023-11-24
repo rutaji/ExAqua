@@ -1,11 +1,14 @@
 package com.rutaji.exaqua;
 
+import com.rutaji.exaqua.Fluids.ModFluids;
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.container.ModContainers;
 import com.rutaji.exaqua.container.SieveContainer;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.item.ModItems;
 import com.rutaji.exaqua.networking.PacketHandler;
+import com.rutaji.exaqua.screen.AutoSqueezerScreen;
+import com.rutaji.exaqua.screen.CauldronScreen;
 import com.rutaji.exaqua.screen.SieveScreen;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.screen.SqueezerScreen;
@@ -14,6 +17,8 @@ import com.rutaji.exaqua.util.ModItemModelProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -51,6 +56,7 @@ public class ExAqua
         ModTileEntities.register(eventBus);
         ModContainers.register(eventBus);
         ModRecipeTypes.register(eventBus);
+        ModFluids.register(eventBus);
 
         eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -74,8 +80,17 @@ public class ExAqua
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         ModItemModelProperties.makeHandSieve(ModItems.HANDSIEVE.get());
+
         ScreenManager.registerFactory(ModContainers.SQUEEZERCONTAINER.get(), SqueezerScreen::new);
         ScreenManager.registerFactory(ModContainers.SIEVECONTAINER.get(), SieveScreen::new);
+        ScreenManager.registerFactory(ModContainers.CAULDRON_CONTAINER.get(), CauldronScreen::new);
+        ScreenManager.registerFactory(ModContainers.AUTO_SQUEEZER_CONTAINER.get(), AutoSqueezerScreen::new);
+
+        //RenderTypeLookup.setRenderLayer(ModBlocks.DIAMONDSIEVE.get(),RenderType.getCutout());
+
+        RenderTypeLookup.setRenderLayer(ModFluids.MUD_BLOCK.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLUID.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLOWING.get(), RenderType.getTranslucent());
 
     }
 

@@ -41,6 +41,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
             }
         };
     }
+    private final String NBTCONSTANT = "liquidstored";
     public MyDelegate Onchange;
     public  FluidStack FluidStored =  FluidStack.EMPTY;
     private int Capacity = 3000; //default capacity
@@ -103,7 +104,6 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
     @Override
     public int fill(FluidStack resource, IFluidHandler.FluidAction action)
     {
-        System.out.println("fil");
         if (resource.isEmpty() || !isFluidValid(resource))
         {
             return 0;
@@ -186,11 +186,18 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
     //region nbt
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        INBT fluidTag = nbt.get(NBTConstants.STORED);
+        INBT fluidTag = nbt.get(NBTCONSTANT);
         FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundNBT) fluidTag);
         if (fluidStack != null) {
             setStack(fluidStack);
         }
+    }
+
+    public CompoundNBT serializeNBT(CompoundNBT nbt) {
+        if (!isEmpty()) {
+            nbt.put(NBTCONSTANT, getFluid().writeToNBT(new CompoundNBT()));
+        }
+        return nbt;
     }
 
 
@@ -201,7 +208,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
         if (instance instanceof MyLiquidTank) {
             MyLiquidTank fluidTank = (MyLiquidTank) instance;
             if (!fluidTank.isEmpty()) {
-                nbt.put(NBTConstants.STORED, fluidTank.getFluid().writeToNBT(new CompoundNBT()));
+                nbt.put(NBTCONSTANT, fluidTank.getFluid().writeToNBT(new CompoundNBT()));
             }
         }
         return nbt;

@@ -29,6 +29,7 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
         Onchange = m;
     }
     //endregion
+    private final String NBTCONSTANT = "energystorage";
     public MyDelegate Onchange;
     private final FloatingLong MAXCAPACITY;
     public long GetAsRF(){
@@ -68,9 +69,14 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
 
     }
     //region NBT
+    public CompoundNBT serializeNBT(CompoundNBT nbt)
+    {
+        nbt.putString(NBTCONSTANT, getEnergy().toString());
+        return nbt;
+    }
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        setEnergy(FloatingLong.parseFloatingLong(nbt.getString(NBTConstants.STORED)));
+        setEnergy(FloatingLong.parseFloatingLong(nbt.getString(NBTCONSTANT)));
     }
     public ICapabilityProvider getCapabilityProvider() {
         return new ICapabilityProvider() {
@@ -91,7 +97,7 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
         if (instance instanceof MyEnergyStorage) {
             MyEnergyStorage EnergyTank = (MyEnergyStorage) instance;
             if (!EnergyTank.isEmpty()) {
-                nbt.putDouble(NBTConstants.STORED, Energy.getValue());
+                nbt.putDouble(NBTCONSTANT, Energy.getValue());
             }
         }
         return nbt;
@@ -101,7 +107,7 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
     public void readNBT(Capability<IEnergyContainer> capability, IEnergyContainer instance, Direction side, INBT nbt) {
         if(instance instanceof MyEnergyStorage)
         {
-            setEnergy( FloatingLong.create(((CompoundNBT) nbt).getDouble(NBTConstants.STORED)));
+            setEnergy( FloatingLong.create(((CompoundNBT) nbt).getDouble(NBTCONSTANT)));
         }
 
     }

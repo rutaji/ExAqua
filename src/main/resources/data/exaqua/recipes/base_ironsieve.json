@@ -1,0 +1,25 @@
+{
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "minecraft:water",
+      "amount": 150
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:iron_ore"},
+      "chance": 3
+    },
+    {
+      "item": { "item": "minecraft:gold_ore"},
+      "chance": 1
+    },
+    {
+      "item": { "item": "minecraft:coal"},
+      "chance": 4
+    }
+  ],
+  "time": 50,
+  "rf": 40,
+  "tier":"iron"
+}

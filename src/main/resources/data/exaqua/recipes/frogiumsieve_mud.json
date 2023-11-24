@@ -1,0 +1,55 @@
+{
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "exaqua:mud_fluid",
+      "amount": 100
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:oxeye_daisy"},
+      "chance": 2
+    },{
+      "item": {"item": "minecraft:pink_tulip"},
+      "chance": 3
+    },
+    {
+      "item": {"item": "minecraft:white_tulip"},
+      "chance": 1
+    },
+    {
+      "item": {"item": "minecraft:red_tulip"},
+      "chance": 1
+    },
+    {
+      "item": {"item": "minecraft:azure_bluet"},
+      "chance": 1
+    },
+    {
+      "item": {"item": "minecraft:allium"},
+      "chance": 3
+    },
+    {
+      "item": {"item": "minecraft:blue_orchid"},
+      "chance": 3
+    },
+    {
+      "item": {"item": "minecraft:poppy"},
+      "chance": 2
+    },
+    {
+      "item": {"item": "minecraft:dandelion"},
+      "chance": 3
+    },
+    {
+      "item": {"item": "minecraft:cactus"},
+      "chance": 1
+    }
+
+
+
+  ],
+  "time": 30,
+  "rf": 15,
+  "tier":"frogium"
+}
