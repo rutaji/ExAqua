@@ -68,7 +68,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
 
     @Override
     public void setIngredients(SieveRecipie recipe, IIngredients ingredients) {
-        FluidStack f = recipe.INPUTFLUID;
+        FluidStack f = recipe.INPUTFLUID.copy();
         f.setAmount(1000);
         ingredients.setInput(VanillaTypes.FLUID,f);
         List<ItemStack> output = recipe.GetAllPossibleOutputs();

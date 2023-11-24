@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -49,7 +50,7 @@ public class AutoSqueezerContainer extends Container {
     {
         if (TILEEMTITY instanceof IMyLiquidTankTIle){
             if(((IMyLiquidTankTIle) TILEEMTITY).GetTank().isEmpty()){return "Empty";}
-            return ((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluid().getFluid().getRegistryName().toString();
+            return new TranslationTextComponent(((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
         return "Doesnt have a container";
     }

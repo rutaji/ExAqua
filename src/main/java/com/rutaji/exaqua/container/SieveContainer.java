@@ -13,7 +13,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -59,7 +61,7 @@ public class SieveContainer extends Container {
     {
         if (TILEENTITY instanceof IMyLiquidTankTIle){
             if(((IMyLiquidTankTIle) TILEENTITY).GetTank().isEmpty()){return "Empty";}
-            return ((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluid().getFluid().getRegistryName().toString();
+            return new TranslationTextComponent(((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
         return "Does not contain storage";
     }
