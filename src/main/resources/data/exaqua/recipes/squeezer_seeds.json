@@ -1,0 +1,12 @@
+{
+  "type": "exaqua:squeezer",
+  "ingredients": [
+    {
+      "item": "minecraft:wheat_seeds"
+    }
+  ],
+  "output": {
+    "fluid": "minecraft:water",
+    "amount": 20
+  }
+}

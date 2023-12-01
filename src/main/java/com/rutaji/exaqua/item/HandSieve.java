@@ -1,5 +1,6 @@
 package com.rutaji.exaqua.item;
 
+import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.data.recipes.HandSieveRecipie;
 import com.rutaji.exaqua.data.recipes.InventorySieve;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
@@ -67,7 +68,7 @@ public class HandSieve extends Item {
             {
 
                 InventorySieve inv = new InventorySieve();
-                inv.setFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemstack.getOrCreateTag().getString(FLUID_INSIDE))),5));
+                inv.setFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(ExAqua.MOD_ID,itemstack.getOrCreateTag().getString(FLUID_INSIDE))),5));
 
                 Optional<HandSieveRecipie> recipe = worldIn.getRecipeManager()
                         .getRecipe(ModRecipeTypes.HANDSIEVE_RECIPE, inv, worldIn);
