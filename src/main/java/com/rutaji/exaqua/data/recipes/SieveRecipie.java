@@ -2,10 +2,15 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.SieveTiers;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -56,7 +62,7 @@ public class SieveRecipie implements ISieveRecipie {
         return  RESULT.size();
     }
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(@NotNull IInventory inv, @NotNull World worldIn) {
         if(inv instanceof InventorySieve)
         {
             FluidStack f = ((InventorySieve) inv).getFluid();
@@ -66,18 +72,18 @@ public class SieveRecipie implements ISieveRecipie {
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
-        return null;
+    public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
+        return ItemStack.EMPTY;
     }
 
     @Override // does not provide anything because this recipe doesn´t have clear output
-    public ItemStack getRecipeOutput() {
+    public @NotNull ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
 
     public List<Double> CountChances()
     {
-        List<Double> result = new ArrayList();
+        List<Double> result = new ArrayList<>();
         int i =0;
         for (RoolItem r : RESULT)
         {
@@ -87,7 +93,7 @@ public class SieveRecipie implements ISieveRecipie {
         return result;
     }
     public List<ItemStack> GetAllPossibleOutputs() {
-        List<ItemStack> results  = new ArrayList<ItemStack>();
+        List<ItemStack> results  = new ArrayList<>();
         for (RoolItem r: RESULT)
         {
             results.add(r.item);
@@ -96,12 +102,12 @@ public class SieveRecipie implements ISieveRecipie {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.SIEVE_SERIALIZER.get();
     }
 
@@ -129,12 +135,17 @@ public class SieveRecipie implements ISieveRecipie {
             implements IRecipeSerializer<SieveRecipie> {
 
         @Override
-        public SieveRecipie read(ResourceLocation recipeId, JsonObject json) {
+        public @NotNull SieveRecipie read(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
 
             JsonObject InputJson = JSONUtils.getJsonObject(json, "input");
-            String Fluid = InputJson.get("fluid").getAsString();
+            String OutputFluid = InputJson.get("fluid").getAsString();
             int FluidtAmount = InputJson.get("amount").getAsInt();
-            FluidStack Input = new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(Fluid)) ,FluidtAmount);
+
+            Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid));
+            if(f == null){
+                ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + OutputFluid);
+                f= Fluids.EMPTY;}
+            FluidStack Input = new FluidStack(f ,FluidtAmount);
 
 
             JsonArray OutputsJson = JSONUtils.getJsonArray(json, "outputs");
@@ -152,8 +163,13 @@ public class SieveRecipie implements ISieveRecipie {
 
         @Nullable
         @Override
-        public SieveRecipie read(ResourceLocation recipeId, PacketBuffer buffer) {
-            FluidStack Input = new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString())),buffer.readInt());
+        public SieveRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
+            String OutputFluid = buffer.readString();
+            Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid));
+            if(f == null){
+                ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + OutputFluid);
+                f= Fluids.EMPTY;}
+            FluidStack Input = new FluidStack(f,buffer.readInt());
 
             List<RoolItem> Results = new ArrayList<>();
             int size = buffer.readInt();

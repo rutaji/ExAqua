@@ -18,6 +18,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 
 public class AutoSqueezerContainer extends Container {
     private final TileEntity TILEEMTITY;
@@ -99,7 +100,7 @@ public class AutoSqueezerContainer extends Container {
     private static final int TE_INVENTORY_SLOT_COUNT = 1;
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack transferStackInSlot(@NotNull PlayerEntity playerIn, int index) {
         Slot sourceSlot = inventorySlots.get(index);
         if (sourceSlot == null || !sourceSlot.getHasStack()) return ItemStack.EMPTY;
         ItemStack sourceStack = sourceSlot.getStack();

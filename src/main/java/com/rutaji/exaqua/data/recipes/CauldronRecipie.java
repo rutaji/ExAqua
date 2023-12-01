@@ -14,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -28,15 +29,6 @@ public class CauldronRecipie implements ICauldronRecipie {
         TEMP = temp;
         this.AMOUNT = amount;
     }
-    public CauldronRecipie(ResourceLocation id, Fluid input, ItemStack inputItem, Fluid output, ItemStack outputitem,CauldronTemperature temp) {
-        this.ID = id;
-        this.INPUT = input;
-        OUTPUT = output;
-        INPUT_ITEM = inputItem;
-        OUTPUT_ITEM = outputitem;
-        TEMP = temp;
-        AMOUNT = 0;
-    }
     //endregion
     private final ResourceLocation ID;
     public final Fluid INPUT;
@@ -50,7 +42,7 @@ public class CauldronRecipie implements ICauldronRecipie {
 
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(@NotNull IInventory inv, @NotNull World worldIn) {
         if(inv instanceof InventoryCauldron)
         {
             return  ((INPUT == Fluids.EMPTY && ( ((InventoryCauldron) inv).getFluid() == Fluids.EMPTY || ((InventoryCauldron) inv).getFluid() == OUTPUT ))||( ((InventoryCauldron) inv).amount >= AMOUNT &&(((InventoryCauldron) inv).getFluid().isEquivalentTo(INPUT)))) &&
@@ -62,19 +54,19 @@ public class CauldronRecipie implements ICauldronRecipie {
 
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getRecipeOutput()
+    public @NotNull ItemStack getRecipeOutput()
     {
      if(OUTPUT == null){return OUTPUT_ITEM;}
      return ItemStack.EMPTY;
     }
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
 
@@ -82,7 +74,7 @@ public class CauldronRecipie implements ICauldronRecipie {
 
     //region registration
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.CAULDRON_SERIALIZER.get();
     }
 
@@ -98,7 +90,7 @@ public class CauldronRecipie implements ICauldronRecipie {
             implements IRecipeSerializer<CauldronRecipie> {
 
         @Override
-        public CauldronRecipie read(ResourceLocation recipeId, JsonObject json) {
+        public @NotNull CauldronRecipie read(@NotNull ResourceLocation recipeId, JsonObject json) {
 
             Fluid InputF = Fluids.EMPTY;
             ItemStack InputI = ItemStack.EMPTY;
@@ -118,7 +110,7 @@ public class CauldronRecipie implements ICauldronRecipie {
             Fluid outputF = Fluids.EMPTY;
             ItemStack OutputI = ItemStack.EMPTY;
             String output = json.get("outputtype").getAsString();
-            int amount = 0;
+            int amount;
             switch (output)
             {
                 case "fluid":
@@ -136,7 +128,7 @@ public class CauldronRecipie implements ICauldronRecipie {
 
         @Nullable
         @Override
-        public CauldronRecipie read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public CauldronRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
             Fluid InputF;
             ItemStack InputI;
 
@@ -148,7 +140,7 @@ public class CauldronRecipie implements ICauldronRecipie {
 
             Fluid outputF = Fluids.EMPTY;
             ItemStack OutputI = ItemStack.EMPTY;
-            int amount = 0;
+            int amount;
             String output = buffer.readString();
             switch (output)
             {

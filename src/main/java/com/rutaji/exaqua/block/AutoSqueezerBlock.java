@@ -1,13 +1,10 @@
 package com.rutaji.exaqua.block;
 
 import com.rutaji.exaqua.container.AutoSqueezerContainer;
-import com.rutaji.exaqua.container.SqueezerContainer;
 import com.rutaji.exaqua.tileentity.AutoSqueezerTileEntity;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
-import com.rutaji.exaqua.tileentity.SqueezerTile;
 import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -16,9 +13,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -35,6 +29,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -60,7 +55,7 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
 
 
-    public VoxelShape getShape(BlockState blockState, IBlockReader worlIn, BlockPos pos, ISelectionContext context)
+    public @NotNull VoxelShape getShape(@NotNull BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
     {
         return SHAPE;
     }
@@ -109,7 +104,7 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     //endregion
     //region bucket implementation
     @Override
-    public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {
+    public Fluid pickupFluid(IWorld worldIn, BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle){
             if(((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount() >= 1000){

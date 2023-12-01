@@ -2,7 +2,9 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.rutaji.exaqua.ExAqua;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -15,7 +17,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +27,7 @@ import java.util.Random;
 
 public class HandSieveRecipie implements IHandSieveRecipie {
     //region Constructor
-    public HandSieveRecipie(ResourceLocation id, Fluid input, List<RoolItem> output,int chance) {
+    public HandSieveRecipie(ResourceLocation id, @NotNull Fluid input, List<RoolItem> output, int chance) {
         this.ID = id;
         this.INPUTFLUID = input;
         this.RESULTS = output;
@@ -44,13 +48,13 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     private final ResourceLocation ID;
     private static final Random RANDOM = new Random();
     public final List<RoolItem> RESULTS;
-    public final Fluid INPUTFLUID;
+    public final @Nonnull Fluid INPUTFLUID;
     public final int SUM;
     public final int SUCCESCHANCE;
 
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(@NotNull IInventory inv, @NotNull World worldIn) {
         if(inv instanceof InventorySieve)
         {
             FluidStack f = ((InventorySieve) inv).getFluid();
@@ -65,17 +69,17 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
-        return null;
+    public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public @NotNull ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
 
     public List<ItemStack> GetAllPossibleOutputs() {
-        List<ItemStack> results  = new ArrayList<ItemStack>();
+        List<ItemStack> results  = new ArrayList<>();
         for (RoolItem r: RESULTS)
         {
             results.add(r.item);
@@ -84,14 +88,14 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
 
     public int GetSize(){return RESULTS.size();}
     public List<Double> CountChances()
     {
-        List<Double> result = new ArrayList();
+        List<Double> result = new ArrayList<>();
         int i =0;
         for (RoolItem r : RESULTS)
         {
@@ -115,7 +119,7 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     }
     //region registration
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.HANDSIEVE_SERIALIZER.get();
     }
 
@@ -131,9 +135,13 @@ public class HandSieveRecipie implements IHandSieveRecipie {
             implements IRecipeSerializer<HandSieveRecipie> {
 
         @Override
-        public HandSieveRecipie read(ResourceLocation recipeId, JsonObject json) {
+        public @NotNull HandSieveRecipie read(@NotNull ResourceLocation recipeId, JsonObject json) {
 
             Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("fluid").getAsString()));
+            if(fluid == null){
+                ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + json.get("fluid").getAsString());
+                fluid= Fluids.EMPTY;}
+
             JsonArray OutputsJson = JSONUtils.getJsonArray(json, "outputs");
             List<RoolItem> Outputs = new ArrayList<>();
             for (int i = 0; i < OutputsJson.size(); i++) {
@@ -146,7 +154,7 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
         @Nullable
         @Override
-        public HandSieveRecipie read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public HandSieveRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
             Fluid Input = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString()));
             List<RoolItem> Results = new ArrayList<>();
             int size = buffer.readInt();

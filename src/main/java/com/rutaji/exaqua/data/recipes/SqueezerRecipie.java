@@ -2,7 +2,10 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -16,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -33,37 +37,37 @@ public class SqueezerRecipie implements ISqueezerRecipie {
 
     }
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(IInventory inv, @NotNull World worldIn) {
         return RECIPIEITEMS.get(0).test(inv.getStackInSlot(0));
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
         return ItemStack.EMPTY;
     }
     @Override
-    public NonNullList<Ingredient> getIngredients(){
+    public @NotNull NonNullList<Ingredient> getIngredients(){
         return RECIPIEITEMS;
     }
     @Override //Does not provide anything because this recipie doesn´t produce items
-    public ItemStack getRecipeOutput() {
+    public @NotNull ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
     public FluidStack getRealOutput(){
         return OUTPUT.copy();
     }
 
-    public ItemStack getIcon() {
+    public @NotNull ItemStack getIcon() {
         return new ItemStack(ModBlocks.SQUEEZER.get());
     }
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.SQUEEZER_SERIALIZER.get();
     }
     public static class SqueezerRecipeType implements IRecipeType<SqueezerRecipie> {
@@ -77,11 +81,16 @@ public class SqueezerRecipie implements ISqueezerRecipie {
             implements IRecipeSerializer<SqueezerRecipie> {
 
         @Override
-        public SqueezerRecipie read(ResourceLocation recipeId, JsonObject json) {
+        public @NotNull SqueezerRecipie read(@NotNull ResourceLocation recipeId, @NotNull JsonObject json) {
             JsonObject output1 = JSONUtils.getJsonObject(json, "output");
             String OutputFluid = output1.get("fluid").getAsString();
             int OutputAmount = output1.get("amount").getAsInt();
-            FluidStack output = new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid)) ,OutputAmount);
+
+            Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid));
+            if(f == null){
+                ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + OutputFluid);
+                f= Fluids.EMPTY;}
+            FluidStack output = new FluidStack( f,OutputAmount);
 
 
             JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
@@ -97,14 +106,17 @@ public class SqueezerRecipie implements ISqueezerRecipie {
 
         @Nullable
         @Override
-        public SqueezerRecipie read(ResourceLocation recipeId, PacketBuffer buffer) {
-            NonNullList<Ingredient> inputs = NonNullList.withSize(1, Ingredient.EMPTY);
+        public SqueezerRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
+            NonNullList<Ingredient> inputs = NonNullList.withSize(buffer.readInt(), Ingredient.EMPTY);
 
-            for (int i = 0; i < inputs.size(); i++) {
-                inputs.set(i, Ingredient.read(buffer));
-            }
+            inputs.replaceAll(ignored -> Ingredient.read(buffer));
 
-            FluidStack output = new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString())),buffer.readInt());
+            String OutputFluid = buffer.readString();
+            Fluid f =ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid));
+            if(f == null){
+                ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + OutputFluid);
+                f= Fluids.EMPTY;}
+            FluidStack output = new FluidStack(f,buffer.readInt());
             return new SqueezerRecipie(recipeId, output, inputs);
         }
 
