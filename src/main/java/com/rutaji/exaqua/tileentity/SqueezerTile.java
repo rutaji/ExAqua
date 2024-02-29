@@ -21,9 +21,11 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -57,20 +59,20 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     //endregion
     //region nbt
     @Override
-    public void read(BlockState state, CompoundNBT nbt){
+    public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         Tank.deserializeNBT(nbt);
         super.read(state,nbt);
     }
 
     @Override
-    public CompoundNBT write( CompoundNBT nbt){
+    public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         nbt = Tank.serializeNBT(nbt);
         return super.write(nbt);
     }
     @Override //server send on chung load
-    public CompoundNBT getUpdateTag(){
+    public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
@@ -81,10 +83,10 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     }
     //endregion
 
-    @Nullable
+
     @Override
-    public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
-        if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler" )
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
+        if(Objects.equals(cap.getName(), "net.minecraftforge.fluids.capability.IFluidHandler"))
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();

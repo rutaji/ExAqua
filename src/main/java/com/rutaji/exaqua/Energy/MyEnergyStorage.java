@@ -3,7 +3,6 @@ package com.rutaji.exaqua.Energy;
 import com.rutaji.exaqua.integration.mekanism.EnergyStorageAdapter;
 import com.rutaji.exaqua.others.MyDelegate;
 import mekanism.api.Action;
-import mekanism.api.NBTConstants;
 import mekanism.api.energy.IEnergyContainer;
 import mekanism.api.inventory.AutomationType;
 import mekanism.api.math.FloatingLong;
@@ -13,6 +12,7 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -45,12 +45,12 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
         return false;
     }
     @Override
-    public FloatingLong getEnergy() {
+    public @NotNull FloatingLong getEnergy() {
         return Energy;
     }
 
     @Override
-    public void setEnergy(FloatingLong energy) {
+    public void setEnergy(@NotNull FloatingLong energy) {
         Energy = energy;
         SendChangeToClient();
     }
@@ -60,7 +60,7 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
     }
 
     @Override
-    public FloatingLong getMaxEnergy() {
+    public @NotNull FloatingLong getMaxEnergy() {
         return MAXCAPACITY;
     }
 
@@ -81,8 +81,8 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
     public ICapabilityProvider getCapabilityProvider() {
         return new ICapabilityProvider() {
             @Override
-            public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-                if (cap.getName() == "mekanism.api.energy.IStrictEnergyHandler") {
+            public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+                if (cap.getName().equals("mekanism.api.energy.IStrictEnergyHandler")) {
                     return LazyOptional.of(() -> new EnergyStorageAdapter(MyEnergyStorage.this)).cast();
                 }
                 return LazyOptional.empty();

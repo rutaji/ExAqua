@@ -24,15 +24,17 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Optional;
 
 public class SieveTileEntity extends TileEntity implements ITickableTileEntity,IMyLiquidTankTIle,IMYEnergyStorageTile {
 
     //region Items
-    private int NUMBER_OF_INVENTORY_SLOTS =8;
+    private final int NUMBER_OF_INVENTORY_SLOTS =8;
     private ItemStackHandler createHandler()
     {
         return new ItemStackHandler(NUMBER_OF_INVENTORY_SLOTS){
@@ -53,7 +55,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     //endregion
     //region nbt
     @Override
-    public void read(BlockState state, CompoundNBT nbt){
+    public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         tier = SieveTiers.valueOf(nbt.getString("tier"));
         Tank.deserializeNBT(nbt);
@@ -61,7 +63,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
         super.read(state,nbt);
     }
     @Override
-    public CompoundNBT write( CompoundNBT nbt){
+    public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         nbt.putString("tier",tier.name());
         nbt = Tank.serializeNBT(nbt);
@@ -69,7 +71,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
         return super.write(nbt);
     }
     @Override //server send on chung load
-    public CompoundNBT getUpdateTag(){
+    public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
@@ -106,13 +108,13 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     }
 
     //endregion
-    @Nullable
+
     @Override
-    public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
-        if(cap.getName() == "mekanism.api.energy.IStrictEnergyHandler"){
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
+        if(Objects.equals(cap.getName(), "mekanism.api.energy.IStrictEnergyHandler")){
             return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
         }
-        if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler" )
+        if(Objects.equals(cap.getName(), "net.minecraftforge.fluids.capability.IFluidHandler"))
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();
@@ -145,7 +147,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
             if (Tank.FluidStored.getAmount() == 0 && !crafting) {
                 return;
             }
-            if(crafting == false) {
+            if(!crafting) {
                 InventorySieve inv = new InventorySieve();
                 inv.setFluidStack(Tank.FluidStored);
                 inv.setTier(GetTier());

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.data.recipes.SieveRecipie;
-import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -36,27 +36,27 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
 
 
     @Override
-    public ResourceLocation getUid() {
+    public @NotNull ResourceLocation getUid() {
         return UID;
     }
 
     @Override
-    public Class<? extends SieveRecipie> getRecipeClass() {
+    public @NotNull Class<? extends SieveRecipie> getRecipeClass() {
         return SieveRecipie.class;
     }
 
     @Override
-    public String getTitle() {
+    public @NotNull String getTitle() {
         return "Automatic Sieving";
     }
 
     @Override
-    public IDrawable getBackground() {
+    public @NotNull IDrawable getBackground() {
         return BACKGROUND;
     }
 
     @Override
-    public IDrawable getIcon() {
+    public @NotNull IDrawable getIcon() {
         return ICON;
     }
 
@@ -79,7 +79,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, SieveRecipie recipe, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, SieveRecipie recipe, @NotNull IIngredients ingredients) {
         recipeLayout.getFluidStacks().init(0,true,92,8);
 
         int x = X;
@@ -96,7 +96,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
 
     }
     @Override
-    public void draw(SieveRecipie recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(SieveRecipie recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
     {
         int x = X;
         int y = Y;
@@ -104,6 +104,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
         //drawing tiless
         for(int i =0;i < recipe.GetSize();i++ )
         {
+            assert Minecraft.getInstance().currentScreen != null;
             Minecraft.getInstance().currentScreen.blit(matrixStack,x,y,201,0,18,18);
             x+=34;
             if(x > WIDTH -5) {x = X;y+=40;}
@@ -112,9 +113,9 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
         y = Y;
         HELPER.createDrawableIngredient(new ItemStack(recipe.TIER.GetSymbol())).draw(matrixStack,10,10);
         String s;
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.INPUTFLUID.getAmount()) + " mb" , 110 , 18, 0x111111);
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.RF) + " rf/t" , 110 , 28, 0x111111);
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.TIME) + " t" , 110 , 38, 0x111111);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, recipe.INPUTFLUID.getAmount() + " mb" , 110 , 18, 0x111111);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, recipe.RF + " rf/t" , 110 , 28, 0x111111);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, recipe.TIME + " t" , 110 , 38, 0x111111);
         //drawing procents
         for(double d : recipe.GetChances())
         {

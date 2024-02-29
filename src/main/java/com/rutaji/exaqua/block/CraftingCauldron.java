@@ -1,8 +1,9 @@
 package com.rutaji.exaqua.block;
 
 import com.rutaji.exaqua.container.CauldronContainer;
-import com.rutaji.exaqua.container.SqueezerContainer;
-import com.rutaji.exaqua.tileentity.*;
+import com.rutaji.exaqua.tileentity.CauldronEntity;
+import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
+import com.rutaji.exaqua.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
@@ -31,23 +32,25 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class CraftingCauldron extends Block implements ILiquidContainer, IBucketPickupHandler {
+
+    //region Constructor
     public CraftingCauldron(Properties properties) {
         super(properties);
     }
+    //endregion
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit) {
         if(!worldIn.isRemote()) {
             TileEntity tileEntity = worldIn.getTileEntity(pos);
             if(tileEntity instanceof CauldronEntity) {
-                //region UI
                 INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
                 NetworkHooks.openGui(((ServerPlayerEntity) player), containerProvider, tileEntity.getPos());
-                //endregion
             } else {
                 throw new IllegalStateException("Wrong TileEntity!");
             }
@@ -58,12 +61,11 @@ public class CraftingCauldron extends Block implements ILiquidContainer, IBucket
     private INamedContainerProvider createContainerProvider(World worldIn, BlockPos pos) {
         return new INamedContainerProvider() {
             @Override
-            public ITextComponent getDisplayName() {
+            public @NotNull ITextComponent getDisplayName() {
                 return new TranslationTextComponent("");
             }
-            @Nullable
             @Override
-            public Container createMenu(int i, PlayerInventory inventory, PlayerEntity playerEn) {
+            public @NotNull Container createMenu(int i, @NotNull PlayerInventory inventory, @NotNull PlayerEntity playerEn) {
                 return new CauldronContainer(i,worldIn,pos,inventory,playerEn);
             }
         };
@@ -86,7 +88,7 @@ public class CraftingCauldron extends Block implements ILiquidContainer, IBucket
             Block.makeCuboidShape(2, 1, 13, 14, 16, 14),
             Block.makeCuboidShape(0, 0, 0, 16, 1, 16)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
-    public VoxelShape getShape(BlockState blockState, IBlockReader worlIn, BlockPos pos, ISelectionContext context)
+    public @NotNull VoxelShape getShape(@NotNull BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
     {
         return SHAPE;
     }
@@ -104,7 +106,7 @@ public class CraftingCauldron extends Block implements ILiquidContainer, IBucket
     //endregion
     //region bucket implementation
     @Override
-    public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {
+    public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle){
             if(((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount() >= 1000){
@@ -116,7 +118,7 @@ public class CraftingCauldron extends Block implements ILiquidContainer, IBucket
     }
 
     @Override
-    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
+    public boolean canContainFluid(IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle)
         {
@@ -126,7 +128,7 @@ public class CraftingCauldron extends Block implements ILiquidContainer, IBucket
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
+    public boolean receiveFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle)

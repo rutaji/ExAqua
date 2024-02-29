@@ -1,13 +1,11 @@
 package com.rutaji.exaqua.networking;
 
 import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
-import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import mekanism.api.math.FloatingLong;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;

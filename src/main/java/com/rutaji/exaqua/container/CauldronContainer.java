@@ -18,6 +18,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 
 public class CauldronContainer extends Container {
     private final TileEntity TILEEMTITY;
@@ -32,10 +33,7 @@ public class CauldronContainer extends Container {
         layoutPlayerInventorySlots(8,84);
 
         if(TILEEMTITY != null){
-            TILEEMTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new SlotItemHandler(h,0,80,33));
-
-            });
+            TILEEMTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> addSlot(new SlotItemHandler(h,0,80,33)));
         }
 
     }
@@ -63,7 +61,7 @@ public class CauldronContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player){
+    public boolean canInteractWith(@NotNull PlayerEntity player){
         return  isWithinUsableDistance(IWorldPosCallable.of(TILEEMTITY.getWorld(), TILEEMTITY.getPos()),
                 player, ModBlocks.CAULDRON.get());
     }
@@ -106,7 +104,7 @@ public class CauldronContainer extends Container {
     private static final int TE_INVENTORY_SLOT_COUNT = 1;
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public @NotNull ItemStack transferStackInSlot(@NotNull PlayerEntity playerIn, int index) {
         Slot sourceSlot = inventorySlots.get(index);
         if (sourceSlot == null || !sourceSlot.getHasStack()) return ItemStack.EMPTY;
         ItemStack sourceStack = sourceSlot.getStack();

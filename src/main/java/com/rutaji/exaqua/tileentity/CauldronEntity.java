@@ -1,27 +1,25 @@
 package com.rutaji.exaqua.tileentity;
 
-import com.mojang.realmsclient.client.Request;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
 import com.rutaji.exaqua.data.recipes.CauldronRecipie;
 import com.rutaji.exaqua.data.recipes.InventoryCauldron;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
-import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
 import com.rutaji.exaqua.networking.MyFluidStackPacket;
 import com.rutaji.exaqua.networking.PacketHandler;
 import com.rutaji.exaqua.others.CauldronTemperature;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -30,9 +28,11 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity {
@@ -77,20 +77,20 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     //endregion
     //region nbt
     @Override
-    public void read(BlockState state, CompoundNBT nbt){
+    public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         Tank.deserializeNBT(nbt);
         super.read(state,nbt);
     }
 
     @Override
-    public CompoundNBT write( CompoundNBT nbt){
+    public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         nbt = Tank.serializeNBT(nbt);
         return super.write(nbt);
     }
     @Override //server send on chung load
-    public CompoundNBT getUpdateTag(){
+    public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
@@ -100,10 +100,10 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
         read(state,nbt);
     }
     //endregion
-    @Nullable
+
     @Override
-    public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
-        if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler" )
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
+        if (Objects.equals(cap.getName(), "net.minecraftforge.fluids.capability.IFluidHandler"))
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();

@@ -2,13 +2,13 @@ package com.rutaji.exaqua.Fluids;
 
 import com.rutaji.exaqua.integration.mekanism.WaterFluidTankCapabilityAdapter;
 import com.rutaji.exaqua.others.MyDelegate;
-import mekanism.api.NBTConstants;
 import mekanism.api.fluid.IExtendedFluidTank;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -33,8 +33,8 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
     public ICapabilityProvider getCapabilityProvider() {
         return new ICapabilityProvider() {
             @Override
-            public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-                if (cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler") {
+            public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+                if (cap.getName().equals("net.minecraftforge.fluids.capability.IFluidHandler")) {
                     return LazyOptional.of(() -> new WaterFluidTankCapabilityAdapter(MyLiquidTank.this)).cast();
                 }
                 return LazyOptional.empty();
@@ -88,7 +88,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
     }
 
     @Override
-    public void setStack(FluidStack stack) {
+    public void setStack(@NotNull FluidStack stack) {
 
         FluidStored = stack;
         SendChangeToClient();
@@ -102,7 +102,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
     }
 
     @Override
-    public int fill(FluidStack resource, IFluidHandler.FluidAction action)
+    public int fill(FluidStack resource, IFluidHandler.@NotNull FluidAction action)
     {
         if (resource.isEmpty() || !isFluidValid(resource))
         {
@@ -147,7 +147,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
 
     @Nonnull
     @Override
-    public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
+    public FluidStack drain(int maxDrain, IFluidHandler.@NotNull FluidAction action) {
         System.out.println("drain");
         int drained = maxDrain;
         if (FluidStored.getAmount() < drained)
@@ -166,7 +166,7 @@ public class MyLiquidTank implements IExtendedFluidTank , Capability.IStorage<IF
 
     @Nonnull
     @Override
-    public FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action) {
+    public FluidStack drain(FluidStack resource, IFluidHandler.@NotNull FluidAction action) {
         System.out.println("drain fluidstack");
         if (resource.isEmpty() || !resource.isFluidEqual(FluidStored))
         {

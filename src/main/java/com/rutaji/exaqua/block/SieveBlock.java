@@ -32,6 +32,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -58,7 +59,7 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
             Block.makeCuboidShape(14, 10, 14, 16, 16, 16)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
     @Override
-    public VoxelShape getShape(BlockState blockState, IBlockReader worlIn, BlockPos pos, ISelectionContext context)
+    public @NotNull VoxelShape getShape(@NotNull BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
     {
         return SHAPE;
     }
@@ -69,8 +70,8 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
     //endregion
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
-                                             PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, World worldIn, @NotNull BlockPos pos,
+                                                      @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit)
     {
         if(!worldIn.isRemote()) {
             TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -89,13 +90,12 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
     private INamedContainerProvider createContainerProvider(World worldIn, BlockPos pos) {
         return new INamedContainerProvider() {
             @Override
-            public ITextComponent getDisplayName() {
+            public @NotNull ITextComponent getDisplayName() {
                 return new TranslationTextComponent("screen.exaqua.sievecontainer");
             }
 
-            @Nullable
             @Override
-            public Container createMenu(int i, PlayerInventory inventory, PlayerEntity playerEn) {
+            public Container createMenu(int i, @NotNull PlayerInventory inventory, @NotNull PlayerEntity playerEn) {
                 return new SieveContainer(i,worldIn,pos,inventory,playerEn);
             }
         };
@@ -103,7 +103,7 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
     }
     //region bucket implementation
     @Override
-    public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {
+    public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle){
             if(((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount() >= 1000){
@@ -114,7 +114,7 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
         return Fluids.EMPTY;
     }
     @Override
-    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
+    public boolean canContainFluid(IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle)
         {
@@ -124,7 +124,7 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
+    public boolean receiveFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle)

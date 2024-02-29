@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.data.recipes.CauldronRecipie;
-import com.rutaji.exaqua.data.recipes.SieveRecipie;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -12,13 +11,11 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
     public final static ResourceLocation UID = new ResourceLocation(ExAqua.MOD_ID,"cauldron");
@@ -38,38 +35,34 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
 
 
     @Override
-    public ResourceLocation getUid() {
+    public @NotNull ResourceLocation getUid() {
         return UID;
     }
 
     @Override
-    public Class<? extends CauldronRecipie> getRecipeClass() {
+    public @NotNull Class<? extends CauldronRecipie> getRecipeClass() {
         return CauldronRecipie.class;
     }
 
     @Override
-    public String getTitle() {
+    public @NotNull String getTitle() {
         return "Crafting Cauldron";
     }
 
     @Override
-    public IDrawable getBackground() {
+    public @NotNull IDrawable getBackground() {
         return BACKGROUND;
     }
 
     @Override
-    public IDrawable getIcon() {
+    public @NotNull IDrawable getIcon() {
         return ICON;
     }
 
 
 
-    private final int X = 5;
-    private final int Y = 60;
-
-
     @Override
-    public void setIngredients(CauldronRecipie recipe, IIngredients ingredients) {
+    public void setIngredients(CauldronRecipie recipe, @NotNull IIngredients ingredients) {
         if(recipe.INPUT != Fluids.EMPTY)
         {
             ingredients.setInput(VanillaTypes.FLUID,new FluidStack(recipe.INPUT,1000));
@@ -92,7 +85,7 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, CauldronRecipie recipe, IIngredients ingredients) {
+    public void setRecipe(@NotNull IRecipeLayout recipeLayout, CauldronRecipie recipe, @NotNull IIngredients ingredients) {
 
         if(recipe.INPUT != Fluids.EMPTY)
         {
@@ -116,17 +109,20 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
 
     }
     @Override
-    public void draw(CauldronRecipie recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(CauldronRecipie recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
     {
         switch (recipe.TEMP)
         {
             case hot:
+                assert Minecraft.getInstance().currentScreen != null;
                 Minecraft.getInstance().currentScreen.blit(matrixStack, 70, 8, 202, 1, 24, 18);
                 break;
             case cold:
+                assert Minecraft.getInstance().currentScreen != null;
                 Minecraft.getInstance().currentScreen.blit(matrixStack, 70, 8, 202, 21, 24, 18);
                 break;
             case neutral:
+                assert Minecraft.getInstance().currentScreen != null;
                 Minecraft.getInstance().currentScreen.blit(matrixStack, 70, 8, 202, 41, 24, 18);
                 break;
         }

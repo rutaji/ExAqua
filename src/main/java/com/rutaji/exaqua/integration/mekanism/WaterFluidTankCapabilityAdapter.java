@@ -7,6 +7,7 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class WaterFluidTankCapabilityAdapter implements IMekanismFluidHandler {
         tankie = t;
     }
     @Override
-    public List<IExtendedFluidTank> getFluidTanks(@Nullable Direction side) {
+    public @NotNull List<IExtendedFluidTank> getFluidTanks(@Nullable Direction side) {
 
         return Arrays.asList(new IExtendedFluidTank[]{tankie});
     }
@@ -34,7 +35,7 @@ public class WaterFluidTankCapabilityAdapter implements IMekanismFluidHandler {
     private class Provider implements ICapabilityProvider {
         @Override
         public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-            if (capability.getName() == "net.minecraftforge.fluids.capability.IFluidHandler")
+            if (capability.getName().equals("net.minecraftforge.fluids.capability.IFluidHandler"))
             {
                 return LazyOptional.of(() -> WaterFluidTankCapabilityAdapter.this).cast();
             }

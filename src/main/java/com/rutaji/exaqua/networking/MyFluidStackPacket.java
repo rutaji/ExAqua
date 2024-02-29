@@ -1,9 +1,7 @@
 package com.rutaji.exaqua.networking;
 
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
-import com.rutaji.exaqua.tileentity.SqueezerTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

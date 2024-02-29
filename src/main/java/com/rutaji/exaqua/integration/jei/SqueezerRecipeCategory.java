@@ -12,9 +12,9 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 
 public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie>{
     public final static ResourceLocation UID = new ResourceLocation(ExAqua.MOD_ID,"squeezer");
@@ -32,27 +32,27 @@ public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie>{
 
 
     @Override
-    public ResourceLocation getUid() {
+    public @NotNull ResourceLocation getUid() {
         return UID;
     }
 
     @Override
-    public Class<? extends SqueezerRecipie> getRecipeClass() {
+    public @NotNull Class<? extends SqueezerRecipie> getRecipeClass() {
         return SqueezerRecipie.class;
     }
 
     @Override
-    public String getTitle() {
+    public @NotNull String getTitle() {
         return ModBlocks.SQUEEZER.get().getTranslatedName().toString();
     }
 
     @Override
-    public IDrawable getBackground() {
+    public @NotNull IDrawable getBackground() {
         return BACKGROUND;
     }
 
     @Override
-    public IDrawable getIcon() {
+    public @NotNull IDrawable getIcon() {
         return ICON;
     }
 
@@ -67,7 +67,7 @@ public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie>{
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, SqueezerRecipie recipe, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, @NotNull SqueezerRecipie recipe, @NotNull IIngredients ingredients) {
         recipeLayout.getItemStacks().init(0, true, 80, 29);
         recipeLayout.getFluidStacks().init(0,false,80,55);
 
@@ -77,9 +77,9 @@ public class SqueezerRecipeCategory implements IRecipeCategory<SqueezerRecipie>{
 
     }
     @Override
-    public void draw(SqueezerRecipie recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(SqueezerRecipie recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
     {
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack,String.valueOf(recipe.getRealOutput().getAmount() + " mB") , 97 , 64, 0x111111);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, recipe.getRealOutput().getAmount() + " mB", 97 , 64, 0x111111);
     }
 
 
