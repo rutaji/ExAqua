@@ -68,7 +68,7 @@ public class HandSieve extends Item {
             {
 
                 InventorySieve inv = new InventorySieve();
-                inv.setFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(ExAqua.MOD_ID,itemstack.getOrCreateTag().getString(FLUID_INSIDE))),5));
+                inv.setFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemstack.getOrCreateTag().getString(FLUID_INSIDE))),5));
 
                 Optional<HandSieveRecipie> recipe = worldIn.getRecipeManager()
                         .getRecipe(ModRecipeTypes.HANDSIEVE_RECIPE, inv, worldIn);
@@ -86,7 +86,6 @@ public class HandSieve extends Item {
                                 playerIn.entityDropItem(iRecipe.GetRandomItemStack());
                             }
                         }
-
                         LowerWater(itemstack);
                     }
                 });
@@ -127,7 +126,6 @@ public class HandSieve extends Item {
                 if (fluid != Fluids.EMPTY) {
                     itemstack.getOrCreateTag().putInt(HOLDING_WATER,UsesFromBucket);
                     itemstack.getOrCreateTag().putString(FLUID_INSIDE, fluid.getRegistryName().toString());
-
                 }
             }
         }
