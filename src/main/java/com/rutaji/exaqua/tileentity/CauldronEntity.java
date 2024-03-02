@@ -61,7 +61,7 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
 
     //endregion
     //region Liquid
-    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange,1000);
+    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange,1000,e->true);
 
     @Override
     public MyLiquidTank GetTank() {
@@ -70,7 +70,7 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     @Override
     public void TankChange() {
         if(world != null &&!world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.GetFluidstack(), pos));
         }
     }
     //endregion
@@ -79,14 +79,14 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     @Override
     public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
-        Tank.deserializeNBT(nbt);
+        Tank.readFromNBT(nbt);
         super.read(state,nbt);
     }
 
     @Override
     public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
-        nbt = Tank.serializeNBT(nbt);
+        nbt = Tank.writeToNBT(nbt);
         return super.write(nbt);
     }
     @Override //server send on chung load
@@ -154,7 +154,7 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
                                 Tank.fill(new FluidStack(RecipieOnCooldown.OUTPUT, RecipieOnCooldown.AMOUNT), IFluidHandler.FluidAction.EXECUTE);
                             }
                             else {
-                                Tank.setStack(new FluidStack(RecipieOnCooldown.OUTPUT, Tank.getFluidAmount()));
+                                Tank.setFluid(new FluidStack(RecipieOnCooldown.OUTPUT, Tank.getFluidAmount()));
                             }
                             if (RecipieOnCooldown.INPUT_ITEM != ItemStack.EMPTY) {
                                 ITEM_STACK_HANDLER.extractItem(0, RecipieOnCooldown.INPUT_ITEM.getCount(), false);

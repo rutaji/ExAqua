@@ -30,7 +30,7 @@ public class SieveRecipie implements ISieveRecipie {
 
     private final ResourceLocation ID;
 
-    public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output,int time,double rf,SieveTiers tier) {
+    public SieveRecipie(ResourceLocation id, FluidStack input,List<RoolItem> output,int time,int rf,SieveTiers tier) {
         this.ID = id;
         this.INPUTFLUID = input;
         this.RESULT = output;
@@ -53,7 +53,7 @@ public class SieveRecipie implements ISieveRecipie {
     public final List<RoolItem> RESULT;
     public final FluidStack INPUTFLUID;
     public final int TIME;
-    public final double RF;
+    public final int RF;
     public final int SUM;
     public final SieveTiers TIER;
 
@@ -155,7 +155,7 @@ public class SieveRecipie implements ISieveRecipie {
                 Outputs.add(new RoolItem( ShapedRecipe.deserializeItem(j.get("item").getAsJsonObject()),j.get("chance").getAsInt()));
             }
             int time = json.get("time").getAsInt();
-            double rf = json.get("rf").getAsDouble();
+            int rf = json.get("rf").getAsInt();
             String tier = json.get("tier").getAsString();
 
             return new SieveRecipie(recipeId, Input,Outputs,time,rf,SieveTiers.valueOf(tier));
@@ -179,7 +179,7 @@ public class SieveRecipie implements ISieveRecipie {
 
             }
             int time = buffer.readInt();
-            double rf = buffer.readDouble();
+            int rf = buffer.readInt();
             SieveTiers tier = buffer.readEnumValue(SieveTiers.class);
             return new SieveRecipie(recipeId, Input,Results,time,rf,tier);
         }
@@ -197,7 +197,7 @@ public class SieveRecipie implements ISieveRecipie {
                 buffer.writeInt(R.chance);
             }
             buffer.writeInt(recipe.TIME);
-            buffer.writeDouble(recipe.RF);
+            buffer.writeInt(recipe.RF);
             buffer.writeEnumValue(recipe.TIER);
 
 

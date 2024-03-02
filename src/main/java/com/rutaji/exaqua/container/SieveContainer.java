@@ -67,7 +67,7 @@ public class SieveContainer extends Container {
     }
     public long GetEnergyAmount(){
         if (TILEENTITY instanceof IMYEnergyStorageTile){
-            return ((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().GetAsRF();
+            return (long)(((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().GetAsRF());
         }
         return -1;
     }

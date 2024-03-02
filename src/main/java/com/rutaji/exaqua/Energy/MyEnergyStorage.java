@@ -12,46 +12,50 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEnergyContainer>{
+public class MyEnergyStorage extends EnergyStorage implements Capability.IStorage<IEnergyContainer>{
+    private static final String NBTCONSTANT = "energystorage";
+
     //region RF conversion
-    public static double fromRF(double d) {return (d*5)/2;}
-    public static long fromRF(long d) {return (d*5)/2;}
-    public static long ToRF(long rf) {return (rf*2)/5;}
+    public static int fromRF(FloatingLong d) {return d.multiply(2.5).intValue();}
+    public static int fromRF(int d) {return (int)(d*2.5);}
+    public static double ToRF(int rf) {return rf/2.5;}
     //endregion
-    FloatingLong Energy = FloatingLong.create(0);
+
     //region Constructor
-    public MyEnergyStorage(double capacity, MyDelegate m){
-        MAXCAPACITY =FloatingLong.create(capacity);
+    public MyEnergyStorage(int capacity, MyDelegate m, int maxRecieve, int maxExtract){
+        super(capacity,maxRecieve,maxExtract);
         Onchange = m;
     }
-    //endregion
-    private final String NBTCONSTANT = "energystorage";
-    public MyDelegate Onchange;
-    private final FloatingLong MAXCAPACITY;
-    public long GetAsRF(){
-         FloatingLong test = getEnergy();
-         return MyEnergyStorage.ToRF(test.getValue());
+    public MyEnergyStorage(int capacity, MyDelegate m){
+        this(capacity,m,9999999,999999);
     }
-    public boolean DrainRF(double rf){
-        FloatingLong totake = FloatingLong.create(fromRF(rf));
-        if(totake.smallerOrEqual(getEnergy())){
-            extract(totake, Action.EXECUTE, AutomationType.MANUAL);
+    //endregion
+    public MyDelegate Onchange;
+    public double GetAsRF(){
+         return ToRF(getEnergyStored());
+    }
+    public boolean DrainRF(int rf){
+        int energyConverted = fromRF(rf);
+        if (HasEnoughEnergy(energyConverted))
+        {
+            extractEnergy(energyConverted,false);
             return true;
         }
         return false;
     }
-    @Override
-    public @NotNull FloatingLong getEnergy() {
-        return Energy;
+    public boolean HasEnoughEnergy(int energyAmounth)
+    {
+        return getEnergyStored() >= energyAmounth;
     }
 
-    @Override
-    public void setEnergy(@NotNull FloatingLong energy) {
-        Energy = energy;
+
+    public void setEnergy(@NotNull int energy) {
+        this.energy = energy;
         SendChangeToClient();
     }
     public void SendChangeToClient()
@@ -59,25 +63,6 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
         Onchange.Execute();
     }
 
-    @Override
-    public @NotNull FloatingLong getMaxEnergy() {
-        return MAXCAPACITY;
-    }
-
-    @Override
-    public void onContentsChanged() {
-
-    }
-    //region NBT
-    public CompoundNBT serializeNBT(CompoundNBT nbt)
-    {
-        nbt.putString(NBTCONSTANT, getEnergy().toString());
-        return nbt;
-    }
-    @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-        setEnergy(FloatingLong.parseFloatingLong(nbt.getString(NBTCONSTANT)));
-    }
     public ICapabilityProvider getCapabilityProvider() {
         return new ICapabilityProvider() {
             @Override
@@ -90,24 +75,59 @@ public class MyEnergyStorage implements IEnergyContainer,Capability.IStorage<IEn
         };
     }
 
+    @Override
+    public int receiveEnergy(int maxReceive, boolean simulate)
+    {
+        if (!canReceive())
+            return 0;
+
+        int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
+        if (!simulate)
+            setEnergy(energy + energyReceived);
+        return energyReceived;
+    }
+
+    @Override
+    public int extractEnergy(int maxExtract, boolean simulate)
+    {
+        if (!canExtract())
+            return 0;
+
+        int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+        if (!simulate)
+            setEnergy(energy - energyExtracted);
+        return energyExtracted;
+    }
+
+
+    //region NBT
+    public CompoundNBT serializeNBT(@NotNull CompoundNBT nbt)
+    {
+        nbt.putInt(NBTCONSTANT, getEnergyStored());
+        return nbt;
+    }
+
+
+    public void deserializeNBT(@NotNull CompoundNBT nbt) {
+        setEnergy((nbt.getInt(NBTCONSTANT)));
+    }
+    
+
     @Nullable
     @Override
     public INBT writeNBT(Capability<IEnergyContainer> capability, IEnergyContainer instance, Direction side) {
         CompoundNBT nbt = new CompoundNBT();
         if (instance instanceof MyEnergyStorage) {
             MyEnergyStorage EnergyTank = (MyEnergyStorage) instance;
-            if (!EnergyTank.isEmpty()) {
-                nbt.putDouble(NBTCONSTANT, Energy.getValue());
-            }
+                nbt.putInt(NBTCONSTANT, getEnergyStored());
         }
         return nbt;
     }
-
     @Override
     public void readNBT(Capability<IEnergyContainer> capability, IEnergyContainer instance, Direction side, INBT nbt) {
         if(instance instanceof MyEnergyStorage)
         {
-            setEnergy( FloatingLong.create(((CompoundNBT) nbt).getDouble(NBTCONSTANT)));
+            setEnergy( ((CompoundNBT) nbt).getInt(NBTCONSTANT));
         }
 
     }

@@ -75,7 +75,7 @@ public class HandSieve extends Item {
                 if( !recipe.isPresent())
                 {
                     EmptyIt(itemstack);
-                    System.out.println("Není recept !!!");
+                    System.out.println("no recipie");
                     return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
                 }
                 recipe.ifPresent(iRecipe -> {

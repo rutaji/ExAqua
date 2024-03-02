@@ -61,7 +61,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     @Override
     public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
-        Tank.deserializeNBT(nbt);
+        Tank.readFromNBT(nbt);
         GetEnergyStorage().deserializeNBT(nbt);
         super.read(state,nbt);
     }
@@ -69,7 +69,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     @Override
     public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
-        nbt = Tank.serializeNBT(nbt);
+        nbt = Tank.writeToNBT(nbt);
         nbt = GetEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
@@ -95,7 +95,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     public void EnergyChangePacket()
     {
         if(world != null && !world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergy(), pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergyStored(), pos));
         }
     }
 
@@ -115,7 +115,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     }
     private final int CraftingCooldownMax = 20;
     private int CraftingCooldown = CraftingCooldownMax;
-    private final int CraftingRF = 5;
+    private final int CraftingRF = 20;
     @Override
     public void tick()
     {
@@ -144,7 +144,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
 
             recipe.ifPresent(iRecipe -> {
                 FluidStack output = iRecipe.getRealOutput();
-                if(!Tank.CanTakeFluid(output.getFluid())){return;}
+                if(!Tank.isFluidValid(new FluidStack(output.getFluid(), output.getAmount()))){return;}
                 ITEM_STACK_HANDLER.extractItem(0, 1, false);
 
                 this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
@@ -157,7 +157,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     public void TankChange()
     {
         if(world != null &&!world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.GetFluidstack(), pos));
         }
 
     }
