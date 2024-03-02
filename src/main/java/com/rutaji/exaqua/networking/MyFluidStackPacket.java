@@ -31,8 +31,6 @@ public class MyFluidStackPacket {
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
-        System.out.println("handle");
-
         TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
         if ( tileEntity instanceof IMyLiquidTankTIle) {
             ((IMyLiquidTankTIle)tileEntity).GetTank().setFluid(PacketStack);

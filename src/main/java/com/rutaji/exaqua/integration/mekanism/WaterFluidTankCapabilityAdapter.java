@@ -35,7 +35,6 @@ public class WaterFluidTankCapabilityAdapter implements IMekanismFluidHandler {
 
             @Override
             public void onContentsChanged() {
-                System.out.println("onContent call from adapter");
                 tank.onContentsChanged();
             }
 
@@ -70,7 +69,6 @@ public class WaterFluidTankCapabilityAdapter implements IMekanismFluidHandler {
     @Override
     public void onContentsChanged()
     {
-        System.out.println("oncontent change called from adapter CLASS !! directly from class");
         tankie.onContentsChanged();
     }
 

@@ -115,7 +115,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     }
     private final int CraftingCooldownMax = 20;
     private int CraftingCooldown = CraftingCooldownMax;
-    private final int CraftingRF = 5;
+    private final int CraftingRF = 20;
     @Override
     public void tick()
     {

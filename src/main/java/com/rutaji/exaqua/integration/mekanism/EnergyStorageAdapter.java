@@ -22,12 +22,14 @@ public class EnergyStorageAdapter implements IMekanismStrictEnergyHandler {
             MyEnergyStorage EnergyReference = energyStorage;
             @Override
             public FloatingLong getEnergy() {
-                return FloatingLong.create(EnergyReference.getEnergyStored());
+                 FloatingLong test = FloatingLong.create(EnergyReference.getEnergyStored());
+                return test;
             }
 
             @Override
             public void setEnergy(FloatingLong energy) {
                 EnergyReference.setEnergy(energy.intValue());
+
             }
 
             @Override
@@ -49,7 +51,6 @@ public class EnergyStorageAdapter implements IMekanismStrictEnergyHandler {
 
     @Override
     public void onContentsChanged() {
-        //todo is this good ?
         energyStorage.SendChangeToClient();
     }
     private final MyEnergyStorage energyStorage;

@@ -21,28 +21,29 @@ public class MyEnergyStorage extends EnergyStorage implements Capability.IStorag
     private static final String NBTCONSTANT = "energystorage";
 
     //region RF conversion
-    public static int fromRF(int d) {return d;}
-    public static int ToRF(int rf) {return rf;}
+    public static int fromRF(FloatingLong d) {return d.multiply(2.5).intValue();}
+    public static int fromRF(int d) {return (int)(d*2.5);}
+    public static double ToRF(int rf) {return rf/2.5;}
     //endregion
 
     //region Constructor
-    public MyEnergyStorage(int capacity, MyDelegate m, int maxRecieve, int minRecieve){
-        super(capacity,maxRecieve,minRecieve);
+    public MyEnergyStorage(int capacity, MyDelegate m, int maxRecieve, int maxExtract){
+        super(capacity,maxRecieve,maxExtract);
         Onchange = m;
     }
     public MyEnergyStorage(int capacity, MyDelegate m){
-        this(capacity,m,9999999,0);
+        this(capacity,m,9999999,999999);
     }
     //endregion
     public MyDelegate Onchange;
-    public int GetAsRF(){
-
-         return getEnergyStored();
+    public double GetAsRF(){
+         return ToRF(getEnergyStored());
     }
     public boolean DrainRF(int rf){
-        if (HasEnoughEnergy(rf))
+        int energyConverted = fromRF(rf);
+        if (HasEnoughEnergy(energyConverted))
         {
-            extractEnergy(rf,false);
+            extractEnergy(energyConverted,false);
             return true;
         }
         return false;
@@ -72,6 +73,30 @@ public class MyEnergyStorage extends EnergyStorage implements Capability.IStorag
                 return LazyOptional.empty();
             }
         };
+    }
+
+    @Override
+    public int receiveEnergy(int maxReceive, boolean simulate)
+    {
+        if (!canReceive())
+            return 0;
+
+        int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
+        if (!simulate)
+            setEnergy(energy + energyReceived);
+        return energyReceived;
+    }
+
+    @Override
+    public int extractEnergy(int maxExtract, boolean simulate)
+    {
+        if (!canExtract())
+            return 0;
+
+        int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+        if (!simulate)
+            setEnergy(energy - energyExtracted);
+        return energyExtracted;
     }
 
 
