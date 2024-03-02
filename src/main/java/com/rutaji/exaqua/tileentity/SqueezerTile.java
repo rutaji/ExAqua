@@ -61,14 +61,14 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     @Override
     public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
-        Tank.deserializeNBT(nbt);
+        Tank.readFromNBT(nbt);
         super.read(state,nbt);
     }
 
     @Override
     public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
-        nbt = Tank.serializeNBT(nbt);
+        nbt = Tank.writeToNBT(nbt);
         return super.write(nbt);
     }
     @Override //server send on chung load
@@ -120,7 +120,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
 
             recipe.ifPresent(iRecipe -> {
                 FluidStack output = iRecipe.getRealOutput();
-                if(!Tank.CanTakeFluid(output.getFluid())){return;}
+                if(!Tank.isFluidValid(new FluidStack(output.getFluid(),output.getAmount()))){return;}
                 ITEM_STACK_HANDLER.extractItem(0, 1, false);
 
                 this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
@@ -132,7 +132,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     public void TankChange()
     {
         if(world != null &&!world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.GetFluidstack(), pos));
         }
 
     }

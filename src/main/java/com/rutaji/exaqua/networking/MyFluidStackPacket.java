@@ -35,7 +35,7 @@ public class MyFluidStackPacket {
 
         TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
         if ( tileEntity instanceof IMyLiquidTankTIle) {
-            ((IMyLiquidTankTIle)tileEntity).GetTank().setStack(PacketStack);
+            ((IMyLiquidTankTIle)tileEntity).GetTank().setFluid(PacketStack);
         }
     }
 }
