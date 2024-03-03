@@ -16,6 +16,7 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -86,7 +87,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
-        if(Objects.equals(cap.getName(), "net.minecraftforge.fluids.capability.IFluidHandler"))
+        if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();

@@ -123,7 +123,7 @@ public class AutoSqueezerContainer extends Container {
     }
 
     public String GetEnergyAmount() {
-        return String.valueOf (((AutoSqueezerTileEntity)TILEEMTITY).GetEnergyStorage().GetAsRF());
+        return String.valueOf (((AutoSqueezerTileEntity)TILEEMTITY).GetEnergyStorage().getEnergyStored());
     }
     //endregion
 }

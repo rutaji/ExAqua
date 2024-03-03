@@ -20,6 +20,7 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.Optional;
 
 public class SieveTileEntity extends TileEntity implements ITickableTileEntity,IMyLiquidTankTIle,IMYEnergyStorageTile {
@@ -94,7 +94,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     }
     //endregion
     //region Energy
-    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(MyEnergyStorage.fromRF(9000),this::EnergyChangePacket);
+    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(9000,this::EnergyChangePacket);
     @Override
     public MyEnergyStorage GetEnergyStorage() {
         return this.MY_ENERGY_STORAGE;
@@ -113,11 +113,10 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
         String test = cap.getName();
-        if(Objects.equals(cap.getName(), "mekanism.api.energy.IStrictEnergyHandler")){
+        if(cap == CapabilityEnergy.ENERGY){
             return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
         }
-
-        if(Objects.equals(cap.getName(), "net.minecraftforge.fluids.capability.IFluidHandler"))
+        if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();
@@ -189,7 +188,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
             }
             else{
-                if(this.GetEnergyStorage().DrainRF(rf)) {
+                if(this.GetEnergyStorage().DrainEnergy(rf)) {
                     craftingTime++;
                     markDirty();
                 }

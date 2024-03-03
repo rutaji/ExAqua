@@ -17,7 +17,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -85,7 +87,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     }
     //endregion
     //region Energy
-    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(MyEnergyStorage.fromRF(9000),this::EnergyChangePacket);
+    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(9000,this::EnergyChangePacket);
     @Override
     public MyEnergyStorage GetEnergyStorage() {
         return this.MY_ENERGY_STORAGE;
@@ -103,12 +105,12 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
 
     @Override
     public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
-        if(cap.getName().equals("net.minecraftforge.fluids.capability.IFluidHandler"))
+        if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();
         }
-        if(cap.getName().equals("mekanism.api.energy.IStrictEnergyHandler")){
+        if(cap == CapabilityEnergy.ENERGY){
             return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
         }
         return super.getCapability(cap,side);
@@ -121,7 +123,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     {
         if(CraftingCooldown > 0 )
         {
-           if( GetEnergyStorage().DrainRF(CraftingRF))
+           if( GetEnergyStorage().DrainEnergy(CraftingRF))
            {
                CraftingCooldown--;
            }

@@ -1,17 +1,14 @@
 package com.rutaji.exaqua.Energy;
 
-import com.rutaji.exaqua.integration.mekanism.EnergyStorageAdapter;
 import com.rutaji.exaqua.others.MyDelegate;
-import mekanism.api.Action;
 import mekanism.api.energy.IEnergyContainer;
-import mekanism.api.inventory.AutomationType;
-import mekanism.api.math.FloatingLong;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,13 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class MyEnergyStorage extends EnergyStorage implements Capability.IStorage<IEnergyContainer>{
     private static final String NBTCONSTANT = "energystorage";
-
-    //region RF conversion
-    public static int fromRF(FloatingLong d) {return d.multiply(2.5).intValue();}
-    public static int fromRF(int d) {return (int)(d*2.5);}
-    public static double ToRF(int rf) {return rf/2.5;}
-    //endregion
-
     //region Constructor
     public MyEnergyStorage(int capacity, MyDelegate m, int maxRecieve, int maxExtract){
         super(capacity,maxRecieve,maxExtract);
@@ -36,14 +26,10 @@ public class MyEnergyStorage extends EnergyStorage implements Capability.IStorag
     }
     //endregion
     public MyDelegate Onchange;
-    public double GetAsRF(){
-         return ToRF(getEnergyStored());
-    }
-    public boolean DrainRF(int rf){
-        int energyConverted = fromRF(rf);
-        if (HasEnoughEnergy(energyConverted))
+    public boolean DrainEnergy(int energy){
+        if (HasEnoughEnergy(energy))
         {
-            extractEnergy(energyConverted,false);
+            extractEnergy(energy,false);
             return true;
         }
         return false;
@@ -67,7 +53,7 @@ public class MyEnergyStorage extends EnergyStorage implements Capability.IStorag
         return new ICapabilityProvider() {
             @Override
             public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-                if (cap.getName().equals("mekanism.api.energy.IStrictEnergyHandler")) {
+                if (cap == CapabilityEnergy.ENERGY) {
                     return LazyOptional.of(() -> new EnergyStorageAdapter(MyEnergyStorage.this)).cast();
                 }
                 return LazyOptional.empty();
