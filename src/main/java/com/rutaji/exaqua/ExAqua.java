@@ -31,12 +31,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(ExAqua.MOD_ID)
 public class ExAqua
 {
     public static final String MOD_ID = "exaqua";
-    // Directly reference a log4j logger.
+
     public static final Logger LOGGER = LogManager.getLogger();
 
     public ExAqua() {
@@ -69,7 +68,6 @@ public class ExAqua
     {
         PacketHandler.init();
         // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
     }
 
@@ -80,8 +78,6 @@ public class ExAqua
         ScreenManager.registerFactory(ModContainers.SIEVECONTAINER.get(), SieveScreen::new);
         ScreenManager.registerFactory(ModContainers.CAULDRON_CONTAINER.get(), CauldronScreen::new);
         ScreenManager.registerFactory(ModContainers.AUTO_SQUEEZER_CONTAINER.get(), AutoSqueezerScreen::new);
-
-        //RenderTypeLookup.setRenderLayer(ModBlocks.DIAMONDSIEVE.get(),RenderType.getCutout());
 
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_BLOCK.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLUID.get(), RenderType.getTranslucent());

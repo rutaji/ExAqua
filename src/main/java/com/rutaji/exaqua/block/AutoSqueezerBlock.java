@@ -61,7 +61,6 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
         return SHAPE;
     }
     //endregion
-
     @Override
     public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit) {
         if(!worldIn.isRemote()) {

@@ -112,6 +112,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
+        String test = cap.getName();
         if(Objects.equals(cap.getName(), "mekanism.api.energy.IStrictEnergyHandler")){
             return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
         }

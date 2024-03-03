@@ -1,0 +1,9 @@
+JEI 
+completely compatible
+
+Mekanism 
+works: item,liquid,energy transport
+
+Pipez
+works: item,liquid transport
+doen´t work : energy transport

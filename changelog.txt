@@ -3,3 +3,18 @@
 1.12 fixed a bug that crashed the game, when running on a server + small bugfixes
 1.3 fixed the handsieve item
 2.3 changed MyLiquidTank,MyEnergyStorage,EnergyStorageAdapter,WaterFluidTankCapabilityAdapter => mod correctly morks with Mekanizm and doesn´t crash without it
+
+
+
+
+
+
+
+TODO:
+make handsieve textures configurable
+add config files
+add visuals for cauldron
+add sounds and visual effects
+test  compatibility with other mods
+add entities
+documentation

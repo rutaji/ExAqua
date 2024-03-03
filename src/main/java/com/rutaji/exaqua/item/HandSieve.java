@@ -60,7 +60,7 @@ public class HandSieve extends Item {
     public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, PlayerEntity playerIn, @NotNull Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
 
-            if(itemstack.getOrCreateTag().getInt(HOLDING_WATER) == 0) //pokud prázdný
+            if(itemstack.getOrCreateTag().getInt(HOLDING_WATER) == 0) //if empty
             {
                 return PickUpSourceBlock(worldIn,playerIn,itemstack);
             }
