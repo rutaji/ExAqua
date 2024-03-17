@@ -43,8 +43,10 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
 
     public boolean IsFull()
     {
-        return getFluidAmount() < getCapacity();
+        return !(getFluidAmount() < getCapacity());
     }
+
+    public float GetFullness(){return getFluidAmount()/(float)getCapacity();}
 
 
     @Override

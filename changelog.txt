@@ -4,7 +4,7 @@
 1.3 fixed the handsieve item
 2.3 changed MyLiquidTank,MyEnergyStorage,EnergyStorageAdapter,WaterFluidTankCapabilityAdapter => mod correctly morks with Mekanizm and doesn´t crash without it
 3.3 changed EnergyStorageAdapter and WaterFluidTankCapabilityAdapter to use forge interfaces insted of Mekanism => capatibilities work with more mods
-
+17.3 added visuals for cauldron
 
 
 
@@ -13,7 +13,9 @@
 TODO:
 make handsieve textures configurable
 add config files
-add visuals for cauldron
+
 add sounds and visual effects
 add entities
 documentation
+compatibility with other mods
+port to other versions

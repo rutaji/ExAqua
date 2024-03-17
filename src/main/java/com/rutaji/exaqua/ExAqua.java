@@ -6,6 +6,7 @@ import com.rutaji.exaqua.container.ModContainers;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.item.ModItems;
 import com.rutaji.exaqua.networking.PacketHandler;
+import com.rutaji.exaqua.renderer.CauldronRenderer;
 import com.rutaji.exaqua.screen.AutoSqueezerScreen;
 import com.rutaji.exaqua.screen.CauldronScreen;
 import com.rutaji.exaqua.screen.SieveScreen;
@@ -17,10 +18,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -83,6 +86,7 @@ public class ExAqua
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLUID.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLOWING.get(), RenderType.getTranslucent());
 
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.CAULDRON_ENTITY.get(), CauldronRenderer::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
