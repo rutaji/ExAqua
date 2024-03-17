@@ -49,11 +49,11 @@ public class CauldronRenderer extends TileEntityRenderer<CauldronEntity> {
 
         matrixStackIn.push();
 
-        Float YLevel = Math.min(tileEntityIn.GetTank().GetFullness(),.6f);
-        add(builder, matrixStackIn, .2f, YLevel, .80f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrixStackIn, .80f, YLevel, .80f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
-        add(builder, matrixStackIn, .80f, YLevel, .2f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
-        add(builder, matrixStackIn, .2f, YLevel, .2f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
+        Float YLevel = tileEntityIn.GetTank().GetFullness() * 0.94f +0.06f;
+        add(builder, matrixStackIn, .19f, YLevel, .81f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
+        add(builder, matrixStackIn, .81f, YLevel, .81f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
+        add(builder, matrixStackIn, .81f, YLevel, .19f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);
+        add(builder, matrixStackIn, .19f, YLevel, .19f, sprite.getMinU(), sprite.getMinV(), r, g, b, a);
 
         matrixStackIn.pop();
     }
