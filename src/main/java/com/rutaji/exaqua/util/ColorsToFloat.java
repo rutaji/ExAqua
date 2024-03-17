@@ -29,6 +29,7 @@ public class ColorsToFloat {
      * White: 1.3F
      * Yellow: 1.4F
      * Brown: 1.5F
+     * Green: 1.6F
      * Unknown: 2F
      */
     public static List<Color> Colors =  Arrays.asList(

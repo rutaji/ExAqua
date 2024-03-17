@@ -14,7 +14,8 @@ TODO:
 add config files
 add sounds and visual effects
 refactor handsieve
-refactor cauldron
+refactor cauldron and its recipies
+add logger
 
 add entities
 documentation

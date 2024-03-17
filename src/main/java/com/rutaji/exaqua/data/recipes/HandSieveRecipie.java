@@ -108,7 +108,11 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     public ItemStack GetRandomItemStack()
     {
 
-        if(SUM == 0){System.out.println("Recipe doesn´t have a chance");return ItemStack.EMPTY;}
+        if(SUM == 0)
+        {
+            ExAqua.LOGGER.warn("HandSieve recipie has sum of changes 0.Recipie resource location: {}",getId());
+            return ItemStack.EMPTY;
+        }
         int random = RANDOM.nextInt(SUM) + 1;
         for (RoolItem r: RESULTS)
         {
@@ -139,7 +143,7 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
             Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("fluid").getAsString()));
             if(fluid == null){
-                ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + json.get("fluid").getAsString());
+                ExAqua.LOGGER.error("Error in {}. Fluid not found: {}",recipeId.getPath(),json.get("fluid").getAsString());
                 fluid= Fluids.EMPTY;}
 
             JsonArray OutputsJson = JSONUtils.getJsonArray(json, "outputs");

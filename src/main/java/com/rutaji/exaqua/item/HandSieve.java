@@ -30,15 +30,14 @@ import java.util.Optional;
 
 public class HandSieve extends Item {
     //region Constructor
-    public HandSieve(Properties p_i48487_1_) {
-        super(p_i48487_1_);
+    public HandSieve(Properties properties) {
+        super(properties);
     }
     //endregion
     //region Tags Constants
     public static final String HOLDING_WATER = "HoldingWater"; //tag int
     public static final String FLUID_INSIDE = "FluidInside"; //tag string
     //endregion
-    private final ResourceLocation customIcon = new ResourceLocation("exaqua", "extra/handsievewater");
     private static final int UsesFromBucket = 20;
 
     public void onCreated(ItemStack stack, @NotNull World worldIn, @NotNull PlayerEntity playerIn) {
@@ -60,22 +59,28 @@ public class HandSieve extends Item {
     public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, PlayerEntity playerIn, @NotNull Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
 
-            if(itemstack.getOrCreateTag().getInt(HOLDING_WATER) == 0) //if empty
+            if(IsEmpty(itemstack))
             {
                 return PickUpSourceBlock(worldIn,playerIn,itemstack);
             }
-            else
+            else// todo add server side
             {
 
                 InventorySieve inv = new InventorySieve();
-                inv.setFluidStack(new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemstack.getOrCreateTag().getString(FLUID_INSIDE))),5));
+                Fluid fluidInside = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemstack.getOrCreateTag().getString(FLUID_INSIDE)));
+                if(fluidInside == null)
+                {
+                    EmptyIt(itemstack);
+                    new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+                }
+                inv.setFluidStack(new FluidStack(fluidInside,5));
 
                 Optional<HandSieveRecipie> recipe = worldIn.getRecipeManager()
                         .getRecipe(ModRecipeTypes.HANDSIEVE_RECIPE, inv, worldIn);
                 if( !recipe.isPresent())
                 {
                     EmptyIt(itemstack);
-                    System.out.println("no recipie");
+                    playerIn.sendMessage(new StringTextComponent("no recipie for this fluid"),playerIn.getUniqueID());
                     return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
                 }
                 recipe.ifPresent(iRecipe -> {
@@ -95,14 +100,19 @@ public class HandSieve extends Item {
 
         return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
     }
-    private static void EmptyIt(ItemStack itemStack){
+    //region stored fluid methods
+    public static void EmptyIt(ItemStack itemStack){
         itemStack.getOrCreateTag().putInt(HOLDING_WATER,0);
         itemStack.getOrCreateTag().putString(FLUID_INSIDE,"");
     }
-    private static void LowerWater(ItemStack itemStack){
+    public static boolean IsEmpty(ItemStack itemStack)
+    {
+        return itemStack.getOrCreateTag().getInt(HOLDING_WATER) == 0;
+    }
+    public static void LowerWater(ItemStack itemStack){
         LowerWater(itemStack,1);
     }
-    private static void LowerWater(ItemStack itemStack,int HowMuch)
+    public static void LowerWater(ItemStack itemStack,int HowMuch)
     {
         itemStack.getOrCreateTag().putInt(HOLDING_WATER, itemStack.getOrCreateTag().getInt(HOLDING_WATER) -HowMuch);
         if(itemStack.getOrCreateTag().getInt(HOLDING_WATER) <= 0)
@@ -110,6 +120,7 @@ public class HandSieve extends Item {
             itemStack.getOrCreateTag().putString(FLUID_INSIDE,"");
         }
     }
+    //endregion
     private ActionResult<ItemStack> PickUpSourceBlock(World worldIn, PlayerEntity playerIn,ItemStack itemstack)
     {
         BlockRayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
