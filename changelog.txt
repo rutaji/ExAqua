@@ -6,16 +6,16 @@
 3.3 changed EnergyStorageAdapter and WaterFluidTankCapabilityAdapter to use forge interfaces insted of Mekanism => capatibilities work with more mods
 17.3 added visuals for cauldron
 17.3 hand sieve automatically detects nearest color and changes texture
-
+17.3 refactored handSieve
+18.3 added partickles to handSeive and sounds
 
 
 
 TODO:
 add config files
-add sounds and visual effects
-refactor handsieve
 refactor cauldron and its recipies
-add logger
+change UI
+fluid packet doesnt work
 
 add entities
 documentation

@@ -70,8 +70,6 @@ public class ExAqua
     private void setup(final FMLCommonSetupEvent event)
     {
         PacketHandler.init();
-        // some preinit code
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

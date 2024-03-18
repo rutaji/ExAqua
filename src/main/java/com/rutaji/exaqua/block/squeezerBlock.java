@@ -21,8 +21,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -57,6 +56,8 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
         if(speed < -0.1 && tileEntity instanceof SqueezerTile){
             if(!state.get(SQUEEZED))
             {
+
+                worldIn.playSound(null,pos,SoundEvents.BLOCK_WOOD_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 ((SqueezerTile) tileEntity).squeez();
                 changeBlockModel(worldIn, pos,true );
             }
