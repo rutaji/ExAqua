@@ -53,6 +53,17 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
     public void onContentsChanged() {
         Onchange.Execute();
     }
+    @Override
+    public void setFluid(FluidStack stack)
+    {
+        this.fluid = stack;
+        onContentsChanged();
+    }
+    public void setFluidWithoundOnContentsChanged(FluidStack stack)
+    {
+        this.fluid = stack;
+    }
+
 
     public void AddBucket(Fluid fluid)
     {

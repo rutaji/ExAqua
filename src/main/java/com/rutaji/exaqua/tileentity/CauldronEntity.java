@@ -46,6 +46,7 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     //region inventory
     private final ItemStackHandler ITEM_STACK_HANDLER = createHandler();
     private final LazyOptional<IItemHandler> HANDLER = LazyOptional.of(() -> ITEM_STACK_HANDLER);
+    private int rainMaxBound = 90;
     private ItemStackHandler createHandler()
     {
         return new ItemStackHandler(1){
@@ -118,8 +119,8 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     }
     private void GetRain()
     {
-        if (world.isRaining() && world.canSeeSky(pos) && world.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN) {
-            if( world.rand.nextInt(31) == 30)
+        if (!world.isRemote() && world.isRaining() && world.canSeeSky(pos) && world.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN) {
+            if( world.rand.nextInt(rainMaxBound) == 1)
             {
                 Tank.fill(new FluidStack(Fluids.WATER,20), IFluidHandler.FluidAction.EXECUTE);
             }

@@ -8,14 +8,13 @@
 17.3 hand sieve automatically detects nearest color and changes texture
 17.3 refactored handSieve
 18.3 added partickles to handSeive and sounds
-
+21.3 fixed fluid packet
 
 
 TODO:
 add config files
 refactor cauldron and its recipies
 change UI
-fluid packet doesnt work
 
 add entities
 documentation
