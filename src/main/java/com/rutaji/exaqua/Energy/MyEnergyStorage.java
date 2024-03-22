@@ -26,7 +26,7 @@ public class MyEnergyStorage extends EnergyStorage implements Capability.IStorag
     }
     //endregion
     public MyDelegate Onchange;
-    public boolean DrainEnergy(int energy){
+    public boolean TryDrainEnergy(int energy){
         if (HasEnoughEnergy(energy))
         {
             extractEnergy(energy,false);

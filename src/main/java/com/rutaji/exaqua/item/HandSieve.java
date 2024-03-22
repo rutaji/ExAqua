@@ -1,6 +1,7 @@
 package com.rutaji.exaqua.item;
 
 import com.rutaji.exaqua.ExAqua;
+import com.rutaji.exaqua.config.ServerModConfig;
 import com.rutaji.exaqua.data.recipes.HandSieveRecipie;
 import com.rutaji.exaqua.data.recipes.InventorySieve;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
@@ -45,7 +46,7 @@ public class HandSieve extends Item {
     public static final String HOLDING_WATER = "HoldingWater"; //tag int
     public static final String FLUID_INSIDE = "FluidInside"; //tag string
     //endregion
-    private static final int UsesFromBucket = 20;
+    private int GetUsesFromBucket(){return ServerModConfig.HandSieveBucketUse.get();}
 
     public void onCreated(ItemStack stack, @NotNull World worldIn, @NotNull PlayerEntity playerIn) {
         stack.getOrCreateTag().putInt(HOLDING_WATER, 0);
@@ -140,7 +141,7 @@ public class HandSieve extends Item {
                 if (fluid != Fluids.EMPTY) {
                     SoundEvent soundevent = fluid.getAttributes().getFillSound();
                     playerIn.playSound(soundevent, 1.0F, 1.0F);
-                    itemstack.getOrCreateTag().putInt(HOLDING_WATER, UsesFromBucket);
+                    itemstack.getOrCreateTag().putInt(HOLDING_WATER, GetUsesFromBucket());
                     itemstack.getOrCreateTag().putString(FLUID_INSIDE, fluid.getRegistryName().toString());
                 }
             }

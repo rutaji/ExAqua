@@ -188,7 +188,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
             }
             else{
-                if(this.GetEnergyStorage().DrainEnergy(rf)) {
+                if(this.GetEnergyStorage().TryDrainEnergy(rf)) {
                     craftingTime++;
                     markDirty();
                 }

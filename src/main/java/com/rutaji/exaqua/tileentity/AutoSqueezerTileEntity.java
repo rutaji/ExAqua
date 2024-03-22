@@ -2,6 +2,7 @@ package com.rutaji.exaqua.tileentity;
 
 import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
+import com.rutaji.exaqua.config.ServerModConfig;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
 import com.rutaji.exaqua.networking.MyEnergyPacket;
@@ -115,15 +116,15 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
         }
         return super.getCapability(cap,side);
     }
-    private final int CraftingCooldownMax = 20;
-    private int CraftingCooldown = CraftingCooldownMax;
-    private final int CraftingRF = 20;
+    private int GetDefaultMaxCraftingTime(){return ServerModConfig.AutoSqueezerTimeForRecipie.get();}
+    private int CraftingCooldown = GetDefaultMaxCraftingTime();
+    private int getDefaultRFConsumtion(){return ServerModConfig.AutoSqueezerRFperTick.get();}
     @Override
     public void tick()
     {
         if(CraftingCooldown > 0 )
         {
-           if( GetEnergyStorage().DrainEnergy(CraftingRF))
+           if( GetEnergyStorage().TryDrainEnergy(getDefaultRFConsumtion()))
            {
                CraftingCooldown--;
            }
@@ -150,7 +151,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
                 ITEM_STACK_HANDLER.extractItem(0, 1, false);
 
                 this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
-                CraftingCooldown = CraftingCooldownMax;
+                CraftingCooldown = GetDefaultMaxCraftingTime();
                 markDirty();
             });
         }

@@ -1,6 +1,7 @@
 package com.rutaji.exaqua.tileentity;
 
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
+import com.rutaji.exaqua.config.ServerModConfig;
 import com.rutaji.exaqua.data.recipes.CauldronRecipie;
 import com.rutaji.exaqua.data.recipes.InventoryCauldron;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
@@ -46,7 +47,7 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     //region inventory
     private final ItemStackHandler ITEM_STACK_HANDLER = createHandler();
     private final LazyOptional<IItemHandler> HANDLER = LazyOptional.of(() -> ITEM_STACK_HANDLER);
-    private int rainMaxBound = 90;
+
     private ItemStackHandler createHandler()
     {
         return new ItemStackHandler(1){
@@ -119,12 +120,16 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
     }
     private void GetRain()
     {
-        if (!world.isRemote() && world.isRaining() && world.canSeeSky(pos) && world.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN) {
-            if( world.rand.nextInt(rainMaxBound) == 1)
+        if (!world.isRemote() && CanCollectRain() ) {
+            if( world.rand.nextInt(ServerModConfig.CauldronRainMaxBound.get()) == 0)
             {
                 Tank.fill(new FluidStack(Fluids.WATER,20), IFluidHandler.FluidAction.EXECUTE);
             }
         }
+    }
+    private boolean CanCollectRain()
+    {
+        return ServerModConfig.CauldronRainMaxBound.get() > 0 && world.isRaining() && world.canSeeSky(pos) && world.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN;
     }
     //region crefting region
     private final int  CraftCooldownMax = 50;

@@ -2,6 +2,8 @@ package com.rutaji.exaqua;
 
 import com.rutaji.exaqua.Fluids.ModFluids;
 import com.rutaji.exaqua.block.ModBlocks;
+import com.rutaji.exaqua.config.ClientModConfig;
+import com.rutaji.exaqua.config.ServerModConfig;
 import com.rutaji.exaqua.container.ModContainers;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.item.ModItems;
@@ -14,17 +16,17 @@ import com.rutaji.exaqua.screen.SqueezerScreen;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.util.ModItemModelProperties;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -43,8 +45,6 @@ public class ExAqua
 
     public ExAqua() {
 
-
-
         // Register the setup method for modloading
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -54,6 +54,9 @@ public class ExAqua
         ModContainers.register(eventBus);
         ModRecipeTypes.register(eventBus);
         ModFluids.register(eventBus);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC,"ExAqua-server.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC,"ExAqua-client.toml");
 
         eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -84,7 +87,10 @@ public class ExAqua
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLUID.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLOWING.get(), RenderType.getTranslucent());
 
-        ClientRegistry.bindTileEntityRenderer(ModTileEntities.CAULDRON_ENTITY.get(), CauldronRenderer::new);
+        if (ClientModConfig.CauldronRenderEntity.get())
+        {
+            ClientRegistry.bindTileEntityRenderer(ModTileEntities.CAULDRON_ENTITY.get(), CauldronRenderer::new);
+        }
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
