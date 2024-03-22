@@ -33,6 +33,7 @@ public class MyEnergyPacket
         TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
         if ( tileEntity instanceof IMYEnergyStorageTile) {
             ((IMYEnergyStorageTile)tileEntity).GetEnergyStorage().setEnergy(EnergyInPacket);
+            context.get().setPacketHandled(true);
         }
     }
 }

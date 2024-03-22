@@ -88,12 +88,9 @@ public class HandSieve extends Item {
             if (foundRecipie.IsSucces()) {
                 playerIn.entityDropItem(foundRecipie.GetRandomItemStack());
             }
-            IParticleData fluidPartickles = fluidInside.getDefaultState().getDripParticleData();
             Vector3d lookVector = playerIn.getLookVec();
-            if (fluidPartickles != null) {
-                ((ServerWorld) worldIn).spawnParticle(ParticleTypes.RAIN, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(),
+            ((ServerWorld) worldIn).spawnParticle(ParticleTypes.RAIN, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(),
                         4, lookVector.x , 1.5d, lookVector.z , 0.1d);
-            }
             LowerWater(itemstack);
 
         }

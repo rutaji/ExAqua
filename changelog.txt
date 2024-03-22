@@ -9,10 +9,9 @@
 17.3 refactored handSieve
 18.3 added partickles to handSeive and sounds
 21.3 fixed fluid packet
-22.3 added config files
+22.3 added config files and fixed bugs
 
 TODO:
-autosqueezer bugged
 refactor cauldron and its recipies
 change UI
 

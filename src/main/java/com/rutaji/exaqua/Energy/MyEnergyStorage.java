@@ -38,6 +38,15 @@ public class MyEnergyStorage extends EnergyStorage implements Capability.IStorag
     {
         return getEnergyStored() >= energyAmounth;
     }
+    @Override
+    public boolean canReceive()
+    {
+        return !IsFull() && this.maxReceive > 0;
+    }
+    public boolean IsFull()
+    {
+        return getEnergyStored() == getMaxEnergyStored();
+    }
 
 
     public void setEnergy(@NotNull int energy) {
