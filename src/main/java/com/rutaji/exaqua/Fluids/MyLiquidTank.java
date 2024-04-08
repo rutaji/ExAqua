@@ -69,4 +69,13 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
     {
         fill(new FluidStack(fluid ,1000),FluidAction.EXECUTE);
     }
+
+    public boolean IsEmpty() {
+        return getFluid().isEmpty();
+    }
+    public void ChangeFluidKeepAmount(Fluid fluid)
+    {
+        FluidStack fluidStack = new FluidStack(fluid,getFluidAmount());
+        setFluid(fluidStack);
+    }
 }

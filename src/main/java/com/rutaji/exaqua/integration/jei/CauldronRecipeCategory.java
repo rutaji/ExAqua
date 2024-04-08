@@ -13,6 +13,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
@@ -63,19 +64,19 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
 
     @Override
     public void setIngredients(CauldronRecipie recipe, @NotNull IIngredients ingredients) {
-        if(recipe.INPUT != Fluids.EMPTY)
+        if(recipe.INPUT_FLUID != Fluids.EMPTY)
         {
-            ingredients.setInput(VanillaTypes.FLUID,new FluidStack(recipe.INPUT,1000));
+            ingredients.setInput(VanillaTypes.FLUID,new FluidStack(recipe.INPUT_FLUID,1000));
         }
-        if(recipe.INPUT_ITEM != ItemStack.EMPTY)
+        if(recipe.INPUT_ITEM != Ingredient.EMPTY)
         {
-            ingredients.setInput(VanillaTypes.ITEM,recipe.INPUT_ITEM);
+           ingredients.setInputIngredients(recipe.getIngredients());
         }
-        if(recipe.OUTPUT != Fluids.EMPTY)
+        if(recipe.OUTPUT_FLUID != Fluids.EMPTY)
         {
-            ingredients.setOutput(VanillaTypes.FLUID,new FluidStack(recipe.OUTPUT,1000));
+            ingredients.setOutput(VanillaTypes.FLUID,new FluidStack(recipe.OUTPUT_FLUID,1000));
         }
-        else
+        if(recipe.OUTPUT_ITEM != ItemStack.EMPTY)//todo jsou tyhle if potřeba ?
         {
             ingredients.setOutput(VanillaTypes.ITEM,recipe.OUTPUT_ITEM);
         }
@@ -87,19 +88,20 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
     @Override
     public void setRecipe(@NotNull IRecipeLayout recipeLayout, CauldronRecipie recipe, @NotNull IIngredients ingredients) {
 
-        if(recipe.INPUT != Fluids.EMPTY)
+        if(recipe.INPUT_FLUID != Fluids.EMPTY)
         {
             recipeLayout.getFluidStacks().init(0,true,12,9);
         }
-        if(recipe.INPUT_ITEM != ItemStack.EMPTY)
+        if(recipe.INPUT_ITEM != Ingredient.EMPTY)
         {
             recipeLayout.getItemStacks().init(0,true,36,8);
         }
-        if(recipe.OUTPUT == Fluids.EMPTY)
+        if(recipe.OUTPUT_ITEM != ItemStack.EMPTY)//todo jsou tyhle if potřeba ?
         {
             recipeLayout.getItemStacks().init(1, false, 150, 8);
         }
-        else{
+        if(recipe.OUTPUT_FLUID != Fluids.EMPTY)
+        {
             recipeLayout.getFluidStacks().init(1, false, 151, 9);
         }
 
@@ -114,15 +116,12 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
         switch (recipe.TEMP)
         {
             case hot:
-                assert Minecraft.getInstance().currentScreen != null;
                 Minecraft.getInstance().currentScreen.blit(matrixStack, 70, 8, 202, 1, 24, 18);
                 break;
             case cold:
-                assert Minecraft.getInstance().currentScreen != null;
                 Minecraft.getInstance().currentScreen.blit(matrixStack, 70, 8, 202, 21, 24, 18);
                 break;
             case neutral:
-                assert Minecraft.getInstance().currentScreen != null;
                 Minecraft.getInstance().currentScreen.blit(matrixStack, 70, 8, 202, 41, 24, 18);
                 break;
         }

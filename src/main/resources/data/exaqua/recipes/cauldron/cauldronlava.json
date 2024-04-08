@@ -1,9 +1,8 @@
 {
   "type": "exaqua:cauldron",
-  "itemi": {"item": "minecraft:cobblestone"},
-  "outputtype": "fluid",
-  "output": "minecraft:lava",
-  "temp": "hot",
-  "amount": 50
+  "input_item": {"item": "minecraft:cobblestone"},
+  "output_fluid": "minecraft:lava",
+  "temperature": "hot",
+  "amount_Output": 50
 
 }

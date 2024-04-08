@@ -15,6 +15,7 @@ import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -34,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.Optional;
 
 public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity {
@@ -154,33 +154,23 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
                 InventoryCauldron inv = GetInventory();
                 if(RecipieOnCooldown.matches(inv,world))
                 {
-                    if (RecipieOnCooldown.OUTPUT != Fluids.EMPTY)//output is fluid
-                        {
-                            if (RecipieOnCooldown.INPUT == Fluids.EMPTY) {
-                                if (Tank.IsFull()) return;
-                                Tank.fill(new FluidStack(RecipieOnCooldown.OUTPUT, RecipieOnCooldown.AMOUNT), IFluidHandler.FluidAction.EXECUTE);
-                            }
-                            else {
-                                Tank.setFluid(new FluidStack(RecipieOnCooldown.OUTPUT, Tank.getFluidAmount()));
-                            }
-                            if (RecipieOnCooldown.INPUT_ITEM != ItemStack.EMPTY) {
-                                ITEM_STACK_HANDLER.extractItem(0, RecipieOnCooldown.INPUT_ITEM.getCount(), false);
-                            }
-
-                        } else if (RecipieOnCooldown.OUTPUT_ITEM != ItemStack.EMPTY) //output is item
-                        {
-                            if (RecipieOnCooldown.INPUT_ITEM != ItemStack.EMPTY) {
-                                ITEM_STACK_HANDLER.extractItem(0, RecipieOnCooldown.INPUT_ITEM.getCount(), false);
-                            }
-                            if (RecipieOnCooldown.INPUT != Fluids.EMPTY) {
-                                Tank.drain(new FluidStack(RecipieOnCooldown.INPUT, RecipieOnCooldown.AMOUNT), IFluidHandler.FluidAction.EXECUTE);
-                            }
-                            ItemStack result = ITEM_STACK_HANDLER.insertItem(0, RecipieOnCooldown.OUTPUT_ITEM.copy(), false);
-                            if (result != ItemStack.EMPTY) {
-                                dispence(result);
-                            }
-
-                        }
+                    if(RecipieOnCooldown.OUTPUT_FLUID != Fluids.EMPTY)//add fluid output
+                    {
+                        if(RecipieOnCooldown.INPUT_FLUID == Fluids.EMPTY){Tank.fill(new FluidStack(RecipieOnCooldown.OUTPUT_FLUID, RecipieOnCooldown.AMOUNT_OUTPUT), IFluidHandler.FluidAction.EXECUTE);}
+                        else if(Tank.getFluid().getFluid() == RecipieOnCooldown.INPUT_FLUID){Tank.ChangeFluidKeepAmount(RecipieOnCooldown.OUTPUT_FLUID);}
+                    }
+                    if(RecipieOnCooldown.INPUT_FLUID != Fluids.EMPTY && RecipieOnCooldown.OUTPUT_FLUID == Fluids.EMPTY)
+                    {
+                        Tank.drain(RecipieOnCooldown.AMOUNT_INPUT, IFluidHandler.FluidAction.EXECUTE);
+                    }
+                    if(RecipieOnCooldown.INPUT_ITEM != Ingredient.EMPTY)
+                    {
+                        ITEM_STACK_HANDLER.extractItem(0, 1, false);
+                    }
+                    if(RecipieOnCooldown.OUTPUT_ITEM != ItemStack.EMPTY)
+                    {
+                        AddToInventory(RecipieOnCooldown.OUTPUT_ITEM);
+                    }
                     markDirty();
                 }
                 RecipieOnCooldown = null;
@@ -197,7 +187,14 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
         inv.setFluid(Tank.getFluid().getFluid());
         inv.setTemp(this.GetTemp());
         inv.amount = Tank.getFluidAmount();
-        return  inv;
+        return inv;
+    }
+    private void AddToInventory(ItemStack itemStack)
+    {
+        ItemStack result = ITEM_STACK_HANDLER.insertItem(0, RecipieOnCooldown.OUTPUT_ITEM.copy(), false);
+        if (result != ItemStack.EMPTY) {
+            dispence(result);
+        }
     }
     //endregion
     //region dispence

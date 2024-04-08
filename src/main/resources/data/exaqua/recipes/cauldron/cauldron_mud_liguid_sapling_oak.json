@@ -1,11 +1,9 @@
 {
   "type": "exaqua:cauldron",
-  "fluidi": "minecraft:water",
-  "itemi": {"item": "minecraft:oak_sapling" ,"count": 6},
-  "outputtype": "fluid",
-  "output": "exaqua:mud_fluid",
-  "temp": "neutral",
-  "amount": 0
+  "input_fluid": "minecraft:water",
+  "input_item": {"item": "minecraft:oak_sapling" ,"count": 6},
+  "output_fluid": "exaqua:mud_fluid",
+  "temperature": "neutral"
 
 
 }

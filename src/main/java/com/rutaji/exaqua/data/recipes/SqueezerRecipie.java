@@ -40,6 +40,10 @@ public class SqueezerRecipie implements ISqueezerRecipie {
     public boolean matches(IInventory inv, @NotNull World worldIn) {
         return INPUT.test(inv.getStackInSlot(0));
     }
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return NonNullList.from(INPUT);
+    }
 
     @Override
     public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
