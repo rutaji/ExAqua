@@ -163,7 +163,7 @@ public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITi
                     {
                         Tank.drain(RecipieOnCooldown.AMOUNT_INPUT, IFluidHandler.FluidAction.EXECUTE);
                     }
-                    if(RecipieOnCooldown.INPUT_ITEM != Ingredient.EMPTY)
+                    if(RecipieOnCooldown.INPUT_ITEM != ItemStack.EMPTY)
                     {
                         ITEM_STACK_HANDLER.extractItem(0, 1, false);
                     }

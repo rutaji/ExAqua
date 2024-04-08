@@ -5,17 +5,17 @@
 2.3 changed MyLiquidTank,MyEnergyStorage,EnergyStorageAdapter,WaterFluidTankCapabilityAdapter => mod correctly morks with Mekanizm and doesn´t crash without it
 3.3 changed EnergyStorageAdapter and WaterFluidTankCapabilityAdapter to use forge interfaces insted of Mekanism => capatibilities work with more mods
 17.3 added visuals for cauldron
-17.3 hand sieve automatically detects nearest color and changes texture
+17.3 hand sieve automatically detects the nearest color and changes texture
 17.3 refactored handSieve
 18.3 added partickles to handSeive and sounds
 21.3 fixed fluid packet
 22.3 added config files and fixed bugs
+8.4 refactor cauldron and its recipies
 
 TODO:
-refactor cauldron and its recipies
-change UI
+changed itemstack to Ingridient in squeezer => something broke
 
+change UI
 add entities
 documentation
-compatibility with other mods
 port to other versions

@@ -68,15 +68,15 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
         {
             ingredients.setInput(VanillaTypes.FLUID,new FluidStack(recipe.INPUT_FLUID,1000));
         }
-        if(recipe.INPUT_ITEM != Ingredient.EMPTY)
+        if(recipe.INPUT_ITEM != ItemStack.EMPTY)
         {
-           ingredients.setInputIngredients(recipe.getIngredients());
+           ingredients.setInput(VanillaTypes.ITEM,recipe.INPUT_ITEM);
         }
         if(recipe.OUTPUT_FLUID != Fluids.EMPTY)
         {
             ingredients.setOutput(VanillaTypes.FLUID,new FluidStack(recipe.OUTPUT_FLUID,1000));
         }
-        if(recipe.OUTPUT_ITEM != ItemStack.EMPTY)//todo jsou tyhle if potřeba ?
+        if(recipe.OUTPUT_ITEM != ItemStack.EMPTY)
         {
             ingredients.setOutput(VanillaTypes.ITEM,recipe.OUTPUT_ITEM);
         }
@@ -92,11 +92,11 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
         {
             recipeLayout.getFluidStacks().init(0,true,12,9);
         }
-        if(recipe.INPUT_ITEM != Ingredient.EMPTY)
+        if(recipe.INPUT_ITEM != ItemStack.EMPTY)
         {
             recipeLayout.getItemStacks().init(0,true,36,8);
         }
-        if(recipe.OUTPUT_ITEM != ItemStack.EMPTY)//todo jsou tyhle if potřeba ?
+        if(recipe.OUTPUT_ITEM != ItemStack.EMPTY)
         {
             recipeLayout.getItemStacks().init(1, false, 150, 8);
         }
