@@ -1,12 +1,11 @@
 {
   "type": "exaqua:squeezer",
-  "ingredients": [
+  "input":
     {
-      "item": "minecraft:bamboo"
-    }
-  ],
+      "item": "minecraft:apple"
+    },
   "output": {
     "fluid": "minecraft:water",
-    "amount": 5
+    "amount": 70
   }
 }

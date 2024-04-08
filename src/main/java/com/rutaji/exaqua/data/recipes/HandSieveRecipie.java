@@ -2,6 +2,7 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.rutaji.exaqua.ExAqua;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -144,13 +145,14 @@ public class HandSieveRecipie implements IHandSieveRecipie {
             Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("fluid").getAsString()));
             if(fluid == null){
                 ExAqua.LOGGER.error("Error in {}. Fluid not found: {}",recipeId.getPath(),json.get("fluid").getAsString());
-                fluid= Fluids.EMPTY;}
+                throw new JsonSyntaxException("Error in "+ recipeId.getPath() + ". Fluid not found: "+ json.get("fluid").getAsString());
+            }
 
             JsonArray OutputsJson = JSONUtils.getJsonArray(json, "outputs");
             List<RoolItem> Outputs = new ArrayList<>();
             for (int i = 0; i < OutputsJson.size(); i++) {
                 JsonObject j = OutputsJson.get(i).getAsJsonObject();
-                Outputs.add(new RoolItem( ShapedRecipe.deserializeItem(j.get("item").getAsJsonObject()),j.get("chance").getAsInt()));
+                Outputs.add(new RoolItem( ShapedRecipe.deserializeItem(j.get("item").getAsJsonObject()),j.get("weight").getAsInt()));
             }
             int chance = json.get("success").getAsInt();
             return new HandSieveRecipie(recipeId, fluid,Outputs,chance);

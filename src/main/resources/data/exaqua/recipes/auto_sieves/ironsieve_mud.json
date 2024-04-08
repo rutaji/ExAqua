@@ -8,31 +8,31 @@
   "outputs": [
     {
       "item": {"item": "minecraft:oak_sapling"},
-      "chance": 4
+      "weight": 4
     },
     {
       "item": {"item": "minecraft:spruce_sapling"},
-      "chance": 3
+      "weight": 3
     },
     {
       "item": {"item": "minecraft:birch_sapling"},
-      "chance": 3
+      "weight": 3
     },
     {
       "item": {"item": "minecraft:jungle_sapling"},
-      "chance": 3
+      "weight": 3
     },
     {
       "item": {"item": "minecraft:acacia_sapling"},
-      "chance": 3
+      "weight": 3
     },
     {
       "item": {"item": "minecraft:birch_sapling"},
-      "chance": 3
+      "weight": 3
     },
     {
       "item": {"item": "minecraft:wheat_seeds"},
-      "chance": 5
+      "weight": 5
     }
 
   ],

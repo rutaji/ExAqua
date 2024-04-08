@@ -5,19 +5,19 @@
   "outputs": [
     {
       "item": {"item": "minecraft:iron_ore"},
-      "chance": 3
+      "weight": 3
     },
     {
       "item": {"item": "minecraft:coal"},
-      "chance": 5
+      "weight": 5
     },
     {
       "item": {"item": "minecraft:flint"},
-      "chance": 2
+      "weight": 2
     },
     {
       "item": { "item": "minecraft:gold_ore"},
-      "chance": 1
+      "weight": 1
     }
   ]
 }

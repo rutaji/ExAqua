@@ -1,0 +1,85 @@
+\documentclass[FM,RP]{tulthesis}
+
+\usepackage[FM,RP]{tulpack/tul}
+\usepackage{fancyhdr}
+\usepackage{graphicx} 
+\usepackage{ifthen}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\TULtitle{Modování Minecraftu}{Minecraft modding}
+\TULprogramme{B0613A140005}{Informační technologie}{Information Technology}
+\TULbranch{}{Aplikovaná informatika}{Applied Informatics}
+\TULauthor{Jiří Růta}
+\TULsupervisor{Ing. Jana Vitvarová}
+\TULyear{2024} \TULid{identifikační kód}
+
+
+\begin{document}
+
+ \ThesisStart{male}
+
+
+\chapter{Minecraft}
+
+\chapter{Minecarft z programátorské stránky}
+\section{Blok}
+Každý druh bloku má svůj objekt v registru. Tento objekt obsahuje proměnné a metody specifické pro daný druh bloku. Tento objekt je třídy \textit{Block} anebo z ní dědí. Jelikož je společný pro všechny bloky daného druhu, pokud chceme ukládat data specificá pro jeden block musíme použít \textit{blockstate} anebo \textit{tile entity}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Blocksiple.png}
+    \caption{dědičnost třídy Block}
+    \label{fig:enter-label}
+\end{figure}
+
+\section{blockstate}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{tulpack/lamp.drawio.png}
+    \caption{:blockstate}
+    \label{fig:blockstate}
+\end{figure}
+Blockstate je neměnná třída obsahující základní datové typy. Každý druh bloku v něm skladuje jiné proměnné. Pro každou kombinaci proměnných je vygenerován singleton. Každý blok má v jednu dobu pouze jeden blockstate. Jelikož je blockstate generován pro každou možnou kombinaci proměných, nedoporučuje se to používat pro velké množství proměných.
+
+
+\section{tile entities}
+Pokud v bloku potřebuj eme skladovat velké množství proměných, můžeme využít \textit{tile entity}. Objekt třídy \textit{tile entity} je samostatný pro každý blok.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{chest.png}
+    \caption{příklad vztahů}
+    \label{fig:enter-label}
+\end{figure}
+
+\section{Inventář}
+Inventář v minecraftu je rozdělen na políčka. Každé políčko může obsahovat pouze jeden druh předmětu a pouze omezené množství. V programu je každé políčko reprezentováno objektem \textit{itemstack}. 
+\subsection{Itemstack}
+Třída obsahuje 2 důležité proměnné, jaký předmět obsahuje (odkaz na jeho třídu) a jeho množství. Třída obsahuje převážně metody na porovnávání objektů Itemstack mezi sebou, předávání informocí o předmětu, ukládání a načítání dat.
+\subsection{Item}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{itemstack.drawio.png}
+    \caption{ItemStack vztahy}
+    \label{fig:enter-label}
+\end{figure}
+Každý druh předmětu má svůj singleton, který dědí třídu \textit{Item}. Tato třída obsahuje proměné a metody pro daný předmět. Například obsahuje metodu "onUse", která je volána pokud se hráč pokusí použít předmět. Jelikož je tato třída společná pro všechny itemy pokud chceme ukládat data specifická pro jeden předmět musíme použít NBT.
+
+
+\section{UI}
+Některé bloky ,předměty otevřou hráči UI. Například když hráč klikne na pec, otevře se mu UI ve kterém může odložit předměty do pece, aby je pec předělala na jiné. Ui se v Minecarftu skládá ze dvou částí: Container a Screen.
+\subsection{Container}
+Container obstarává logicku a data. Komunikuje s ostatními částmi hry. Běží na serveru i na  clientu.
+\subsection{Screen}
+Určuje jak bude UI vypadat. Zobrazuje text a obrázky. Komunikuje pouze s Container. Může obsahovat logicku, ale měla by být jen okolo grafiky v UI. Běží pouze na klientu.
+\section{Výroba}
+Velká část minecarftu je vytváření nových předmětů z těch které už hráč vlastní. Z čeho se předměty vyrábějí je zapsáno v JSON souborech. 
+\subsection{Recept}
+Ve hře je několik druhů receptů, každý druh receptu má svojí třídu implementující interface IRecipie. Každý JSON soubor ve složce s recepty má hodnotu "type", která řiká kterou třídou ho má hra přečíst. Při zapnutí se načtou veškeré recepty z JSON souborů a pro každý json soubor se vytvoří jeden objekt třídy implementující IRecipie. Tyto objekty obsahují veškerá data z JSON souborů a implementují metody na porovnání zdali je možné recept vyrobit. Práce těchto tříd neni vyrobit daný předmět, ale pouze říct zdali je možné daný předmět vyrobit a předat vyžádané informace.    
+\section{Client a Server}
+Minecraft kód vždy běží dvakrát, jednou jako server a jednou jako client. I když hráč hraje sám na vlastním počítači, minecraft pořád běží rozdělen na stranu serveru a clienta. Na obou stranách běží stejný kód. Na rozlišení se používá metoda "world.isRemote", která vrací true pokud kód běží na clientu. Některé operace musí běžet pouze na jedné straně a druhou stranu upozornit pomocí paketů. Například vytváření vytváření nových předmětů by se musí provádět na serveru, jinak je možné že server nebude o předmětu vědět a když se ho hráč pokusí použít tak nebude fungovat, protože o něm server neví. Na druhou stranu, vykreslování grafiky se musí provádět pouze na klientu. 
+\chapter{Můj mód z pohledu hráče}
+
+\chapter{Můj mód z pohledu programátora}
+
+\end{document}

@@ -2,6 +2,7 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.SieveTiers;
 import net.minecraft.fluid.Fluid;
@@ -144,7 +145,7 @@ public class SieveRecipie implements ISieveRecipie {
             Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid));
             if(f == null){
                 ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + OutputFluid);
-                f= Fluids.EMPTY;}
+                throw new JsonSyntaxException("Error in "+ recipeId.getPath() + ". Fluid not found: "+ json.get("fluid").getAsString());}
             FluidStack Input = new FluidStack(f ,FluidtAmount);
 
 
@@ -152,7 +153,7 @@ public class SieveRecipie implements ISieveRecipie {
             List<RoolItem> Outputs = new ArrayList<>();
             for (int i = 0; i < OutputsJson.size(); i++) {
                  JsonObject j = OutputsJson.get(i).getAsJsonObject();
-                Outputs.add(new RoolItem( ShapedRecipe.deserializeItem(j.get("item").getAsJsonObject()),j.get("chance").getAsInt()));
+                Outputs.add(new RoolItem( ShapedRecipe.deserializeItem(j.get("item").getAsJsonObject()),j.get("weight").getAsInt()));
             }
             int time = json.get("time").getAsInt();
             int rf = json.get("rf").getAsInt();
@@ -175,7 +176,7 @@ public class SieveRecipie implements ISieveRecipie {
             int size = buffer.readInt();
             for(int i =0;i< size;i++)
             {
-                Results.add(new RoolItem(buffer.readItemStack(),buffer.readInt()));
+                Results.add(RoolItem.Read(buffer));
 
             }
             int time = buffer.readInt();
@@ -193,8 +194,7 @@ public class SieveRecipie implements ISieveRecipie {
             buffer.writeInt(size);
             for (RoolItem R: recipe.RESULT)
             {
-                buffer.writeItemStack(R.item);
-                buffer.writeInt(R.chance);
+                RoolItem.Write(buffer,R);
             }
             buffer.writeInt(recipe.TIME);
             buffer.writeInt(recipe.RF);

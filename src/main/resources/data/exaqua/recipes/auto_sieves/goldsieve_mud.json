@@ -8,11 +8,11 @@
   "outputs": [
     {
       "item": {"item": "minecraft:dirt"},
-      "chance": 8
+      "weight": 8
     },
     {
       "item": {"item": "exaqua:mud"},
-      "chance": 1
+      "weight": 1
     }
 
   ],

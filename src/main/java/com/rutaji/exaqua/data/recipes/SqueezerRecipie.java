@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -27,27 +28,22 @@ public class SqueezerRecipie implements ISqueezerRecipie {
 
     private final ResourceLocation ID;
     private final FluidStack OUTPUT;
-    private final NonNullList<Ingredient> RECIPIEITEMS;
+    private final Ingredient INPUT;
 
-    public SqueezerRecipie(ResourceLocation id, FluidStack output,
-                                    NonNullList<Ingredient> recipeItems) {
+    public SqueezerRecipie(ResourceLocation id, FluidStack output, Ingredient recipeItems) {
         this.ID = id;
         this.OUTPUT = output;
-        this.RECIPIEITEMS = recipeItems;
+        this.INPUT = recipeItems;
 
     }
     @Override
     public boolean matches(IInventory inv, @NotNull World worldIn) {
-        return RECIPIEITEMS.get(0).test(inv.getStackInSlot(0));
+        return INPUT.test(inv.getStackInSlot(0));
     }
 
     @Override
     public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
         return ItemStack.EMPTY;
-    }
-    @Override
-    public @NotNull NonNullList<Ingredient> getIngredients(){
-        return RECIPIEITEMS;
     }
     @Override //Does not provide anything because this recipie doesn´t produce items
     public @NotNull ItemStack getRecipeOutput() {
@@ -92,24 +88,16 @@ public class SqueezerRecipie implements ISqueezerRecipie {
                 f= Fluids.EMPTY;}
             FluidStack output = new FluidStack( f,OutputAmount);
 
+            JsonObject j = JSONUtils.getJsonObject(json, "input");
+            Ingredient input = Ingredient.deserialize(j);
 
-            JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
-            NonNullList<Ingredient> inputs = NonNullList.withSize(1, Ingredient.EMPTY);
-
-            for (int i = 0; i < inputs.size(); i++) {
-                inputs.set(i, Ingredient.deserialize(ingredients.get(i)));
-            }
-
-            return new SqueezerRecipie(recipeId, output,
-                    inputs);
+            return new SqueezerRecipie(recipeId, output, input);
         }
 
         @Nullable
         @Override
-        public SqueezerRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
-            NonNullList<Ingredient> inputs = NonNullList.withSize(buffer.readInt(), Ingredient.EMPTY);
-
-            inputs.replaceAll(ignored -> Ingredient.read(buffer));
+        public SqueezerRecipie read(@NotNull ResourceLocation recipeId, @NotNull PacketBuffer buffer) {
+            Ingredient input = Ingredient.read(buffer);
 
             String OutputFluid = buffer.readString();
             Fluid f =ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid));
@@ -117,15 +105,13 @@ public class SqueezerRecipie implements ISqueezerRecipie {
                 ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + OutputFluid);
                 f= Fluids.EMPTY;}
             FluidStack output = new FluidStack(f,buffer.readInt());
-            return new SqueezerRecipie(recipeId, output, inputs);
+            return new SqueezerRecipie(recipeId, output, input);
         }
 
         @Override
-        public void write(PacketBuffer buffer, SqueezerRecipie recipe) {
-            buffer.writeInt(recipe.getIngredients().size());
-            for (Ingredient ing : recipe.getIngredients()) {
-                ing.write(buffer);
-            }
+        public void write(@NotNull PacketBuffer buffer, SqueezerRecipie recipe) {
+            recipe.INPUT.write(buffer);
+
             buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.OUTPUT.getFluid()).toString());
             buffer.writeInt(recipe.OUTPUT.getAmount());
 

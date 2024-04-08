@@ -1,12 +1,11 @@
 {
   "type": "exaqua:squeezer",
-  "ingredients": [
+  "input":
     {
-      "tag": "minecraft:saplings"
-    }
-  ],
+      "item": "minecraft:bamboo"
+    },
   "output": {
     "fluid": "minecraft:water",
-    "amount": 50
+    "amount": 5
   }
 }

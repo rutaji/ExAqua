@@ -61,7 +61,6 @@ public class CauldronRecipie implements ICauldronRecipie {
     @Override
     public @NotNull ItemStack getRecipeOutput()
     {
-     if(OUTPUT == null){return OUTPUT_ITEM;}
      return ItemStack.EMPTY;
     }
 
