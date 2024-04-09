@@ -92,7 +92,7 @@ Recipies for squeezer and auto squeezer. This is only recipie that uses Ingridie
 }
 ```
 ## Parametrs
-**input**: Json object of minecraft Ingridient {"item":"item id"}. ${\color{red}This is only recipie that uses Ingridients insted of Itemstacks, meaning you cannot use **count**, but can use **tag**  {"tag": "minecraft:leaves"}.}$ <br>
+**input**: Json object of minecraft Ingridient {"item":"item id"}. $`\color{red}This is only recipie that uses Ingridients insted of Itemstacks, meaning you cannot use **count**, but can use **tag**  {"tag": "minecraft:leaves"}.`$ <br>
 **output**: Json object of fluid player gets by this recipie.<br>
     **fluid**: Id (resource location) of the fluid.<br>
     **amount**: Amount (in miliBuckets) that will be produced as a output.<br>
@@ -139,7 +139,7 @@ Recipies for crafting cauldron.
 
 
 **output_fluid**: Id (resource location) of the fluid produced as a input.<br>
-**amount_Output**: Amount of **output_fluid**  (in miliBuckets) that will be produced as output. ${\color{red}If recipie also requeres **input_fluid** it will transform all fluid in cauldron into **output_fluid** and ignore this parametr.}$<br>
+**amount_Output**: Amount of **output_fluid**  (in miliBuckets) that will be produced as output. $`{\color{red}If recipie also requeres **input_fluid** it will transform all fluid in cauldron into **output_fluid** and ignore this parametr.}`$<br>
 **Output_item**: Json object of minecraft Itemstack {"item":"item id"}. Can contain **count** if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.<br>
 
 **temperature**: Temperature needed for recipie. Set by changing block under the cauldron. Options are: cold, neutral, hot.<br>
