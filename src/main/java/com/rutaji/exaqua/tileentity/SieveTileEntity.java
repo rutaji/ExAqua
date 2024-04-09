@@ -112,7 +112,6 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
-        String test = cap.getName();
         if(cap == CapabilityEnergy.ENERGY){
             return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
         }

@@ -49,7 +49,7 @@ public class MyEnergyStorage extends EnergyStorage implements Capability.IStorag
     }
 
 
-    public void setEnergy(@NotNull int energy) {
+    public void setEnergy(int energy) {
         this.energy = energy;
         SendChangeToClient();
     }

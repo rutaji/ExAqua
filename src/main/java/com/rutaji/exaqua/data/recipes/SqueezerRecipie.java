@@ -1,6 +1,5 @@
 package com.rutaji.exaqua.data.recipes;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
@@ -11,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -41,8 +39,8 @@ public class SqueezerRecipie implements ISqueezerRecipie {
         return INPUT.test(inv.getStackInSlot(0));
     }
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.from(INPUT);
+    public @NotNull NonNullList<Ingredient> getIngredients() {
+        return NonNullList.withSize(1,INPUT);
     }
 
     @Override

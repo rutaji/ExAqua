@@ -75,7 +75,7 @@ public class CauldronRecipie implements ICauldronRecipie {
         return ID;
     }
     @Override
-    public NonNullList<Ingredient> getIngredients() {
+    public @NotNull NonNullList<Ingredient> getIngredients() {
         return NonNullList.create();
     }
 
@@ -84,6 +84,10 @@ public class CauldronRecipie implements ICauldronRecipie {
     @Override
     public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.CAULDRON_SERIALIZER.get();
+    }
+
+    public boolean Has2Outputs() {
+        return OUTPUT_FLUID != Fluids.EMPTY && OUTPUT_ITEM != ItemStack.EMPTY;
     }
 
     public static class CauldronRecipeType implements IRecipeType<CauldronRecipie> {

@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.rutaji.exaqua.ExAqua;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -28,7 +27,7 @@ import java.util.Random;
 
 public class HandSieveRecipie implements IHandSieveRecipie {
     //region Constructor
-    public HandSieveRecipie(ResourceLocation id, @NotNull Fluid input, List<RoolItem> output, int chance) {
+    public HandSieveRecipie(ResourceLocation id, @NotNull Fluid input, @NotNull List<RoolItem> output, int chance) {
         this.ID = id;
         this.INPUTFLUID = input;
         this.RESULTS = output;
@@ -44,11 +43,11 @@ public class HandSieveRecipie implements IHandSieveRecipie {
         Chances = CountChances();
     }
     //endregion
-    public List<Double> GetChances(){return  Chances;}
-    private final List<Double> Chances;
+    public @NotNull List<Double> GetChances(){return  Chances;}
+    private final @NotNull List<Double> Chances;
     private final ResourceLocation ID;
     private static final Random RANDOM = new Random();
-    public final List<RoolItem> RESULTS;
+    public final @NotNull List<RoolItem> RESULTS;
     public final @Nonnull Fluid INPUTFLUID;
     public final int SUM;
     public final int SUCCESCHANCE;

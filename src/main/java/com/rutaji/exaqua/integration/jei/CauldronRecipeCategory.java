@@ -98,7 +98,14 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
         }
         if(recipe.OUTPUT_ITEM != ItemStack.EMPTY)
         {
-            recipeLayout.getItemStacks().init(1, false, 150, 8);
+            if(recipe.OUTPUT_FLUID == Fluids.EMPTY)
+            {
+                recipeLayout.getItemStacks().init(1, false, 150, 8);
+            }
+            else
+            {
+                recipeLayout.getItemStacks().init(1, false, 174, 8);
+            }
         }
         if(recipe.OUTPUT_FLUID != Fluids.EMPTY)
         {
@@ -125,6 +132,21 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
                 Minecraft.getInstance().currentScreen.blit(matrixStack, 70, 8, 202, 41, 24, 18);
                 break;
         }
+        if(recipe.INPUT_FLUID != Fluids.EMPTY)
+        {
+            Minecraft.getInstance().currentScreen.blit(matrixStack, 10, 8, 226, 1, 18, 18);
+        }
+        if(recipe.INPUT_ITEM != ItemStack.EMPTY)
+        {
+            Minecraft.getInstance().currentScreen.blit(matrixStack, 35, 8, 226, 1, 18, 18);
+        }
+        Minecraft.getInstance().currentScreen.blit(matrixStack, 149, 8, 226, 1, 18, 18);
+        if(recipe.Has2Outputs())
+        {
+            Minecraft.getInstance().currentScreen.blit(matrixStack, 173, 8, 226, 1, 18, 18);
+        }
+
+
 
     }
 

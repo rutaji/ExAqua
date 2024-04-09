@@ -36,14 +36,13 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
             }
         };
     }
-    private final String NBTCONSTANT = "liquidstored";
     public MyDelegate Onchange;
 
     public @NotNull FluidStack GetFluidstack(){return fluid;}
 
     public boolean IsFull()
     {
-        return !(getFluidAmount() < getCapacity());
+        return getFluidAmount() >= getCapacity();
     }
 
     public float GetFullness(){return getFluidAmount()/(float)getCapacity();}
@@ -59,11 +58,6 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
         this.fluid = stack;
         onContentsChanged();
     }
-    public void setFluidWithoundOnContentsChanged(FluidStack stack)
-    {
-        this.fluid = stack;
-    }
-
 
     public void AddBucket(Fluid fluid)
     {
