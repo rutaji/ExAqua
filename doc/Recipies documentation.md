@@ -31,11 +31,11 @@ This recipies affect drops from hand sieve.
 }
 ```
 ## parametrs 
-*success*: Chance (in percents) that player gets an item. If roll succeeds player gets item 1 item from *outputs*  (max 100)
-*fluid*: What fluid needs to be in the sieve for this recipie.
-*outputs*: Array of items that player can get. Contains a JSON object with 2 properties:
-    *item*:Json object of minecraft Itemstack {"item":"item id"}. Can contain *count* if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.
-    *weight*: Weight that this item will be selected. Must be bigger than 0. Higher => bigger chance compared to other items.
+**success**: Chance (in percents) that player gets an item. If roll succeeds player gets item 1 item from **outputs**  (max 100)<br>
+**fluid**: What fluid needs to be in the sieve for this recipie.<br>
+**outputs**: Array of items that player can get. Contains a JSON object with 2 properties:<br>
+    **item**:Json object of minecraft Itemstack {"item":"item id"}. Can contain **count** if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.<br>
+    **weight**: Weight that this item will be selected. Must be bigger than 0. Higher => bigger chance compared to other items.<br>
 
 # exaqua:sieve
 This recipies affect drops from all auto sieves.
@@ -65,18 +65,18 @@ This recipies affect drops from all auto sieves.
 }
 ```
 ## parametrs
-*input*: Json object of fluid needed for this recipie.
-  *fluid*: Id (resource location) of the fluid
-  *amount*: Amount (in miliBuckets) that will be used up for one output.
-*outputs*: Array of items that player can get. Contains a JSON object with 2 properties:
-    *item*: Json object of minecraft Itemstack {"item":"item id"}. Can contain *count* if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.
-    *weight*: Weight that this item will be selected. Must be bigger than 0. Higher => bigger chance compared to other items.
-*time*: Time it takes to do one recipie (in ticks).
-*rf*: Rf used every tick.
-*tier*: What tier of sieve is needed for this recipie. Options are: iron, gold, frogium, diamond. 
+**input**: Json object of fluid needed for this recipie.<br>
+  **fluid**: Id (resource location) of the fluid<br>
+  **amount**: Amount (in miliBuckets) that will be used up for one output.<br>
+**outputs**: Array of items that player can get. Contains a JSON object with 2 properties:<br>
+    **item**: Json object of minecraft Itemstack {"item":"item id"}. Can contain **count** if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.<br>
+    **weight**: Weight that this item will be selected. Must be bigger than 0. Higher => bigger chance compared to other items.<br>
+**time**: Time it takes to do one recipie (in ticks).<br>
+**rf**: Rf used every tick.<br>
+**tier**: What tier of sieve is needed for this recipie. Options are: iron, gold, frogium, diamond.<br>
 
 # exaqua:squeezer
-Recipies for squeezer and auto squeezer. This is only recipie that uses Ingridients insted of Itemstacks, meaning you cannot use *count*, but can use *tag*.
+Recipies for squeezer and auto squeezer. This is only recipie that uses Ingridients insted of Itemstacks, meaning you cannot use **count**, but can use **tag**.
 ## Example
 {
   "type": "exaqua:squeezer",
@@ -90,10 +90,10 @@ Recipies for squeezer and auto squeezer. This is only recipie that uses Ingridie
   }
 }
 ## parametrs
-*input*: Json object of minecraft Ingridient {"item":"item id"}. $${\color{This is only recipie that uses Ingridients insted of Itemstacks, meaning you cannot use *count*, but can use *tag* {"tag": "minecraft:leaves"}.}Red}$$
-*output*: Json object of fluid player gets by this recipie.
-    *fluid*: Id (resource location) of the fluid
-    *amount*: Amount (in miliBuckets) that will be produced as a output.
+**input**: Json object of minecraft Ingridient {"item":"item id"}. $${\color{This is only recipie that uses Ingridients insted of Itemstacks, meaning you cannot use **count**, but can use **tag** {"tag": "minecraft:leaves"}.}Red}$$<br>
+**output**: Json object of fluid player gets by this recipie.<br>
+    **fluid**: Id (resource location) of the fluid.<br>
+    **amount**: Amount (in miliBuckets) that will be produced as a output.<br>
 
 # exaqua:cauldron
 Recipies for crafting cauldron.
@@ -129,14 +129,14 @@ Recipies for crafting cauldron.
   "amount_Output": 50
 }
 ## parametrs
-*input_fluid*: Id (resource location) of the fluid needed as a input. If set to empty or not used, recipie will need the cauldron to be empty.
-*amount_input*: Amount of *input_fluid*  (in miliBuckets) that will be needed as a input.
-*input_item*: Json object of minecraft Itemstack {"item":"item id"}. Can contain *count* if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.
+**input_fluid**: Id (resource location) of the fluid needed as a input. If set to empty or not used, recipie will need the cauldron to be empty.<br>
+**amount_input**: Amount of **input_fluid**  (in miliBuckets) that will be needed as a input.<br>
+**input_item**: Json object of minecraft Itemstack {"item":"item id"}. Can contain **count** if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.<br>
 
 
-*output_fluid*: Id (resource location) of the fluid produced as a input.
-*amount_Output*: Amount of *output_fluid*  (in miliBuckets) that will be produced as output. $${\color{If recipie also requeres *input_fluid* it will transform all fluid in cauldron into *output_fluid* and ignore this parametr.}Red}$$
-*Output_item*: Json object of minecraft Itemstack {"item":"item id"}. Can contain *count* if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.
+**output_fluid**: Id (resource location) of the fluid produced as a input.<br>
+**amount_Output**: Amount of **output_fluid**  (in miliBuckets) that will be produced as output. $${\color{If recipie also requeres **input_fluid** it will transform all fluid in cauldron into **output_fluid** and ignore this parametr.}Red}$$<br>
+**Output_item**: Json object of minecraft Itemstack {"item":"item id"}. Can contain **count** if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.<br>
 
-*temperature*: Temperature needed for recipie. Set by changing block under the cauldron. Options are: cold, neutral, hot.
+**temperature**: Temperature needed for recipie. Set by changing block under the cauldron. Options are: cold, neutral, hot.<br>
 
