@@ -30,7 +30,7 @@ This recipies affect drops from hand sieve.
   ]
 }
 ```
-## parametrs 
+## Parametrs 
 **success**: Chance (in percents) that player gets an item. If roll succeeds player gets item 1 item from **outputs**  (max 100)<br>
 **fluid**: What fluid needs to be in the sieve for this recipie.<br>
 **outputs**: Array of items that player can get. Contains a JSON object with 2 properties:<br>
@@ -64,7 +64,7 @@ This recipies affect drops from all auto sieves.
   "tier":"gold"
 }
 ```
-## parametrs
+## Parametrs
 **input**: Json object of fluid needed for this recipie.<br>
   **fluid**: Id (resource location) of the fluid<br>
   **amount**: Amount (in miliBuckets) that will be used up for one output.<br>
@@ -78,6 +78,7 @@ This recipies affect drops from all auto sieves.
 # exaqua:squeezer
 Recipies for squeezer and auto squeezer. This is only recipie that uses Ingridients insted of Itemstacks, meaning you cannot use **count**, but can use **tag**.
 ## Example
+```
 {
   "type": "exaqua:squeezer",
   "input":
@@ -89,8 +90,9 @@ Recipies for squeezer and auto squeezer. This is only recipie that uses Ingridie
     "amount": 70
   }
 }
-## parametrs
-**input**: Json object of minecraft Ingridient {"item":"item id"}. $${\color{This is only recipie that uses Ingridients insted of Itemstacks, meaning you cannot use **count**, but can use **tag** {"tag": "minecraft:leaves"}.}Red}$$<br>
+```
+## Parametrs
+**input**: Json object of minecraft Ingridient {"item":"item id"}. $${\color{red}If recipie also requeres **input_fluid** it will transform all fluid in cauldron into **output_fluid** and ignore this parametr.}$$<br>
 **output**: Json object of fluid player gets by this recipie.<br>
     **fluid**: Id (resource location) of the fluid.<br>
     **amount**: Amount (in miliBuckets) that will be produced as a output.<br>
@@ -98,6 +100,7 @@ Recipies for squeezer and auto squeezer. This is only recipie that uses Ingridie
 # exaqua:cauldron
 Recipies for crafting cauldron.
 ## Examples
+```
 {
   "type": "exaqua:cauldron",
   
@@ -128,14 +131,15 @@ Recipies for crafting cauldron.
   "temperature": "hot",
   "amount_Output": 50
 }
-## parametrs
+```
+## Parametrs
 **input_fluid**: Id (resource location) of the fluid needed as a input. If set to empty or not used, recipie will need the cauldron to be empty.<br>
 **amount_input**: Amount of **input_fluid**  (in miliBuckets) that will be needed as a input.<br>
 **input_item**: Json object of minecraft Itemstack {"item":"item id"}. Can contain **count** if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.<br>
 
 
 **output_fluid**: Id (resource location) of the fluid produced as a input.<br>
-**amount_Output**: Amount of **output_fluid**  (in miliBuckets) that will be produced as output. $${\color{If recipie also requeres **input_fluid** it will transform all fluid in cauldron into **output_fluid** and ignore this parametr.}Red}$$<br>
+**amount_Output**: Amount of **output_fluid**  (in miliBuckets) that will be produced as output. $${\color{red}If recipie also requeres **input_fluid** it will transform all fluid in cauldron into **output_fluid** and ignore this parametr.}$$<br>
 **Output_item**: Json object of minecraft Itemstack {"item":"item id"}. Can contain **count** if you want to set amount of items {"item": "minecraft:cobblestone", "count":2}. Cannot use tag.<br>
 
 **temperature**: Temperature needed for recipie. Set by changing block under the cauldron. Options are: cold, neutral, hot.<br>
