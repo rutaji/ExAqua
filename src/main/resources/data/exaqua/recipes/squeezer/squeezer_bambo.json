@@ -1,0 +1,11 @@
+{
+  "type": "exaqua:squeezer",
+  "input":
+    {
+      "item": "minecraft:bamboo"
+    },
+  "output": {
+    "fluid": "minecraft:water",
+    "amount": 5
+  }
+}

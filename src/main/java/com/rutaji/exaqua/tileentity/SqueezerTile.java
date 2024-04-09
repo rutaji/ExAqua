@@ -16,11 +16,13 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,20 +59,20 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     //endregion
     //region nbt
     @Override
-    public void read(BlockState state, CompoundNBT nbt){
+    public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
-        Tank.deserializeNBT(nbt);
+        Tank.readFromNBT(nbt);
         super.read(state,nbt);
     }
 
     @Override
-    public CompoundNBT write( CompoundNBT nbt){
+    public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
-        nbt = Tank.serializeNBT(nbt);
+        nbt = Tank.writeToNBT(nbt);
         return super.write(nbt);
     }
     @Override //server send on chung load
-    public CompoundNBT getUpdateTag(){
+    public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
@@ -81,10 +83,10 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     }
     //endregion
 
-    @Nullable
+
     @Override
-    public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
-        if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler" )
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
+        if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();
@@ -118,7 +120,7 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
 
             recipe.ifPresent(iRecipe -> {
                 FluidStack output = iRecipe.getRealOutput();
-                if(!Tank.CanTakeFluid(output.getFluid())){return;}
+                if(!Tank.isFluidValid(new FluidStack(output.getFluid(),output.getAmount()))){return;}
                 ITEM_STACK_HANDLER.extractItem(0, 1, false);
 
                 this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
@@ -129,8 +131,9 @@ public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITick
     @Override
     public void TankChange()
     {
+
         if(world != null &&!world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.GetFluidstack(), pos));
         }
 
     }

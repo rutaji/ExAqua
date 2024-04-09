@@ -2,6 +2,7 @@ package com.rutaji.exaqua.tileentity;
 
 import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
+import com.rutaji.exaqua.config.ServerModConfig;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
 import com.rutaji.exaqua.networking.MyEnergyPacket;
@@ -17,12 +18,15 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,22 +62,22 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     //endregion
     //region nbt
     @Override
-    public void read(BlockState state, CompoundNBT nbt){
+    public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
-        Tank.deserializeNBT(nbt);
+        Tank.readFromNBT(nbt);
         GetEnergyStorage().deserializeNBT(nbt);
         super.read(state,nbt);
     }
 
     @Override
-    public CompoundNBT write( CompoundNBT nbt){
+    public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
-        nbt = Tank.serializeNBT(nbt);
+        nbt = Tank.writeToNBT(nbt);
         nbt = GetEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
     @Override //server send on chung load
-    public CompoundNBT getUpdateTag(){
+    public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
@@ -84,7 +88,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     }
     //endregion
     //region Energy
-    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(MyEnergyStorage.fromRF(9000),this::EnergyChangePacket);
+    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(9000,this::EnergyChangePacket);
     @Override
     public MyEnergyStorage GetEnergyStorage() {
         return this.MY_ENERGY_STORAGE;
@@ -94,34 +98,33 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     public void EnergyChangePacket()
     {
         if(world != null && !world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergy(), pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergyStored(), pos));
         }
     }
 
     //endregion
 
-    @Nullable
     @Override
     public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
-        if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler" )
+        if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();
         }
-        if(cap.getName() == "mekanism.api.energy.IStrictEnergyHandler"){
+        if(cap == CapabilityEnergy.ENERGY){
             return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
         }
         return super.getCapability(cap,side);
     }
-    private final int CraftingCooldownMax = 20;
-    private int CraftingCooldown = CraftingCooldownMax;
-    private final int CraftingRF = 5;
+    private int GetDefaultMaxCraftingTime(){return ServerModConfig.AutoSqueezerTimeForRecipie.get();}
+    private int CraftingCooldown = GetDefaultMaxCraftingTime();
+    private int getDefaultRFConsumtion(){return ServerModConfig.AutoSqueezerRFperTick.get();}
     @Override
     public void tick()
     {
         if(CraftingCooldown > 0 )
         {
-           if( GetEnergyStorage().DrainRF(5))
+           if( GetEnergyStorage().TryDrainEnergy(getDefaultRFConsumtion()))
            {
                CraftingCooldown--;
            }
@@ -144,11 +147,11 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
 
             recipe.ifPresent(iRecipe -> {
                 FluidStack output = iRecipe.getRealOutput();
-                if(!Tank.CanTakeFluid(output.getFluid())){return;}
+                if(!Tank.isFluidValid(new FluidStack(output.getFluid(), output.getAmount()))){return;}
                 ITEM_STACK_HANDLER.extractItem(0, 1, false);
 
                 this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
-                CraftingCooldown = CraftingCooldownMax;
+                CraftingCooldown = GetDefaultMaxCraftingTime();
                 markDirty();
             });
         }
@@ -157,7 +160,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     public void TankChange()
     {
         if(world != null &&!world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.GetFluidstack(), pos));
         }
 
     }

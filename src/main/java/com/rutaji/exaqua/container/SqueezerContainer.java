@@ -10,11 +10,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 
 public class SqueezerContainer extends Container {
     private final TileEntity TILEEMTITY;
@@ -29,10 +31,7 @@ public class SqueezerContainer extends Container {
         layoutPlayerInventorySlots(8,86);
 
         if(TILEEMTITY != null){
-            TILEEMTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new SlotItemHandler(h,0,80,43));
-
-            });
+            TILEEMTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> addSlot(new SlotItemHandler(h,0,80,43)));
         }
 
     }
@@ -47,13 +46,13 @@ public class SqueezerContainer extends Container {
     {
         if (TILEEMTITY instanceof IMyLiquidTankTIle){
             if(((IMyLiquidTankTIle) TILEEMTITY).GetTank().isEmpty()){return "Empty";}
-            return ((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluid().getFluid().getRegistryName().toString();
+            return new TranslationTextComponent(((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
         return "Doesnt have a container";
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player){
+    public boolean canInteractWith(@NotNull PlayerEntity player){
         return  isWithinUsableDistance(IWorldPosCallable.of(TILEEMTITY.getWorld(), TILEEMTITY.getPos()),
                                                             player, ModBlocks.SQUEEZER.get());
     }
@@ -69,13 +68,12 @@ public class SqueezerContainer extends Container {
         return index;
     }
 
-    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
+    private void addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
         for (int j = 0; j < verAmount; j++) {
             index = addSlotRange(handler, index, x, y, horAmount, dx);
             y += dy;
         }
 
-        return index;
     }
     private void layoutPlayerInventorySlots(int leftCol, int topRow) {
         addSlotBox(PLAYERINVENTORY, 9, leftCol, topRow, 9, 18, 3, 18);
@@ -96,7 +94,7 @@ public class SqueezerContainer extends Container {
     private static final int TE_INVENTORY_SLOT_COUNT = 1;
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public @NotNull ItemStack transferStackInSlot(@NotNull PlayerEntity playerIn, int index) {
         Slot sourceSlot = inventorySlots.get(index);
         if (sourceSlot == null || !sourceSlot.getHasStack()) return ItemStack.EMPTY;
         ItemStack sourceStack = sourceSlot.getStack();

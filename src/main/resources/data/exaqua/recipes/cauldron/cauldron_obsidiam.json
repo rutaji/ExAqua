@@ -1,0 +1,10 @@
+{
+  "type": "exaqua:cauldron",
+  "input_fluid": "minecraft:lava",
+  "input_item": {"item": "minecraft:ice"},
+  "Output_item":{"item": "minecraft:obsidian"},
+  "temperature": "neutral",
+  "amount_input": 1000
+
+
+}

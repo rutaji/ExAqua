@@ -57,7 +57,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> F_ORE_STONE =registerBlock("frogium_ore_stone",() -> new FrogiumOre(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2)));
     public static final RegistryObject<Block> F_BLOCK =registerBlock("frogium_block",() -> new FrogiumBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(4)));
     public static final RegistryObject<Block> CAULDRON =registerBlock("cauldron",() -> new CraftingCauldron(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(4).notSolid()));
-    public static final RegistryObject<Block> mud =registerBlock("mud",() -> new Block(AbstractBlock.Properties.create(Material.SAND).hardnessAndResistance(1)));
+    public static final RegistryObject<Block> MUD =registerBlock("mud",() -> new Block(AbstractBlock.Properties.create(Material.SAND).hardnessAndResistance(1)));
     public static final RegistryObject<Block> AUTO_SQUEEZER =registerBlock("auto_squeezer",() -> new AutoSqueezerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3)));
 
 }

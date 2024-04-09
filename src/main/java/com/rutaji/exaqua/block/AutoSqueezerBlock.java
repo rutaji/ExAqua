@@ -1,13 +1,10 @@
 package com.rutaji.exaqua.block;
 
 import com.rutaji.exaqua.container.AutoSqueezerContainer;
-import com.rutaji.exaqua.container.SqueezerContainer;
 import com.rutaji.exaqua.tileentity.AutoSqueezerTileEntity;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
-import com.rutaji.exaqua.tileentity.SqueezerTile;
 import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -16,9 +13,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -33,8 +27,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -60,42 +56,41 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
 
 
-    public VoxelShape getShape(BlockState blockState, IBlockReader worlIn, BlockPos pos, ISelectionContext context)
+    public @NotNull VoxelShape getShape(@NotNull BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
     {
         return SHAPE;
     }
     //endregion
-
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit) {
         if(!worldIn.isRemote()) {
             TileEntity tileEntity = worldIn.getTileEntity(pos);
             if(tileEntity instanceof AutoSqueezerTileEntity) {
-                //region UI
+
                 INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
                 NetworkHooks.openGui(((ServerPlayerEntity) player), containerProvider, tileEntity.getPos());
-                //endregion
+
             } else {
                 throw new IllegalStateException("Wrong TileEntity!");
             }
         }
         return ActionResultType.SUCCESS;
     }
-
+    //region UI
     private INamedContainerProvider createContainerProvider(World worldIn, BlockPos pos) {
         return new INamedContainerProvider() {
             @Override
-            public ITextComponent getDisplayName() {
+            public @NotNull ITextComponent getDisplayName() {
                 return new TranslationTextComponent("screen.exaqua.autosqueezercontainer");
             }
-            @Nullable
             @Override
-            public Container createMenu(int i, PlayerInventory inventory, PlayerEntity playerEn) {
+            public Container createMenu(int i, @NotNull PlayerInventory inventory, @NotNull PlayerEntity playerEn) {
                 return new AutoSqueezerContainer(i,worldIn,pos,inventory,playerEn);
             }
         };
 
     }
+    //endregion
     //region tile entity
     @Override
     public boolean hasTileEntity(BlockState state) {
@@ -109,7 +104,7 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     //endregion
     //region bucket implementation
     @Override
-    public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {
+    public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle){
             if(((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount() >= 1000){
@@ -121,17 +116,17 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     }
 
     @Override
-    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
+    public boolean canContainFluid(IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle)
         {
-            return  ((IMyLiquidTankTIle)tileEntity).GetTank().CanTakeFluid(fluidIn);
+            return  ((IMyLiquidTankTIle)tileEntity).GetTank().isFluidValid(new FluidStack(fluidIn,1000));
         }
         return false;
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
+    public boolean receiveFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTIle)

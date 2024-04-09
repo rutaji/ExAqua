@@ -2,9 +2,7 @@ package com.rutaji.exaqua.integration.jei;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.rutaji.exaqua.ExAqua;
-import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.data.recipes.HandSieveRecipie;
-import com.rutaji.exaqua.data.recipes.SieveRecipie;
 import com.rutaji.exaqua.item.ModItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -16,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -37,27 +36,27 @@ public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie
 
 
     @Override
-    public ResourceLocation getUid() {
+    public @NotNull ResourceLocation getUid() {
         return UID;
     }
 
     @Override
-    public Class<? extends HandSieveRecipie> getRecipeClass() {
+    public @NotNull Class<? extends HandSieveRecipie> getRecipeClass() {
         return HandSieveRecipie.class;
     }
 
     @Override
-    public String getTitle() {
+    public @NotNull String getTitle() {
         return "Hand sieve";
     }
 
     @Override
-    public IDrawable getBackground() {
+    public @NotNull IDrawable getBackground() {
         return BACKGROUND;
     }
 
     @Override
-    public IDrawable getIcon() {
+    public @NotNull IDrawable getIcon() {
         return ICON;
     }
 
@@ -79,7 +78,7 @@ public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, HandSieveRecipie recipe, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, HandSieveRecipie recipe, @NotNull IIngredients ingredients) {
         recipeLayout.getFluidStacks().init(0,true,92,8);
 
         int x = X;
@@ -96,7 +95,7 @@ public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie
 
     }
     @Override
-    public void draw(HandSieveRecipie recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(HandSieveRecipie recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
     {
         int x = X;
         int y = Y;
@@ -104,6 +103,7 @@ public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie
 
         for(int i =0;i < recipe.GetSize();i++ )
         {
+            assert Minecraft.getInstance().currentScreen != null;
             Minecraft.getInstance().currentScreen.blit(matrixStack,x,y,201,0,18,18);
             x+=34;
             if(x > WIDTH -5) {x = X;y+=40;}

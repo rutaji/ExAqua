@@ -1,0 +1,9 @@
+{
+  "type": "exaqua:cauldron",
+  "input_fluid": "minecraft:water",
+  "Output_item": {"item": "minecraft:ice"},
+  "temperature": "cold",
+  "amount_input": 1000
+
+
+}

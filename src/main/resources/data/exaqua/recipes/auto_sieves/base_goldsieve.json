@@ -1,0 +1,22 @@
+{
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "minecraft:water",
+      "amount": 100
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:sand"},
+      "weight": 6
+    },
+    {
+      "item": { "item": "minecraft:gravel"},
+      "weight": 7
+    }
+
+  ],
+  "time": 25,
+  "rf": 35,
+  "tier":"gold"
+}

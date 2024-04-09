@@ -4,12 +4,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.container.CauldronContainer;
-import com.rutaji.exaqua.container.SqueezerContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import org.jetbrains.annotations.NotNull;
 
 public class CauldronScreen extends ContainerScreen<CauldronContainer> {
     private final ResourceLocation GUI = new ResourceLocation(ExAqua.MOD_ID,"gui/cauldron.png");
@@ -20,7 +20,7 @@ public class CauldronScreen extends ContainerScreen<CauldronContainer> {
     //endregion
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void drawGuiContainerBackgroundLayer(@NotNull MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
         this.minecraft.getTextureManager().bindTexture(GUI);
         int i = this.guiLeft;
@@ -45,7 +45,7 @@ public class CauldronScreen extends ContainerScreen<CauldronContainer> {
 
     }
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);

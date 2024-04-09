@@ -2,6 +2,8 @@ package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import com.rutaji.exaqua.ExAqua;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,7 +17,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +27,7 @@ import java.util.Random;
 
 public class HandSieveRecipie implements IHandSieveRecipie {
     //region Constructor
-    public HandSieveRecipie(ResourceLocation id, Fluid input, List<RoolItem> output,int chance) {
+    public HandSieveRecipie(ResourceLocation id, @NotNull Fluid input, @NotNull List<RoolItem> output, int chance) {
         this.ID = id;
         this.INPUTFLUID = input;
         this.RESULTS = output;
@@ -39,18 +43,18 @@ public class HandSieveRecipie implements IHandSieveRecipie {
         Chances = CountChances();
     }
     //endregion
-    public List<Double> GetChances(){return  Chances;}
-    private final List<Double> Chances;
+    public @NotNull List<Double> GetChances(){return  Chances;}
+    private final @NotNull List<Double> Chances;
     private final ResourceLocation ID;
     private static final Random RANDOM = new Random();
-    public final List<RoolItem> RESULTS;
-    public final Fluid INPUTFLUID;
+    public final @NotNull List<RoolItem> RESULTS;
+    public final @Nonnull Fluid INPUTFLUID;
     public final int SUM;
     public final int SUCCESCHANCE;
 
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(@NotNull IInventory inv, @NotNull World worldIn) {
         if(inv instanceof InventorySieve)
         {
             FluidStack f = ((InventorySieve) inv).getFluid();
@@ -65,17 +69,17 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
-        return null;
+    public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public @NotNull ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
 
     public List<ItemStack> GetAllPossibleOutputs() {
-        List<ItemStack> results  = new ArrayList<ItemStack>();
+        List<ItemStack> results  = new ArrayList<>();
         for (RoolItem r: RESULTS)
         {
             results.add(r.item);
@@ -84,14 +88,14 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
 
     public int GetSize(){return RESULTS.size();}
     public List<Double> CountChances()
     {
-        List<Double> result = new ArrayList();
+        List<Double> result = new ArrayList<>();
         int i =0;
         for (RoolItem r : RESULTS)
         {
@@ -104,7 +108,11 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     public ItemStack GetRandomItemStack()
     {
 
-        if(SUM == 0){System.out.println("Recipe doesn´t have a chance");return ItemStack.EMPTY;}
+        if(SUM == 0)
+        {
+            ExAqua.LOGGER.warn("HandSieve recipie has sum of changes 0.Recipie resource location: {}",getId());
+            return ItemStack.EMPTY;
+        }
         int random = RANDOM.nextInt(SUM) + 1;
         for (RoolItem r: RESULTS)
         {
@@ -115,7 +123,7 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     }
     //region registration
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.HANDSIEVE_SERIALIZER.get();
     }
 
@@ -131,14 +139,19 @@ public class HandSieveRecipie implements IHandSieveRecipie {
             implements IRecipeSerializer<HandSieveRecipie> {
 
         @Override
-        public HandSieveRecipie read(ResourceLocation recipeId, JsonObject json) {
+        public @NotNull HandSieveRecipie read(@NotNull ResourceLocation recipeId, JsonObject json) {
 
             Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("fluid").getAsString()));
+            if(fluid == null){
+                ExAqua.LOGGER.error("Error in {}. Fluid not found: {}",recipeId.getPath(),json.get("fluid").getAsString());
+                throw new JsonSyntaxException("Error in "+ recipeId.getPath() + ". Fluid not found: "+ json.get("fluid").getAsString());
+            }
+
             JsonArray OutputsJson = JSONUtils.getJsonArray(json, "outputs");
             List<RoolItem> Outputs = new ArrayList<>();
             for (int i = 0; i < OutputsJson.size(); i++) {
                 JsonObject j = OutputsJson.get(i).getAsJsonObject();
-                Outputs.add(new RoolItem( ShapedRecipe.deserializeItem(j.get("item").getAsJsonObject()),j.get("chance").getAsInt()));
+                Outputs.add(new RoolItem( ShapedRecipe.deserializeItem(j.get("item").getAsJsonObject()),j.get("weight").getAsInt()));
             }
             int chance = json.get("success").getAsInt();
             return new HandSieveRecipie(recipeId, fluid,Outputs,chance);
@@ -146,7 +159,7 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
         @Nullable
         @Override
-        public HandSieveRecipie read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public HandSieveRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
             Fluid Input = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString()));
             List<RoolItem> Results = new ArrayList<>();
             int size = buffer.readInt();

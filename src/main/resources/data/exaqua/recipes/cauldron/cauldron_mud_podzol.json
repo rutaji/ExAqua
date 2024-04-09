@@ -1,0 +1,8 @@
+{
+  "type": "exaqua:cauldron",
+  "input_fluid": "minecraft:water",
+  "input_item": {"item": "minecraft:podzol"},
+  "output_fluid": "exaqua:mud_fluid",
+  "Output_item": {"item":"minecraft:dirt"},
+  "temperature": "neutral"
+}

@@ -19,11 +19,14 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +35,7 @@ import java.util.Optional;
 public class SieveTileEntity extends TileEntity implements ITickableTileEntity,IMyLiquidTankTIle,IMYEnergyStorageTile {
 
     //region Items
-    private int NUMBER_OF_INVENTORY_SLOTS =8;
+    private final int NUMBER_OF_INVENTORY_SLOTS =8;
     private ItemStackHandler createHandler()
     {
         return new ItemStackHandler(NUMBER_OF_INVENTORY_SLOTS){
@@ -53,23 +56,23 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     //endregion
     //region nbt
     @Override
-    public void read(BlockState state, CompoundNBT nbt){
+    public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         tier = SieveTiers.valueOf(nbt.getString("tier"));
-        Tank.deserializeNBT(nbt);
+        Tank.readFromNBT(nbt);
         GetEnergyStorage().deserializeNBT(nbt);
         super.read(state,nbt);
     }
     @Override
-    public CompoundNBT write( CompoundNBT nbt){
+    public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         nbt.putString("tier",tier.name());
-        nbt = Tank.serializeNBT(nbt);
+        nbt = Tank.writeToNBT(nbt);
         nbt = GetEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
     @Override //server send on chung load
-    public CompoundNBT getUpdateTag(){
+    public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
@@ -91,7 +94,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     }
     //endregion
     //region Energy
-    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(MyEnergyStorage.fromRF(9000),this::EnergyChangePacket);
+    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(9000,this::EnergyChangePacket);
     @Override
     public MyEnergyStorage GetEnergyStorage() {
         return this.MY_ENERGY_STORAGE;
@@ -101,18 +104,18 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     public void EnergyChangePacket()
     {
         if(world != null && !world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergy(), pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergyStored(), pos));
         }
     }
 
     //endregion
-    @Nullable
+
     @Override
-    public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
-        if(cap.getName() == "mekanism.api.energy.IStrictEnergyHandler"){
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
+        if(cap == CapabilityEnergy.ENERGY){
             return MY_ENERGY_STORAGE.getCapabilityProvider().getCapability(cap,side);
         }
-        if(cap.getName() == "net.minecraftforge.fluids.capability.IFluidHandler" )
+        if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return Tank.getCapabilityProvider().getCapability(cap, side);
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return HANDLER.cast();
@@ -135,19 +138,19 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     private ItemStack ItemTocraft;
     private int craftingTime;
     private int craftingTimeDone;
-    private double rf;
+    private int rf;
     public void craft() {
 
         if(!world.isRemote())
         {
 
             //Tank.setStack(new FluidStack(Fluids.WATER,50));
-            if (Tank.FluidStored.getAmount() == 0 && !crafting) {
+            if (Tank.getFluidAmount() == 0 && !crafting) {
                 return;
             }
-            if(crafting == false) {
+            if(!crafting) {
                 InventorySieve inv = new InventorySieve();
-                inv.setFluidStack(Tank.FluidStored);
+                inv.setFluidStack(Tank.GetFluidstack());
                 inv.setTier(GetTier());
 
                 Optional<SieveRecipie> recipe = world.getRecipeManager()
@@ -184,7 +187,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
             }
             else{
-                if(this.GetEnergyStorage().DrainRF(rf)) {
+                if(this.GetEnergyStorage().TryDrainEnergy(rf)) {
                     craftingTime++;
                     markDirty();
                 }
@@ -212,7 +215,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     }
     //endregion
     //region IMyLiquidTankTile
-    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange,5000);
+    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange,5000,e->true);
     @Override
     public MyLiquidTank GetTank() {
         return this.Tank;
@@ -221,7 +224,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     public void TankChange()
     {
         if(world != null && !world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.FluidStored, pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.GetFluidstack(), pos));
         }
 
     }

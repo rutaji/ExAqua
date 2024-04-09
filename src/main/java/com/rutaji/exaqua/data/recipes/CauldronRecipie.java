@@ -8,82 +8,86 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class CauldronRecipie implements ICauldronRecipie {
     //region Constructor
-    public CauldronRecipie(ResourceLocation id, Fluid input, ItemStack inputItem, Fluid output, ItemStack outputitem,CauldronTemperature temp,int amount) {
+    public CauldronRecipie(ResourceLocation id, Fluid input, ItemStack inputItem, Fluid output, ItemStack outputitem,CauldronTemperature temp,int amount_in, int amount_out) {
         this.ID = id;
-        this.INPUT = input;
-        OUTPUT = output;
-        INPUT_ITEM = inputItem;
-        OUTPUT_ITEM = outputitem;
-        TEMP = temp;
-        this.AMOUNT = amount;
-    }
-    public CauldronRecipie(ResourceLocation id, Fluid input, ItemStack inputItem, Fluid output, ItemStack outputitem,CauldronTemperature temp) {
-        this.ID = id;
-        this.INPUT = input;
-        OUTPUT = output;
-        INPUT_ITEM = inputItem;
-        OUTPUT_ITEM = outputitem;
-        TEMP = temp;
-        AMOUNT = 0;
+        this.INPUT_FLUID = input;
+        this.OUTPUT_FLUID = output;
+        this.INPUT_ITEM = inputItem;
+        this.OUTPUT_ITEM = outputitem;
+        this.TEMP = temp;
+        this.AMOUNT_INPUT = amount_in;
+        this.AMOUNT_OUTPUT = amount_out;
+
     }
     //endregion
     private final ResourceLocation ID;
-    public final Fluid INPUT;
-    public final Fluid OUTPUT;
+    public final Fluid INPUT_FLUID;
+    public final Fluid OUTPUT_FLUID;
     public final ItemStack INPUT_ITEM;
     public final ItemStack OUTPUT_ITEM;
     public final CauldronTemperature TEMP;
-    public final int AMOUNT;
+    public final int AMOUNT_INPUT;
 
+    public final int AMOUNT_OUTPUT;
 
 
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(@NotNull IInventory inv, @NotNull World worldIn) {
         if(inv instanceof InventoryCauldron)
         {
-            return  ((INPUT == Fluids.EMPTY && ( ((InventoryCauldron) inv).getFluid() == Fluids.EMPTY || ((InventoryCauldron) inv).getFluid() == OUTPUT ))||( ((InventoryCauldron) inv).amount >= AMOUNT &&(((InventoryCauldron) inv).getFluid().isEquivalentTo(INPUT)))) &&
-                    (INPUT_ITEM == ItemStack.EMPTY || (inv.getStackInSlot(0).isItemEqual(INPUT_ITEM) && inv.getStackInSlot(0).getCount() >= INPUT_ITEM.getCount())) &&
-                    TEMP == ((InventoryCauldron) inv).getTemp() ;
+            InventoryCauldron cauldron = (InventoryCauldron) inv;
+            return ((cauldron.getTemp() == TEMP) &&
+                    (INPUT_FLUID == Fluids.EMPTY || (cauldron.getFluid() == INPUT_FLUID && cauldron.amount >= AMOUNT_INPUT) ) &&
+                    (INPUT_ITEM == ItemStack.EMPTY || (INPUT_ITEM.isItemEqual(cauldron.getStackInSlot(0))) && cauldron.getStackInSlot(0).getCount() >= INPUT_ITEM.getCount()));
         }
         return false;
     }
 
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getRecipeOutput()
+    public @NotNull ItemStack getRecipeOutput()
     {
-     if(OUTPUT == null){return OUTPUT_ITEM;}
      return ItemStack.EMPTY;
     }
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return ID;
     }
-
+    @Override
+    public @NotNull NonNullList<Ingredient> getIngredients() {
+        return NonNullList.create();
+    }
 
 
     //region registration
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.CAULDRON_SERIALIZER.get();
+    }
+
+    public boolean Has2Outputs() {
+        return OUTPUT_FLUID != Fluids.EMPTY && OUTPUT_ITEM != ItemStack.EMPTY;
     }
 
     public static class CauldronRecipeType implements IRecipeType<CauldronRecipie> {
@@ -98,98 +102,72 @@ public class CauldronRecipie implements ICauldronRecipie {
             implements IRecipeSerializer<CauldronRecipie> {
 
         @Override
-        public CauldronRecipie read(ResourceLocation recipeId, JsonObject json) {
+        public @NotNull CauldronRecipie read(@NotNull ResourceLocation recipeId, JsonObject json) {
 
             Fluid InputF = Fluids.EMPTY;
             ItemStack InputI = ItemStack.EMPTY;
-
-            if(json.has("fluidi"))
+            if(json.has("input_fluid"))
             {
-                InputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("fluidi").getAsString()));
+                InputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("input_fluid").getAsString()));
             }
-
-            if(json.has("itemi"))
+            if(json.has("input_item"))
             {
-                InputI = ShapedRecipe.deserializeItem(json.get("itemi").getAsJsonObject());
+                InputI = ShapedRecipe.deserializeItem(json.get("input_item").getAsJsonObject());
             }
-
 
 
             Fluid outputF = Fluids.EMPTY;
             ItemStack OutputI = ItemStack.EMPTY;
-            String output = json.get("outputtype").getAsString();
-            int amount = 0;
-            switch (output)
+            if(json.has("output_fluid"))
             {
-                case "fluid":
-                    outputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("output").getAsString()));
-                    break;
-                case "item":
-                    OutputI = ShapedRecipe.deserializeItem(json.get("output").getAsJsonObject());
-
+                outputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("output_fluid").getAsString()));
             }
-            amount = json.get("amount").getAsInt();
-            CauldronTemperature temp = CauldronTemperature.valueOf(json.get("temp").getAsString());
+            if(json.has("Output_item"))
+            {
+                OutputI = ShapedRecipe.deserializeItem(json.get("Output_item").getAsJsonObject());
+            }
 
-            return new CauldronRecipie(recipeId, InputF,InputI,outputF,OutputI,temp,amount);
+            int amount_in = 0;
+            if(json.has("amount_input")) amount_in = json.get("amount_input").getAsInt();
+            int amount_out = 1;
+            if(json.has("amount_Output")) amount_out = json.get("amount_Output").getAsInt();
+            CauldronTemperature temp = CauldronTemperature.neutral;
+            if (json.has("temperature")){temp = CauldronTemperature.valueOf(json.get("temperature").getAsString());}
+
+            return new CauldronRecipie(recipeId, InputF,InputI,outputF,OutputI,temp,amount_in,amount_out);
         }
 
         @Nullable
         @Override
-        public CauldronRecipie read(ResourceLocation recipeId, PacketBuffer buffer) {
-            Fluid InputF;
-            ItemStack InputI;
-
+        public CauldronRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
             String inputf = buffer.readString();
-            InputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(inputf));
-            InputI = buffer.readItemStack();
+            Fluid InputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(inputf));
+            ItemStack InputI =buffer.readItemStack();
 
 
+            Fluid outputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString()));
+            ItemStack OutputI = buffer.readItemStack();
 
-            Fluid outputF = Fluids.EMPTY;
-            ItemStack OutputI = ItemStack.EMPTY;
-            int amount = 0;
-            String output = buffer.readString();
-            switch (output)
-            {
-                case "fluid":
-                    outputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString()));
-                    break;
-                case "item":
-                    OutputI = buffer.readItemStack();
-
-            }
-            amount = buffer.readInt();
+            int amount = buffer.readInt();
+            int amount_out = buffer.readInt();
             CauldronTemperature temp = buffer.readEnumValue(CauldronTemperature.class);
 
-
-            return new CauldronRecipie(recipeId, InputF,InputI,outputF,OutputI,temp,amount);
+            return new CauldronRecipie(recipeId, InputF,InputI,outputF,OutputI,temp,amount,amount_out);
         }
 
         @Override
         public void write(PacketBuffer buffer, CauldronRecipie recipe) {
 
-           buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.INPUT).toString());
-
-
+           buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.INPUT_FLUID).toString());
            buffer.writeItemStack(recipe.INPUT_ITEM);
 
 
+           buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.OUTPUT_FLUID).toString());
+           buffer.writeItemStack(recipe.OUTPUT_ITEM);
 
-
-           String output = recipe.OUTPUT != Fluids.EMPTY ? "fluid" : "item";
-           buffer.writeString(output);
-            switch (output)
-            {
-                case "fluid":
-                    buffer.writeString(ForgeRegistries.FLUIDS.getKey(recipe.OUTPUT).toString());
-                    break;
-                case "item":
-                    buffer.writeItemStack(recipe.OUTPUT_ITEM);
-
-            }
-            buffer.writeInt(recipe.AMOUNT);
-            buffer.writeEnumValue(recipe.TEMP);
+           buffer.writeInt(recipe.AMOUNT_INPUT);
+           buffer.writeInt(recipe.AMOUNT_OUTPUT);
+           buffer.writeEnumValue(recipe.TEMP);
 
         }
     }

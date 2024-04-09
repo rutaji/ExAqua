@@ -1,0 +1,22 @@
+{
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "exaqua:mud_fluid",
+      "amount": 100
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:dirt"},
+      "weight": 8
+    },
+    {
+      "item": {"item": "exaqua:mud"},
+      "weight": 1
+    }
+
+  ],
+  "time": 20,
+  "rf": 10,
+  "tier":"gold"
+}

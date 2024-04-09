@@ -13,11 +13,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 
 public class SieveContainer extends Container {
 
@@ -59,19 +61,19 @@ public class SieveContainer extends Container {
     {
         if (TILEENTITY instanceof IMyLiquidTankTIle){
             if(((IMyLiquidTankTIle) TILEENTITY).GetTank().isEmpty()){return "Empty";}
-            return ((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluid().getFluid().getRegistryName().toString();
+            return new TranslationTextComponent(((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
         return "Does not contain storage";
     }
     public long GetEnergyAmount(){
         if (TILEENTITY instanceof IMYEnergyStorageTile){
-            return ((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().GetAsRF();
+            return (long)(((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().getEnergyStored());
         }
         return -1;
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player){
+    public boolean canInteractWith(@NotNull PlayerEntity player){
         return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(),TILEENTITY.getPos()),
                 player, ModBlocks.GetSIEVE(GetTier()).get());
     }
@@ -120,7 +122,7 @@ public class SieveContainer extends Container {
     private static final int TE_INVENTORY_SLOT_COUNT = 8;
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack transferStackInSlot(@NotNull PlayerEntity playerIn, int index) {
         Slot sourceSlot = inventorySlots.get(index);
         if (sourceSlot == null || !sourceSlot.getHasStack()) return ItemStack.EMPTY;
         ItemStack sourceStack = sourceSlot.getStack();

@@ -1,0 +1,9 @@
+{
+  "type": "exaqua:cauldron",
+  "input_fluid": "minecraft:water",
+  "input_item": {"item": "minecraft:acacia_leaves" ,"count": 6},
+  "output_fluid": "exaqua:mud_fluid",
+  "temperature": "neutral"
+
+
+}

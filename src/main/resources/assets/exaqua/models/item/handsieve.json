@@ -45,7 +45,7 @@
       "predicate": {
         "color": 0.7
       },
-      "model": "exaqua:item/handsieve/handsievedargreen"
+      "model": "exaqua:item/handsieve/handsievedarkgreen"
     },
     {
       "predicate": {
@@ -94,6 +94,12 @@
         "color": 1.5
       },
       "model": "exaqua:item/handsieve/handsievebrown"
+    },
+    {
+      "predicate": {
+        "color": 1.6
+      },
+      "model": "exaqua:item/handsieve/handsievegreen"
     },
     {
       "predicate": {

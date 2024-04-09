@@ -1,0 +1,11 @@
+{
+  "type": "exaqua:squeezer",
+  "input":
+    {
+      "tag": "minecraft:saplings"
+    },
+  "output": {
+    "fluid": "minecraft:water",
+    "amount": 50
+  }
+}

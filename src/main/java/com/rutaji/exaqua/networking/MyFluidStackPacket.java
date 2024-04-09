@@ -1,9 +1,7 @@
 package com.rutaji.exaqua.networking;
 
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
-import com.rutaji.exaqua.tileentity.SqueezerTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -33,12 +31,12 @@ public class MyFluidStackPacket {
     }
 
     public void handle(Supplier<NetworkEvent.Context> context) {
-        System.out.println("handle");
-
         TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
         if ( tileEntity instanceof IMyLiquidTankTIle) {
-            ((IMyLiquidTankTIle)tileEntity).GetTank().setStack(PacketStack);
+            ((IMyLiquidTankTIle)tileEntity).GetTank().setFluid(PacketStack);
+            context.get().setPacketHandled(true);
         }
+
     }
 }
 

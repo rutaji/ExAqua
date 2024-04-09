@@ -1,0 +1,42 @@
+{
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "exaqua:mud_fluid",
+      "amount": 100
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:pumpkin_seeds"},
+      "weight": 3
+    },
+    {
+      "item": {"item": "minecraft:melon_seeds"},
+      "weight": 2
+    },
+    {
+      "item": {"item": "minecraft:kelp"},
+      "weight": 6
+    },
+    {
+      "item": {"item": "minecraft:sugar_cane"},
+      "weight": 5
+    },
+    {
+      "item": {"item": "minecraft:cocoa_beans"},
+      "weight": 1
+    },
+    {
+      "item": {"item": "minecraft:dark_oak_sapling"},
+      "weight": 1
+    },
+    {
+      "item": {"item": "minecraft:jungle_sapling"},
+      "weight": 1
+    }
+
+  ],
+  "time": 35,
+  "rf": 10,
+  "tier":"diamond"
+}

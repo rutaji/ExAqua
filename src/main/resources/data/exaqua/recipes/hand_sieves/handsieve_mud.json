@@ -1,0 +1,27 @@
+{
+  "type": "exaqua:handsieve",
+  "success": 20,
+  "fluid": "exaqua:mud_fluid",
+  "outputs": [
+    {
+      "item": {"item": "minecraft:wheat_seeds"},
+      "weight": 7
+    },
+    {
+      "item": {"item": "minecraft:beetroot_seeds"},
+      "weight": 4
+    },
+    {
+      "item": {"item": "minecraft:cobblestone", "count":2},
+      "weight": 3
+    },
+    {
+      "item": { "item": "minecraft:dirt"},
+      "weight": 2
+    },
+    {
+      "item": { "item": "minecraft:carrot"},
+      "weight": 1
+    }
+  ]
+}

@@ -10,14 +10,14 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Supplier;
 
 public enum FrogiumArmorMaterial implements IArmorMaterial {
 
     FROGIUM("frogium", 18, new int[] { 1, 2, 2, 1 }, 1,
-    SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0, 0.0f, () -> {
-        return Ingredient.fromItems(ModItems.FROGIUM.get());
-    });
+    SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0, 0.0f, () -> Ingredient.fromItems(ModItems.FROGIUM.get()));
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private final String name;
@@ -29,7 +29,7 @@ public enum FrogiumArmorMaterial implements IArmorMaterial {
     private final float knockbackResistance;
     private final LazyValue<Ingredient> repairMaterial;
 
-    private FrogiumArmorMaterial(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability,
+    FrogiumArmorMaterial(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability,
                              SoundEvent soundEvent, float toughness, float knockbackResistance,
                              Supplier<Ingredient> repairMaterial) {
         this.name = name;
@@ -55,16 +55,16 @@ public enum FrogiumArmorMaterial implements IArmorMaterial {
         return this.enchantability;
     }
 
-    public SoundEvent getSoundEvent() {
+    public @NotNull SoundEvent getSoundEvent() {
         return this.soundEvent;
     }
 
-    public Ingredient getRepairMaterial() {
+    public @NotNull Ingredient getRepairMaterial() {
         return this.repairMaterial.getValue();
     }
 
     @OnlyIn(Dist.CLIENT)
-    public String getName() {
+    public @NotNull String getName() {
         return ExAqua.MOD_ID + ":" + this.name;
     }
 

@@ -1,0 +1,10 @@
+{
+  "type": "exaqua:cauldron",
+  "input_fluid": "minecraft:lava",
+  "input_item": {"item": "minecraft:warped_fungus"},
+  "Output_item": {"item": "minecraft:warped_nylium"},
+  "temperature": "cold",
+  "amount_input": 1000
+
+
+}
