@@ -1,5 +1,6 @@
 package com.rutaji.exaqua.container;
 
+import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.block.SieveTiers;
 import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
@@ -20,13 +21,24 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
-
+/**
+ * Container for sieves.
+ * This class handles logic behind UI. Runs on server and client side. Communicates with tile entity directly.
+ */
 public class SieveContainer extends Container {
 
     private final TileEntity TILEENTITY;
     private final PlayerEntity PLAYERENTITY;
     private final IItemHandler PLAYERINVENTORY;
 
+    /**
+     *
+     * @param windowId
+     * @param world world of the interacted block
+     * @param pos position of the interacted block
+     * @param playerInventory inventory of the player opening the UI
+     * @param playerEntity player opening the UI
+     */
     public SieveContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
         super(ModContainers.SIEVECONTAINER.get(),windowId);
         this.TILEENTITY = world.getTileEntity(pos);
@@ -50,33 +62,48 @@ public class SieveContainer extends Container {
     }
     //region Get
 
+    /**
+     * Return's -1 if tile entity doesn't implement IMyLiquidTankTile.
+     * @return amount of fluid in tile entity
+     */
     public int GetLiquidAmount()
     {
         if (TILEENTITY instanceof IMyLiquidTankTile){
             return ((IMyLiquidTankTile) TILEENTITY).GetTank().getFluidAmount();
         }
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement ImyLiquidTankTile.",this,TILEENTITY);
         return -1;
     }
+    /**
+     * Returns "Empty" if tile entity is empty. If tile entity doesn't implement IMyLiquidTankTile returns "Cannot store fluids!".
+     * @return translated name of the fluid inside tile entity
+     */
     public String GetLiquid()
     {
         if (TILEENTITY instanceof IMyLiquidTankTile){
             if(((IMyLiquidTankTile) TILEENTITY).GetTank().isEmpty()){return "Empty";}
             return new TranslationTextComponent(((IMyLiquidTankTile) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
-        return "Does not contain storage";
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMyLiquidTankTile.",this,TILEENTITY);
+        return "Cannot store fluids!";
     }
+
+    /**
+     * returns -1 if tile entity doesn't implement IMYEnergyStorageTile
+     * @return returns amount of energy stored in tile entity (in FE)
+     */
     public long GetEnergyAmount(){
         if (TILEENTITY instanceof IMYEnergyStorageTile){
             return (long)(((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().getEnergyStored());
         }
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMYEnergyStorageTile.",this,TILEENTITY);
         return -1;
     }
 
-    @Override
-    public boolean canInteractWith(@NotNull PlayerEntity player){
-        return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(),TILEENTITY.getPos()),
-                player, ModBlocks.GetSIEVE(GetTier()).get());
-    }
+    /**
+     * Returns SieveTiers.error if tile entity doens't implement SieveTileEntity
+     * @return SieveTiers of the block
+     */
     public SieveTiers GetTier()
     {
         if(TILEENTITY instanceof SieveTileEntity){
@@ -85,6 +112,16 @@ public class SieveContainer extends Container {
         return SieveTiers.error;
     }
     //endregion
+    /**
+     * returns if player can interact with block is connected with this container
+     * @param player player trying to interact
+     * @return
+     */
+    @Override
+    public boolean canInteractWith(@NotNull PlayerEntity player){
+        return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(),TILEENTITY.getPos()),
+                player, ModBlocks.GetSIEVE(GetTier()).get());
+    }
     //region player inventory
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {

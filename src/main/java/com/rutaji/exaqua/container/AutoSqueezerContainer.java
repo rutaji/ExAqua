@@ -1,7 +1,8 @@
 package com.rutaji.exaqua.container;
 
+import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
-import com.rutaji.exaqua.tileentity.AutoSqueezerTileEntity;
+import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class AutoSqueezerContainer extends Container {
-    @NotNull private  final  TileEntity TILEEMTITY;
+    @NotNull private  final  TileEntity TILEENTITY;
     private final PlayerEntity PLAYERENTITY;
     private final IItemHandler PLAYERINVENTORY;
 
@@ -39,39 +40,53 @@ public class AutoSqueezerContainer extends Container {
      */
     public AutoSqueezerContainer(int windowId, @NotNull World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
         super(ModContainers.AUTO_SQUEEZER_CONTAINER.get(),windowId);
-        this.TILEEMTITY = world.getTileEntity(pos);
+        this.TILEENTITY = world.getTileEntity(pos);
         this.PLAYERENTITY = playerEntity;
         this.PLAYERINVENTORY = new InvWrapper(playerInventory);
 
         layoutPlayerInventorySlots(8,86);
-        TILEEMTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> addSlot(new SlotItemHandler(h,0,80,43)));
+        TILEENTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> addSlot(new SlotItemHandler(h,0,80,43)));
 
     }
-
+    //region Get
     /**
-     *
+     * Return's -1 if tile entity doesn't implement IMyLiquidTankTile.
      * @return amount of fluid in tile entity
      */
     public int GetLiquidAmount()
     {
-        if (TILEEMTITY instanceof IMyLiquidTankTile){
-            return ((IMyLiquidTankTile) TILEEMTITY).GetTank().getFluidAmount();
+        if (TILEENTITY instanceof IMyLiquidTankTile){
+            return ((IMyLiquidTankTile) TILEENTITY).GetTank().getFluidAmount();
         }
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement ImyLiquidTankTile.",this,TILEENTITY);
         return -1;
     }
-
     /**
      * Returns "Empty" if tile entity is empty. If tile entity doesn't implement IMyLiquidTankTile returns "Cannot store fluids!".
      * @return translated name of the fluid inside tile entity
      */
     public String GetLiquid()
     {
-        if (TILEEMTITY instanceof IMyLiquidTankTile){
-            if(((IMyLiquidTankTile) TILEEMTITY).GetTank().isEmpty()){return "Empty";}
-            return new TranslationTextComponent(((IMyLiquidTankTile) TILEEMTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
+        if (TILEENTITY instanceof IMyLiquidTankTile){
+            if(((IMyLiquidTankTile) TILEENTITY).GetTank().isEmpty()){return "Empty";}
+            return new TranslationTextComponent(((IMyLiquidTankTile) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMyLiquidTankTile.",this,TILEENTITY);
         return "Cannot store fluids!";
     }
+
+    /**
+     * returns -1 if tile entity doesn't implement IMYEnergyStorageTile
+     * @return returns amount of energy stored in tile entity (in FE)
+     */
+    public long GetEnergyAmount(){
+        if (TILEENTITY instanceof IMYEnergyStorageTile){
+            return (long)(((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().getEnergyStored());
+        }
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMYEnergyStorageTile.",this,TILEENTITY);
+        return -1;
+    }
+    //endregion
 
     /**
      * returns if player can interact with block is connected with this container
@@ -80,7 +95,7 @@ public class AutoSqueezerContainer extends Container {
      */
     @Override
     public boolean canInteractWith(@NotNull PlayerEntity player){
-        return  isWithinUsableDistance(IWorldPosCallable.of(TILEEMTITY.getWorld(), TILEEMTITY.getPos()),
+        return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(), TILEENTITY.getPos()),
                                                             player, ModBlocks.AUTO_SQUEEZER.get());
     }
     //region inventory
@@ -150,12 +165,6 @@ public class AutoSqueezerContainer extends Container {
         return copyOfSourceStack;
     }
 
-    /**
-     *
-     * @return returns amount of energy stored in tile entity (in FE)
-     */
-    public String GetEnergyAmount() {
-        return String.valueOf (((AutoSqueezerTileEntity)TILEEMTITY).GetEnergyStorage().getEnergyStored());
-    }
+
     //endregion
 }

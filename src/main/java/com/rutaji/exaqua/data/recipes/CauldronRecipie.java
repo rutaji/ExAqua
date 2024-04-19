@@ -1,6 +1,8 @@
 package com.rutaji.exaqua.data.recipes;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.others.CauldronTemperature;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -18,11 +20,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Detainted;
 import javax.annotation.Nullable;
 
+/**
+ * Handles recipies for cauldron.
+ */
 public class CauldronRecipie implements ICauldronRecipie {
     //region Constructor
-    public CauldronRecipie(ResourceLocation id, Fluid input, ItemStack inputItem, Fluid output, ItemStack outputitem,CauldronTemperature temp,int amount_in, int amount_out) {
+    public CauldronRecipie(@NotNull ResourceLocation id, @NotNull Fluid input, @NotNull ItemStack inputItem, @NotNull Fluid output, @NotNull ItemStack outputitem, @NotNull CauldronTemperature temp,int amount_in, int amount_out) {
         this.ID = id;
         this.INPUT_FLUID = input;
         this.OUTPUT_FLUID = output;
@@ -34,18 +40,22 @@ public class CauldronRecipie implements ICauldronRecipie {
 
     }
     //endregion
-    private final ResourceLocation ID;
-    public final Fluid INPUT_FLUID;
-    public final Fluid OUTPUT_FLUID;
-    public final ItemStack INPUT_ITEM;
-    public final ItemStack OUTPUT_ITEM;
-    public final CauldronTemperature TEMP;
+    @NotNull private final ResourceLocation ID;
+    @NotNull public final Fluid INPUT_FLUID;
+    @NotNull public final Fluid OUTPUT_FLUID;
+    @NotNull public final ItemStack INPUT_ITEM;
+    @NotNull public final ItemStack OUTPUT_ITEM;
+    @NotNull public final CauldronTemperature TEMP;
     public final int AMOUNT_INPUT;
 
     public final int AMOUNT_OUTPUT;
 
 
-
+    /**
+     * @param inv inventory should be instace of InventoryCauldron, othervise always return False.
+     * @param worldIn
+     * @return returns True if inventory contains all Ingridients for recipie
+     */
     @Override
     public boolean matches(@NotNull IInventory inv, @NotNull World worldIn) {
         if(inv instanceof InventoryCauldron)
@@ -57,37 +67,56 @@ public class CauldronRecipie implements ICauldronRecipie {
         }
         return false;
     }
-
-
+    //region Getters
+    /**
+     * @param inv
+     * @return item result of this recipie
+     */
     @Override
     public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
-        return ItemStack.EMPTY;
+        return OUTPUT_ITEM;
     }
-
+    /**
+     * @return item result of this recipie
+     */
     @Override
     public @NotNull ItemStack getRecipeOutput()
     {
-     return ItemStack.EMPTY;
+     return OUTPUT_ITEM;
     }
+    /**
+     * @return fluid result of this recipie
+     */
+    public @NotNull Fluid getRecipeOutputFluid()
+    {
+        return OUTPUT_FLUID;
+    }
+
+    /**
+     * @return resource location of the recipie
+     */
 
     @Override
     public @NotNull ResourceLocation getId() {
         return ID;
     }
-    @Override
-    public @NotNull NonNullList<Ingredient> getIngredients() {
-        return NonNullList.create();
+    //endregion
+
+    /**
+     * @return True if recipie has fluid output and item output
+     */
+    public boolean Has2Outputs() {
+        return OUTPUT_FLUID != Fluids.EMPTY && OUTPUT_ITEM != ItemStack.EMPTY;
     }
 
-
     //region registration
+
+    /**
+     * @return serializer for this recipie
+     */
     @Override
     public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.CAULDRON_SERIALIZER.get();
-    }
-
-    public boolean Has2Outputs() {
-        return OUTPUT_FLUID != Fluids.EMPTY && OUTPUT_ITEM != ItemStack.EMPTY;
     }
 
     public static class CauldronRecipeType implements IRecipeType<CauldronRecipie> {
@@ -101,6 +130,13 @@ public class CauldronRecipie implements ICauldronRecipie {
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
             implements IRecipeSerializer<CauldronRecipie> {
 
+        /**
+         * Reads recipie from json.
+         * @exception JsonSyntaxException if json syntax is wrong
+         * @param recipeId resource location of the recipie
+         * @param json json for cenversion
+         * @return  Loaded recipie
+         */
         @Override
         public @NotNull CauldronRecipie read(@NotNull ResourceLocation recipeId, JsonObject json) {
 
@@ -109,6 +145,12 @@ public class CauldronRecipie implements ICauldronRecipie {
             if(json.has("input_fluid"))
             {
                 InputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("input_fluid").getAsString()));
+                if (InputF == null)
+                {
+                    ExAqua.LOGGER.error("error in" + this + "fluid not found:" + json.get("input_fluid").getAsString());
+                    throw new JsonSyntaxException("Error in "+ this + ". Fluid not found: "+ json.get("input_fluid").getAsString());
+                }
+
             }
             if(json.has("input_item"))
             {
@@ -121,6 +163,11 @@ public class CauldronRecipie implements ICauldronRecipie {
             if(json.has("output_fluid"))
             {
                 outputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("output_fluid").getAsString()));
+                if (outputF == null)
+                {
+                    ExAqua.LOGGER.error("error in" + this + "fluid not found:" + json.get("output_fluid").getAsString());
+                    throw new JsonSyntaxException("Error in "+ this + ". Fluid not found: "+ json.get("output_fluid").getAsString());
+                }
             }
             if(json.has("Output_item"))
             {
@@ -137,6 +184,9 @@ public class CauldronRecipie implements ICauldronRecipie {
             return new CauldronRecipie(recipeId, InputF,InputI,outputF,OutputI,temp,amount_in,amount_out);
         }
 
+        /**
+         * Reads recipie from a packetbuffer.
+         */
         @Nullable
         @Override
         public CauldronRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
@@ -155,6 +205,9 @@ public class CauldronRecipie implements ICauldronRecipie {
             return new CauldronRecipie(recipeId, InputF,InputI,outputF,OutputI,temp,amount,amount_out);
         }
 
+        /**
+         * Converts recipie into a packet buffer.
+         */
         @Override
         public void write(PacketBuffer buffer, CauldronRecipie recipe) {
 

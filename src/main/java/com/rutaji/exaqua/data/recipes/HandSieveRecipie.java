@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Handles recipies for hand sieve.
+ */
 public class HandSieveRecipie implements IHandSieveRecipie {
     //region Constructor
     public HandSieveRecipie(ResourceLocation id, @NotNull Fluid input, @NotNull List<RoolItem> output, int chance) {
@@ -35,7 +38,6 @@ public class HandSieveRecipie implements IHandSieveRecipie {
         int sum=0;
         for (RoolItem r: RESULTS)
         {
-
             sum+=r.chance;
             r.chance = sum;
         }
@@ -43,6 +45,9 @@ public class HandSieveRecipie implements IHandSieveRecipie {
         Chances = CountChances();
     }
     //endregion
+    /**
+     * Returns chance for every item in percents. In the same order as GetAllPossibleOutputs()
+     */
     public @NotNull List<Double> GetChances(){return  Chances;}
     private final @NotNull List<Double> Chances;
     private final ResourceLocation ID;
@@ -52,7 +57,11 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     public final int SUM;
     public final int SUCCESCHANCE;
 
-
+    /**
+     * @param inv inventory should be instace of InventorySieve, othervise always return False.
+     * @param worldIn
+     * @return returns True if inventory contains all Ingridients for recipie
+     */
     @Override
     public boolean matches(@NotNull IInventory inv, @NotNull World worldIn) {
         if(inv instanceof InventorySieve)
@@ -62,27 +71,39 @@ public class HandSieveRecipie implements IHandSieveRecipie {
         }
         return false;
     }
+
+    /**
+     * Returns randomly True/False. Chance for True is equal to SUCCESCHANCE of this recipie.
+     */
     public boolean IsSucces()
     {
         int random = RANDOM.nextInt(100)+1;
         return random <= SUCCESCHANCE;
     }
 
+    /**
+     * Recipie output is random. This method always returns empty.
+     */
     @Override
     public @NotNull ItemStack getCraftingResult(@NotNull IInventory inv) {
         return ItemStack.EMPTY;
     }
-
+    /**
+     * Recipie output is random. This method always returns empty.
+     */
     @Override
     public @NotNull ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
 
+    /**
+     * Returns list of all items that can returned by this recipie. In the same order as GetChances()
+     */
     public List<ItemStack> GetAllPossibleOutputs() {
         List<ItemStack> results  = new ArrayList<>();
         for (RoolItem r: RESULTS)
         {
-            results.add(r.item);
+            results.add(r.item.copy());
         }
         return results;
     }
@@ -92,8 +113,13 @@ public class HandSieveRecipie implements IHandSieveRecipie {
         return ID;
     }
 
+    /**
+     * @return Number of possible outputs
+     */
     public int GetSize(){return RESULTS.size();}
-    public List<Double> CountChances()
+
+
+    private List<Double> CountChances()
     {
         List<Double> result = new ArrayList<>();
         int i =0;
@@ -105,6 +131,9 @@ public class HandSieveRecipie implements IHandSieveRecipie {
         return result;
     }
 
+    /**
+     * @return random output item of the recipie
+     */
     public ItemStack GetRandomItemStack()
     {
 
@@ -122,6 +151,10 @@ public class HandSieveRecipie implements IHandSieveRecipie {
 
     }
     //region registration
+
+    /**
+     * @return serializer for this recipie
+     */
     @Override
     public @NotNull IRecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.HANDSIEVE_SERIALIZER.get();
@@ -135,9 +168,17 @@ public class HandSieveRecipie implements IHandSieveRecipie {
     }
     //endregion
     //region Serializer
+
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
             implements IRecipeSerializer<HandSieveRecipie> {
 
+        /**
+         * Reads recipie from json.
+         * @exception JsonSyntaxException if json syntax is wrong
+         * @param recipeId resource location of the recipie
+         * @param json json for cenversion
+         * @return  Loaded recipie
+         */
         @Override
         public @NotNull HandSieveRecipie read(@NotNull ResourceLocation recipeId, JsonObject json) {
 
@@ -156,7 +197,9 @@ public class HandSieveRecipie implements IHandSieveRecipie {
             int chance = json.get("success").getAsInt();
             return new HandSieveRecipie(recipeId, fluid,Outputs,chance);
         }
-
+        /**
+         * Reads recipie from a packetbuffer.
+         */
         @Nullable
         @Override
         public HandSieveRecipie read(@NotNull ResourceLocation recipeId, PacketBuffer buffer) {
@@ -172,6 +215,9 @@ public class HandSieveRecipie implements IHandSieveRecipie {
             return new HandSieveRecipie(recipeId, Input,Results,chance);
         }
 
+        /**
+         * Converts recipie into a packet buffer.
+         */
         @Override
         public void write(PacketBuffer buffer, HandSieveRecipie recipe) {
             buffer.writeString(recipe.INPUTFLUID.getRegistryName().toString());
