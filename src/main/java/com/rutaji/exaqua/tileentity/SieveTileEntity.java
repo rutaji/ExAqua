@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class SieveTileEntity extends TileEntity implements ITickableTileEntity,IMyLiquidTankTIle,IMYEnergyStorageTile {
+public class SieveTileEntity extends TileEntity implements ITickableTileEntity, IMyLiquidTankTile,IMYEnergyStorageTile {
 
     //region Items
     private final int NUMBER_OF_INVENTORY_SLOTS =8;

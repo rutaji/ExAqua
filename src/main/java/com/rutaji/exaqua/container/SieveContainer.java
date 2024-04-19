@@ -3,7 +3,7 @@ package com.rutaji.exaqua.container;
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.block.SieveTiers;
 import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
-import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
+import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import com.rutaji.exaqua.tileentity.SieveTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -52,16 +52,16 @@ public class SieveContainer extends Container {
 
     public int GetLiquidAmount()
     {
-        if (TILEENTITY instanceof IMyLiquidTankTIle){
-            return ((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluidAmount();
+        if (TILEENTITY instanceof IMyLiquidTankTile){
+            return ((IMyLiquidTankTile) TILEENTITY).GetTank().getFluidAmount();
         }
         return -1;
     }
     public String GetLiquid()
     {
-        if (TILEENTITY instanceof IMyLiquidTankTIle){
-            if(((IMyLiquidTankTIle) TILEENTITY).GetTank().isEmpty()){return "Empty";}
-            return new TranslationTextComponent(((IMyLiquidTankTIle) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
+        if (TILEENTITY instanceof IMyLiquidTankTile){
+            if(((IMyLiquidTankTile) TILEENTITY).GetTank().isEmpty()){return "Empty";}
+            return new TranslationTextComponent(((IMyLiquidTankTile) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
         return "Does not contain storage";
     }

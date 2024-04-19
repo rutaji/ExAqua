@@ -15,7 +15,6 @@ import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -37,7 +36,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class CauldronEntity extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity {
+public class CauldronEntity extends TileEntity implements IMyLiquidTankTile, ITickableTileEntity {
     public CauldronEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }

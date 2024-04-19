@@ -2,6 +2,9 @@ package com.rutaji.exaqua.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+/**
+ * Loads serer config from ExAqua-server.toml file.
+ */
 public final class ServerModConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;

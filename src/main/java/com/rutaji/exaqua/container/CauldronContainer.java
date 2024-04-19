@@ -3,7 +3,7 @@ package com.rutaji.exaqua.container;
 import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.others.CauldronTemperature;
 import com.rutaji.exaqua.tileentity.CauldronEntity;
-import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
+import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -46,16 +46,16 @@ public class CauldronContainer extends Container {
     }
     public int GetLiquidAmount()
     {
-        if (TILEEMTITY instanceof IMyLiquidTankTIle){
-            return ((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluidAmount();
+        if (TILEEMTITY instanceof IMyLiquidTankTile){
+            return ((IMyLiquidTankTile) TILEEMTITY).GetTank().getFluidAmount();
         }
         return -1;
     }
     public String GetLiquid()
     {
-        if (TILEEMTITY instanceof IMyLiquidTankTIle){
-            if(((IMyLiquidTankTIle) TILEEMTITY).GetTank().isEmpty()){return "Empty";}
-            return new TranslationTextComponent (((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
+        if (TILEEMTITY instanceof IMyLiquidTankTile){
+            if(((IMyLiquidTankTile) TILEEMTITY).GetTank().isEmpty()){return "Empty";}
+            return new TranslationTextComponent (((IMyLiquidTankTile) TILEEMTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
         return "Doesnt have a container";
     }

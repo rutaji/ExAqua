@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity ,IMYEnergyStorageTile{
+public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankTile, ITickableTileEntity ,IMYEnergyStorageTile{
 
     //region Constructor
     public AutoSqueezerTileEntity(TileEntityType<?> p_i48289_1_) {

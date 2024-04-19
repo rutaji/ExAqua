@@ -1,6 +1,6 @@
 package com.rutaji.exaqua.networking;
 
-import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
+import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -32,8 +32,8 @@ public class MyFluidStackPacket {
 
     public void handle(Supplier<NetworkEvent.Context> context) {
         TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
-        if ( tileEntity instanceof IMyLiquidTankTIle) {
-            ((IMyLiquidTankTIle)tileEntity).GetTank().setFluid(PacketStack);
+        if ( tileEntity instanceof IMyLiquidTankTile) {
+            ((IMyLiquidTankTile)tileEntity).GetTank().setFluid(PacketStack);
             context.get().setPacketHandled(true);
         }
 

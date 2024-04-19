@@ -2,6 +2,9 @@ package com.rutaji.exaqua.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+/**
+ *  Loads client setting from ExAqua-client.toml file.
+ */
 public final class ClientModConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;

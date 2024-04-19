@@ -2,7 +2,7 @@ package com.rutaji.exaqua.block;
 
 import com.rutaji.exaqua.container.CauldronContainer;
 import com.rutaji.exaqua.tileentity.CauldronEntity;
-import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
+import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -109,9 +109,9 @@ public class CraftingCauldron extends Block implements ILiquidContainer, IBucket
     @Override
     public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IMyLiquidTankTIle){
-            if(((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount() >= 1000){
-                return ((IMyLiquidTankTIle) tileEntity).GetTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
+        if (tileEntity instanceof IMyLiquidTankTile){
+            if(((IMyLiquidTankTile) tileEntity).GetTank().getFluidAmount() >= 1000){
+                return ((IMyLiquidTankTile) tileEntity).GetTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
             }
             return Fluids.EMPTY;
         }
@@ -121,9 +121,9 @@ public class CraftingCauldron extends Block implements ILiquidContainer, IBucket
     @Override
     public boolean canContainFluid(IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IMyLiquidTankTIle)
+        if (tileEntity instanceof IMyLiquidTankTile)
         {
-            return  ((IMyLiquidTankTIle)tileEntity).GetTank().isFluidValid(new FluidStack(fluidIn,1000));
+            return  ((IMyLiquidTankTile)tileEntity).GetTank().isFluidValid(new FluidStack(fluidIn,1000));
         }
         return false;
     }
@@ -132,9 +132,9 @@ public class CraftingCauldron extends Block implements ILiquidContainer, IBucket
     public boolean receiveFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IMyLiquidTankTIle)
+        if (tileEntity instanceof IMyLiquidTankTile)
         {
-            ((IMyLiquidTankTIle)tileEntity).GetTank().AddBucket(fluidStateIn.getFluid());
+            ((IMyLiquidTankTile)tileEntity).GetTank().AddBucket(fluidStateIn.getFluid());
         }
         return true;
     }

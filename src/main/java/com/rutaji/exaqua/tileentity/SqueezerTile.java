@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 
-public class SqueezerTile extends TileEntity implements IMyLiquidTankTIle, ITickableTileEntity {
+public class SqueezerTile extends TileEntity implements IMyLiquidTankTile, ITickableTileEntity {
 
     //region Constructor
     public SqueezerTile(TileEntityType<?> p_i48289_1_) {
