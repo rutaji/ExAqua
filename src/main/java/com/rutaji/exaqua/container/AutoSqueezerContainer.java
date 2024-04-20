@@ -31,12 +31,11 @@ public class AutoSqueezerContainer extends Container {
     private final IItemHandler PLAYERINVENTORY;
 
     /**
-     *
-     * @param windowId
-     * @param world world of the interacted block
-     * @param pos position of the interacted block
-     * @param playerInventory inventory of the player opening the UI
-     * @param playerEntity player opening the UI
+     * @param windowId id.
+     * @param world world of the interacted block.
+     * @param pos position of the interacted block.
+     * @param playerInventory inventory of the player opening the UI.
+     * @param playerEntity player opening the UI.
      */
     public AutoSqueezerContainer(int windowId, @NotNull World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
         super(ModContainers.AUTO_SQUEEZER_CONTAINER.get(),windowId);
@@ -50,8 +49,8 @@ public class AutoSqueezerContainer extends Container {
     }
     //region Get
     /**
-     * Return's -1 if tile entity doesn't implement IMyLiquidTankTile.
-     * @return amount of fluid in tile entity
+     * Returns amount of fluid in tile entity. Returns -1 if tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile}.
+     * @return amount of fluid in tile entity.
      */
     public int GetLiquidAmount()
     {
@@ -62,8 +61,9 @@ public class AutoSqueezerContainer extends Container {
         return -1;
     }
     /**
-     * Returns "Empty" if tile entity is empty. If tile entity doesn't implement IMyLiquidTankTile returns "Cannot store fluids!".
-     * @return translated name of the fluid inside tile entity
+     * Returns translated name of the fluid inside tile entity. Returns "Empty" if tile entity is empty.
+     * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} returns "Cannot store fluids!".
+     * @return translated name of the fluid inside tile entity.
      */
     public String GetLiquid()
     {
@@ -76,8 +76,8 @@ public class AutoSqueezerContainer extends Container {
     }
 
     /**
-     * returns -1 if tile entity doesn't implement IMYEnergyStorageTile
-     * @return returns amount of energy stored in tile entity (in FE)
+     * Returns amount of energy stored in tile entity (in FE). Returns -1 if tile entity doesn't implement {@link IMYEnergyStorageTile IMYEnergyStorageTile}.
+     * @return returns amount of energy stored in tile entity (in FE).
      */
     public long GetEnergyAmount(){
         if (TILEENTITY instanceof IMYEnergyStorageTile){
@@ -89,9 +89,9 @@ public class AutoSqueezerContainer extends Container {
     //endregion
 
     /**
-     * returns if player can interact with block is connected with this container
-     * @param player player trying to interact
-     * @return
+     * Returns true if player can interact with the block that is connected with this container.
+     * @param player player trying to interact.
+     * @return true if player can interact with the block that is connected with this container.
      */
     @Override
     public boolean canInteractWith(@NotNull PlayerEntity player){

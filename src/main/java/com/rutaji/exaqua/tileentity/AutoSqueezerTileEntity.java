@@ -4,7 +4,7 @@ import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
 import com.rutaji.exaqua.config.ServerModConfig;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
-import com.rutaji.exaqua.data.recipes.SqueezerRecipie;
+import com.rutaji.exaqua.data.recipes.SqueezerRecipe;
 import com.rutaji.exaqua.networking.MyEnergyPacket;
 import com.rutaji.exaqua.networking.MyFluidStackPacket;
 import com.rutaji.exaqua.networking.PacketHandler;
@@ -142,7 +142,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
                 inv.setInventorySlotContents(i, ITEM_STACK_HANDLER.getStackInSlot(i));
             }
 
-            Optional<SqueezerRecipie> recipe = world.getRecipeManager()
+            Optional<SqueezerRecipe> recipe = world.getRecipeManager()
                     .getRecipe(ModRecipeTypes.SQUEEZER_RECIPE, inv, world);
 
             recipe.ifPresent(iRecipe -> {

@@ -30,11 +30,11 @@ public class SqueezerContainer extends Container {
 
     /**
      *
-     * @param windowId
-     * @param world world of the interacted block
-     * @param pos position of the interacted block
-     * @param playerInventory inventory of the player opening the UI
-     * @param playerEntity player opening the UI
+     * @param windowId id.
+     * @param world world of the interacted block.
+     * @param pos position of the interacted block.
+     * @param playerInventory inventory of the player opening the UI.
+     * @param playerEntity player opening the UI.
      */
     public SqueezerContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
         super(ModContainers.SQUEEZERCONTAINER.get(),windowId);
@@ -49,8 +49,8 @@ public class SqueezerContainer extends Container {
 
     }
     /**
-     * Return's -1 if tile entity doesn't implement IMyLiquidTankTile.
-     * @return amount of fluid in tile entity
+     * Returns amount of fluid in tile entity. Returns -1 if tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile}.
+     * @return amount of fluid in tile entity.
      */
     public int GetLiquidAmount()
     {
@@ -61,8 +61,9 @@ public class SqueezerContainer extends Container {
         return -1;
     }
     /**
-     * Returns "Empty" if tile entity is empty. If tile entity doesn't implement IMyLiquidTankTile returns "Cannot store fluids!".
-     * @return translated name of the fluid inside tile entity
+     * Returns translated name of the fluid inside tile entity. Returns "Empty" if tile entity is empty.
+     * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} returns "Cannot store fluids!".
+     * @return translated name of the fluid inside tile entity.
      */
     public String GetLiquid()
     {

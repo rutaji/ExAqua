@@ -1,20 +1,17 @@
 package com.rutaji.exaqua.item;
 
-import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.config.ServerModConfig;
-import com.rutaji.exaqua.data.recipes.HandSieveRecipie;
+import com.rutaji.exaqua.data.recipes.HandSieveRecipe;
 import com.rutaji.exaqua.data.recipes.InventorySieve;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 public class HandSieve extends Item {
     //region Constructor
@@ -77,14 +73,14 @@ public class HandSieve extends Item {
                 new ActionResult<>(ActionResultType.SUCCESS, itemstack);
             }
             inv.setFluidStack(new FluidStack(fluidInside, 5));
-            Optional<HandSieveRecipie> recipe = worldIn.getRecipeManager()
+            Optional<HandSieveRecipe> recipe = worldIn.getRecipeManager()
                     .getRecipe(ModRecipeTypes.HANDSIEVE_RECIPE, inv, worldIn);
             if (!recipe.isPresent()) {
                 EmptyIt(itemstack);
                 playerIn.sendMessage(new StringTextComponent("no recipie for this fluid"), playerIn.getUniqueID());
                 return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
             }
-            HandSieveRecipie foundRecipie = recipe.get();
+            HandSieveRecipe foundRecipie = recipe.get();
             if (foundRecipie.IsSucces()) {
                 playerIn.entityDropItem(foundRecipie.GetRandomItemStack());
             }

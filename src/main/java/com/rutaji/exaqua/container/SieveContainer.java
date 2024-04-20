@@ -2,7 +2,7 @@ package com.rutaji.exaqua.container;
 
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
-import com.rutaji.exaqua.block.SieveTiers;
+import com.rutaji.exaqua.others.SieveTiers;
 import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import com.rutaji.exaqua.tileentity.SieveTileEntity;
@@ -33,13 +33,13 @@ public class SieveContainer extends Container {
 
     /**
      *
-     * @param windowId
-     * @param world world of the interacted block
-     * @param pos position of the interacted block
-     * @param playerInventory inventory of the player opening the UI
-     * @param playerEntity player opening the UI
+     * @param windowId id.
+     * @param world world of the interacted block.
+     * @param pos position of the interacted block.
+     * @param playerInventory inventory of the player opening the UI.
+     * @param playerEntity player opening the UI.
      */
-    public SieveContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
+    public SieveContainer(int windowId, @NotNull World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
         super(ModContainers.SIEVECONTAINER.get(),windowId);
         this.TILEENTITY = world.getTileEntity(pos);
         this.PLAYERENTITY = playerEntity;
@@ -63,8 +63,8 @@ public class SieveContainer extends Container {
     //region Get
 
     /**
-     * Return's -1 if tile entity doesn't implement IMyLiquidTankTile.
-     * @return amount of fluid in tile entity
+     * Returns amount of fluid in tile entity. Returns -1 if tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile}.
+     * @return amount of fluid in tile entity.
      */
     public int GetLiquidAmount()
     {
@@ -75,8 +75,9 @@ public class SieveContainer extends Container {
         return -1;
     }
     /**
-     * Returns "Empty" if tile entity is empty. If tile entity doesn't implement IMyLiquidTankTile returns "Cannot store fluids!".
-     * @return translated name of the fluid inside tile entity
+     * Returns translated name of the fluid inside tile entity. Returns "Empty" if tile entity is empty.
+     * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} returns "Cannot store fluids!".
+     * @return translated name of the fluid inside tile entity.
      */
     public String GetLiquid()
     {
@@ -89,8 +90,8 @@ public class SieveContainer extends Container {
     }
 
     /**
-     * returns -1 if tile entity doesn't implement IMYEnergyStorageTile
-     * @return returns amount of energy stored in tile entity (in FE)
+     * Returns amount of energy stored in tile entity (in FE). Returns -1 if tile entity doesn't implement {@link IMYEnergyStorageTile IMYEnergyStorageTile}.
+     * @return returns amount of energy stored in tile entity (in FE).
      */
     public long GetEnergyAmount(){
         if (TILEENTITY instanceof IMYEnergyStorageTile){
@@ -101,21 +102,22 @@ public class SieveContainer extends Container {
     }
 
     /**
-     * Returns SieveTiers.error if tile entity doens't implement SieveTileEntity
-     * @return SieveTiers of the block
+     * Returns Sieve Tier of the block. Returns SieveTiers.error if tile entity doens't implement SieveTileEntity.
+     * @return Sieve Tier of the block.
      */
     public SieveTiers GetTier()
     {
         if(TILEENTITY instanceof SieveTileEntity){
            return  ((SieveTileEntity) TILEENTITY).GetTier();
         }
+        ExAqua.LOGGER.error("Error in {}. Tile entity {} isn't instance of SieveTileEntity",this,TILEENTITY);
         return SieveTiers.error;
     }
     //endregion
     /**
-     * returns if player can interact with block is connected with this container
-     * @param player player trying to interact
-     * @return
+     * Returns true if player can interact with the block that is connected with this container.
+     * @param player player trying to interact.
+     * @return true if player can interact with the block that is connected with this container.
      */
     @Override
     public boolean canInteractWith(@NotNull PlayerEntity player){

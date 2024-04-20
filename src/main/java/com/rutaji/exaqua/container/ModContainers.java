@@ -50,8 +50,7 @@ public class ModContainers {
             })));
 
     /**
-     * Registers all modded containers. Called from ExAqua at a start of the game.
-     * @param eventBus
+     * Registers all modded containers. Called from {@link ExAqua ExAqua} at a start of the game.
      */
     public static void register(IEventBus eventBus) {
         CONTAINERS.register(eventBus);

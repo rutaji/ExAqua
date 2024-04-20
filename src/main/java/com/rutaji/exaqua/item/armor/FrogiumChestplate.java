@@ -15,6 +15,10 @@ public class FrogiumChestplate extends ArmorItem {
         super(materialIn, slot, builderIn);
     }
 
+    /**
+     * Called on every tick, if this armor is equipped.
+     * Gives potion effect to a player.
+     */
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player)
     {

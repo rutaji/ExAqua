@@ -3,6 +3,7 @@ package com.rutaji.exaqua.block;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.item.ModItems;
 import com.rutaji.exaqua.others.CustomItemGroup;
+import com.rutaji.exaqua.others.SieveTiers;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -16,6 +17,9 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.function.Supplier;
 
+/**
+ * Registry for all modded blocks.
+ */
 public class ModBlocks {
     //region register
     public  static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ExAqua.MOD_ID);
@@ -31,9 +35,16 @@ public class ModBlocks {
     }
     //endregion
 
-    public static RegistryObject<Block> GetSIEVE(SieveTiers t)
+    /**
+     * Returns registered {@link SieveBlock SieveBlock} with given tier.
+     * @param tiers tier of the sive block to return.
+     * @return registered {@link SieveBlock SieveBlock} with given tier.
+     * @exception NotImplementedException if given tier isn't implemented in this method.
+     * @see SieveTiers
+     */
+    public static RegistryObject<Block> GetSIEVE(SieveTiers tiers)
     {
-        switch (t)
+        switch (tiers)
         {
             case iron: return  IRONSIEVE;
             case gold: return  GOLDSIEVE;

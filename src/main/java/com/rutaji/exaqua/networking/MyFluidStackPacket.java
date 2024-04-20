@@ -10,9 +10,18 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * Used to send changes in {@link com.rutaji.exaqua.Fluids.MyLiquidTank liquid tank} from server to client.
+ */
 public class MyFluidStackPacket {
 
+    /**
+     * Fluid to set in {@link com.rutaji.exaqua.Fluids.MyLiquidTank liquid tank}.
+     */
     public FluidStack PacketStack;
+    /**
+     * Position of  tile entity with the {@link com.rutaji.exaqua.Fluids.MyLiquidTank liquid tank}.
+     */
     public BlockPos pos;
     //region Constructor
     public MyFluidStackPacket(FluidStack f,BlockPos p) {
@@ -30,6 +39,9 @@ public class MyFluidStackPacket {
         buffer.writeBlockPos(packet.pos);
     }
 
+    /**
+     * Called on cliend. Sets fluid stored in {@link com.rutaji.exaqua.Fluids.MyLiquidTank liquid tank} to value stored in this packet.
+     */
     public void handle(Supplier<NetworkEvent.Context> context) {
         TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
         if ( tileEntity instanceof IMyLiquidTankTile) {

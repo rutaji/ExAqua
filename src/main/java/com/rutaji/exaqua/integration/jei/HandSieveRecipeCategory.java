@@ -2,7 +2,8 @@ package com.rutaji.exaqua.integration.jei;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.rutaji.exaqua.ExAqua;
-import com.rutaji.exaqua.data.recipes.HandSieveRecipie;
+import com.rutaji.exaqua.data.recipes.CauldronRecipe;
+import com.rutaji.exaqua.data.recipes.HandSieveRecipe;
 import com.rutaji.exaqua.item.ModItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -18,7 +19,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie>{
+/**
+ * Adds jei UI for recipe of exaqua:handsieve.
+ * @see HandSieveRecipe
+ */
+public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipe>{
     public final static ResourceLocation UID = new ResourceLocation(ExAqua.MOD_ID,"handsieve");
     public final static ResourceLocation TEXTURE = new ResourceLocation(ExAqua.MOD_ID,"gui/sievejei.png");
 
@@ -41,8 +46,8 @@ public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie
     }
 
     @Override
-    public @NotNull Class<? extends HandSieveRecipie> getRecipeClass() {
-        return HandSieveRecipie.class;
+    public @NotNull Class<? extends HandSieveRecipe> getRecipeClass() {
+        return HandSieveRecipe.class;
     }
 
     @Override
@@ -67,7 +72,7 @@ public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie
 
 
     @Override
-    public void setIngredients(HandSieveRecipie recipe, IIngredients ingredients) {
+    public void setIngredients(HandSieveRecipe recipe, IIngredients ingredients) {
         FluidStack f = new FluidStack(recipe.INPUTFLUID,1000);
         ingredients.setInput(VanillaTypes.FLUID,f);
         List<ItemStack> output = recipe.GetAllPossibleOutputs();
@@ -78,7 +83,7 @@ public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, HandSieveRecipie recipe, @NotNull IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, HandSieveRecipe recipe, @NotNull IIngredients ingredients) {
         recipeLayout.getFluidStacks().init(0,true,92,8);
 
         int x = X;
@@ -95,7 +100,7 @@ public class HandSieveRecipeCategory implements IRecipeCategory<HandSieveRecipie
 
     }
     @Override
-    public void draw(HandSieveRecipie recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(HandSieveRecipe recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
     {
         int x = X;
         int y = Y;

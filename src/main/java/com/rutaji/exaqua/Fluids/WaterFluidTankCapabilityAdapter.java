@@ -1,5 +1,6 @@
 package com.rutaji.exaqua.Fluids;
 
+import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -10,6 +11,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This classed is used as middle men betweenn {@link MyLiquidTank MyLiquidTank} and other mods.
+ * Every method calls it's equivalent in {@link MyLiquidTank MyLiquidTank}.
+ */
 public class WaterFluidTankCapabilityAdapter implements IFluidTank, IFluidHandler{
 
     public MyLiquidTank tankie;

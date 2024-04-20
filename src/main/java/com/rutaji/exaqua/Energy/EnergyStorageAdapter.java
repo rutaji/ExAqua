@@ -7,6 +7,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
+/**
+ * This classed is used as middle men betweenn {@link MyEnergyStorage MyEnergyStorage} and other mods.
+ * Every method calls it's equivalent in {@link MyEnergyStorage MyEnergyStorage}.
+ */
 public class EnergyStorageAdapter implements IEnergyStorage {
 
     private final MyEnergyStorage energyStorage;

@@ -17,16 +17,16 @@ public class ModTileEntities {
     }
     //endregion
 
-    public static RegistryObject<TileEntityType<SqueezerTile>> SQUEEZERTILE =
+    public static RegistryObject<TileEntityType<SqueezerTileEntity>> SQUEEZERTILE =
             TILE_ENTITIES.register("squeezer", () -> TileEntityType.Builder.create(
-                    SqueezerTile::new, ModBlocks.SQUEEZER.get()).build(null));
+                    SqueezerTileEntity::new, ModBlocks.SQUEEZER.get()).build(null));
 
     public static RegistryObject<TileEntityType<SieveTileEntity>> SIEVERTILE =
             TILE_ENTITIES.register("sieve", () -> TileEntityType.Builder.create(
                     SieveTileEntity::new, ModBlocks.IRONSIEVE.get(),ModBlocks.GOLDSIEVE.get(),ModBlocks.FROGIUMSIEVE.get(),ModBlocks.DIAMONDSIEVE.get()).build(null));
-    public static RegistryObject<TileEntityType<CauldronEntity>> CAULDRON_ENTITY =
+    public static RegistryObject<TileEntityType<CauldronTileEntity>> CAULDRON_ENTITY =
             TILE_ENTITIES.register("cauldron", () -> TileEntityType.Builder.create(
-                    CauldronEntity::new,ModBlocks.CAULDRON.get()).build(null));
+                    CauldronTileEntity::new,ModBlocks.CAULDRON.get()).build(null));
     public static RegistryObject<TileEntityType<AutoSqueezerTileEntity>> AUTO_SQUEEZER_ENTITY =
             TILE_ENTITIES.register("auto_squeezer", () -> TileEntityType.Builder.create(
                     AutoSqueezerTileEntity::new,ModBlocks.AUTO_SQUEEZER.get()).build(null));

@@ -3,7 +3,7 @@ package com.rutaji.exaqua.integration.jei;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
-import com.rutaji.exaqua.data.recipes.CauldronRecipie;
+import com.rutaji.exaqua.data.recipes.CauldronRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,12 +13,15 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
-public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
+/**
+ * Adds jei UI for recipe of exaqua:cauldron.
+ * @see CauldronRecipe
+ */
+public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipe>{
     public final static ResourceLocation UID = new ResourceLocation(ExAqua.MOD_ID,"cauldron");
     public final static ResourceLocation TEXTURE = new ResourceLocation(ExAqua.MOD_ID,"gui/cauldronjei.png");
 
@@ -41,8 +44,8 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
     }
 
     @Override
-    public @NotNull Class<? extends CauldronRecipie> getRecipeClass() {
-        return CauldronRecipie.class;
+    public @NotNull Class<? extends CauldronRecipe> getRecipeClass() {
+        return CauldronRecipe.class;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
 
 
     @Override
-    public void setIngredients(CauldronRecipie recipe, @NotNull IIngredients ingredients) {
+    public void setIngredients(CauldronRecipe recipe, @NotNull IIngredients ingredients) {
         if(recipe.INPUT_FLUID != Fluids.EMPTY)
         {
             ingredients.setInput(VanillaTypes.FLUID,new FluidStack(recipe.INPUT_FLUID,1000));
@@ -86,7 +89,7 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayout recipeLayout, CauldronRecipie recipe, @NotNull IIngredients ingredients) {
+    public void setRecipe(@NotNull IRecipeLayout recipeLayout, CauldronRecipe recipe, @NotNull IIngredients ingredients) {
 
         if(recipe.INPUT_FLUID != Fluids.EMPTY)
         {
@@ -118,7 +121,7 @@ public class CauldronRecipeCategory implements IRecipeCategory<CauldronRecipie>{
 
     }
     @Override
-    public void draw(CauldronRecipie recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(CauldronRecipe recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
     {
         switch (recipe.TEMP)
         {

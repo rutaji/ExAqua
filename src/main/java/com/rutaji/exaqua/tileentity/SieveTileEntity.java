@@ -2,10 +2,10 @@ package com.rutaji.exaqua.tileentity;
 
 import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
-import com.rutaji.exaqua.block.SieveTiers;
+import com.rutaji.exaqua.data.recipes.SieveRecipe;
+import com.rutaji.exaqua.others.SieveTiers;
 import com.rutaji.exaqua.data.recipes.InventorySieve;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
-import com.rutaji.exaqua.data.recipes.SieveRecipie;
 import com.rutaji.exaqua.networking.MyEnergyPacket;
 import com.rutaji.exaqua.networking.MyFluidStackPacket;
 import com.rutaji.exaqua.networking.PacketHandler;
@@ -132,6 +132,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     //region Tiers
     public SieveTiers GetTier(){return  tier;}
     public SieveTiers tier = SieveTiers.error;
+    public void SetTier(SieveTiers tier){this.tier = tier;}
     //endregion
     //region crafting
     private boolean crafting = false;
@@ -153,12 +154,12 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
                 inv.setFluidStack(Tank.GetFluidstack());
                 inv.setTier(GetTier());
 
-                Optional<SieveRecipie> recipe = world.getRecipeManager()
+                Optional<SieveRecipe> recipe = world.getRecipeManager()
                         .getRecipe(ModRecipeTypes.SIEVE_RECIPE, inv, world);
 
                 recipe.ifPresent(iRecipe -> {
 
-                    if (iRecipe instanceof SieveRecipie) {
+                    if (iRecipe instanceof SieveRecipe) {
                         Tank.drain(iRecipe.INPUTFLUID.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                         ItemTocraft = iRecipe.getRandomItemStack();
                         craftingTime = 0;

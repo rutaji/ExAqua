@@ -1,9 +1,10 @@
 package com.rutaji.exaqua.block;
 
 import com.rutaji.exaqua.container.SqueezerContainer;
+import com.rutaji.exaqua.tileentity.AutoSqueezerTileEntity;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
-import com.rutaji.exaqua.tileentity.SqueezerTile;
+import com.rutaji.exaqua.tileentity.SqueezerTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IBucketPickupHandler;
@@ -49,26 +50,42 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
         this.setDefaultState(this.getStateContainer().getBaseState().with(SQUEEZED,false));
     }
     //endregion
+
+    /**
+     * Called when entity collides with this block.
+     * If entity falled on this block sets block state property SQUEEZED to true and calls {@link SqueezerTileEntity#squeez()} squeez()} in tile entity.
+     * @see squeezerBlock#SetSqueezedProperty
+     * @see squeezerBlock#SQUEEZED
+     * @see SqueezerTileEntity#squeez()
+     */
     @Override
     public void onEntityCollision(@NotNull BlockState state, net.minecraft.world.World worldIn, @NotNull BlockPos pos, Entity entity) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         double speed = entity.getMotion().y;
-        if(speed < -0.1 && tileEntity instanceof SqueezerTile){
+        if(speed < -0.1 && tileEntity instanceof SqueezerTileEntity){
             if(!state.get(SQUEEZED))
             {
 
                 worldIn.playSound(null,pos,SoundEvents.BLOCK_WOOD_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                ((SqueezerTile) tileEntity).squeez();
-                changeBlockModel(worldIn, pos,true );
+                ((SqueezerTileEntity) tileEntity).squeez();
+                SetSqueezedProperty(worldIn, pos,true );
             }
         }
         super.onEntityCollision(state,worldIn,pos,entity);
 
     }
     //region model
-    public void changeBlockModel(World world, BlockPos pos, boolean value) {
+
+    /**
+     * Sets block state property {@link squeezerBlock#SQUEEZED squeezed} to given value.
+     */
+    public void SetSqueezedProperty(World world, BlockPos pos, boolean value) {
         world.setBlockState(pos, world.getBlockState(pos).with(SQUEEZED, value));
     }
+
+    /**
+     * Shape of a model when {@link squeezerBlock#SQUEEZED SQUEEZED} is false.
+     */
     public final VoxelShape SHAPE = Stream.of(
             Block.makeCuboidShape(1, 0, 1, 15, 1, 15),
             Block.makeCuboidShape(1, 1, 1, 2, 10, 2),
@@ -79,7 +96,10 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
             Block.makeCuboidShape(4, 6, 4, 12, 10, 12),
             Block.makeCuboidShape(4, 1, 4, 12, 4, 12)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
-    public final VoxelShape SHAPE2 = Stream.of(
+    /**
+     * Shape of a model when {@link squeezerBlock#SQUEEZED SQUEEZED} is true.
+     */
+    public final VoxelShape SHAPE_SQUEEZED = Stream.of(
             Block.makeCuboidShape(1, 0, 1, 15, 1, 15),
             Block.makeCuboidShape(1, 1, 1, 2, 8, 2),
             Block.makeCuboidShape(14, 1, 1, 15, 8, 2),
@@ -92,34 +112,58 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
             Block.makeCuboidShape(14, 10, 14, 15, 12, 15),
             Block.makeCuboidShape(14, 10, 1, 15, 12, 2)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
+    /**
+     * Block state property that determinates what model will be used for this block.
+     */
     public static final BooleanProperty SQUEEZED = BooleanProperty.create("squeezed");
 
     @Override
     public void fillStateContainer(StateContainer.Builder builder){builder.add(SQUEEZED);}
 
+    /**
+     * @return default block state for this block.
+     */
     @Override
     public BlockState getStateForPlacement(@NotNull BlockItemUseContext context) {
         return this.getDefaultState().with(SQUEEZED, false);
     }
+
+    /**
+     * @return shape of a model based on {@link squeezerBlock#SQUEEZED SQUEEZED} property.
+     * @see squeezerBlock#SQUEEZED
+     * @see squeezerBlock#SHAPE
+     * @see squeezerBlock#SHAPE_SQUEEZED
+     */
     public @NotNull VoxelShape getShape(BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
     {
         if(blockState.get(SQUEEZED)){
-           return SHAPE2;
+           return SHAPE_SQUEEZED;
         }
         return SHAPE;
     }
     //endregion
 
+    /**
+     * Called when player interacts with a block. if block is Squeezed
+     * @param state block state of interacted block.
+     * @param worldIn world of interacted block.
+     * @param pos position of interacted block.
+     * @param player player which interacted with the block.
+     * @param handIn hand of the player.
+     * @param hit ray trace result.
+     * @return success if no exception was thrown.
+     * @exception IllegalStateException if block's tile entity isn't instance of {@link AutoSqueezerTileEntity AutoSqueezerTileEntity}.
+     */
     @Override
     public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit) {
         if(!worldIn.isRemote()) {
             if(state.get(SQUEEZED))
             {
-                changeBlockModel(worldIn,pos,false);
+                SetSqueezedProperty(worldIn,pos,false);
                 return ActionResultType.SUCCESS;
             }
             TileEntity tileEntity = worldIn.getTileEntity(pos);
-            if(tileEntity instanceof SqueezerTile) {
+            if(tileEntity instanceof SqueezerTileEntity) {
                 //region UI
                 INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
                 NetworkHooks.openGui(((ServerPlayerEntity) player), containerProvider, tileEntity.getPos());
@@ -130,7 +174,10 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
         }
         return ActionResultType.SUCCESS;
     }
-
+    /**
+     * Creates container provider, that provides {@link SqueezerContainer SqueezerContainer}
+     * @return {@link SqueezerContainer SqueezerContainer} provider.
+     */
     private INamedContainerProvider createContainerProvider(World worldIn, BlockPos pos) {
         return new INamedContainerProvider() {
             @Override
@@ -145,10 +192,17 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
 
     }
     //region tile entity
+    /**
+     * @return true.
+     */
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
     }
+    /**
+     * Returns tile entity of this block, {@link SqueezerTileEntity SqueezerTileEntity}. All tile entities all registered in {@link ModTileEntities ModTileEntities}.
+     * @return tile entity of this block.
+     */
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -156,6 +210,11 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
     }
     //endregion
     //region bucket implementation
+    /**
+     * Picks up one bucket of fluid from the block. If block doesn't contain any fluid returns empty. If block contains less than one bucket returns empty.
+     * If the block doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} returns false.
+     * @return picked up fluid. Can be empty.
+     */
     @Override
     public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -167,7 +226,10 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
         }
         return Fluids.EMPTY;
     }
-
+    /**
+     * Returns true if block can contained provided fluid. If tile entity of this block doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} always returns false.
+     * @return true if block can contained provided fluid.
+     */
     @Override
     public boolean canContainFluid(IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -178,6 +240,11 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
         return false;
     }
 
+    /**
+     * Adds 1 bucket of fluid into tile entity and returns true.
+     * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} block cannot store fluids and returns false.
+     * @return true if successfully stored fluid, otherwise false.
+     */
     @Override
     public boolean receiveFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
 
