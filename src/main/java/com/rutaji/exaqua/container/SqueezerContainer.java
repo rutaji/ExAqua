@@ -2,6 +2,7 @@ package com.rutaji.exaqua.container;
 
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
+import com.rutaji.exaqua.block.SqueezerBlock;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,7 +21,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Container for squeezer.
+ * Container for {@link SqueezerBlock squeezer UI}.
  * This class handles logic behind UI. Runs on server and client side. Communicates with tile entity directly.
  */
 public class SqueezerContainer extends Container {

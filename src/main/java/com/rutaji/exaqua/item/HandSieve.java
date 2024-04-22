@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
+
 public class HandSieve extends Item {
     //region Constructor
     public HandSieve(Properties properties) {
@@ -39,16 +40,28 @@ public class HandSieve extends Item {
 
     //endregion
     //region Tags Constants
+    /**
+     * Key for nbt data,that stores amount of fluid as a int.
+     */
     public static final String HOLDING_WATER = "HoldingWater"; //tag int
+    /**
+     * Key for nbt data,that stores fluid as a string.
+     */
     public static final String FLUID_INSIDE = "FluidInside"; //tag string
     //endregion
     private int GetUsesFromBucket(){return ServerModConfig.HandSieveBucketUse.get();}
 
+    /**
+     *Called on item creation. Creates nbt tags for the new item.
+     */
     public void onCreated(ItemStack stack, @NotNull World worldIn, @NotNull PlayerEntity playerIn) {
         stack.getOrCreateTag().putInt(HOLDING_WATER, 0);
         stack.getOrCreateTag().putString(FLUID_INSIDE, "");
     }
 
+    /**
+     * Returns description of the item. Adds to the description information about fluid, that this item is holding.
+     */
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, @NotNull List<ITextComponent> tooltip, @NotNull ITooltipFlag flagIn) {
         if (stack.getOrCreateTag().getInt(HOLDING_WATER) != 0) {
@@ -59,6 +72,13 @@ public class HandSieve extends Item {
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
+    /**
+     * Called when player uses the item. If it's empty it tries to {@link HandSieve#PickUpSourceBlock pick up fluid source block }.
+     * If it contains fluid, it searches recipie matching the fluid in {@link HandSieveRecipe recipes of type exaqua:handsieve }.
+     * If it finds the recipie it {@link HandSieve#LowerWater lowers fluid amount by 1} and drops item from recipie (if random rool succeed).
+     * If it doesn't find any recipie for the fluid, it {@link HandSieve#EmptyIt empties itself} and returns fail, otherwise it returns succes
+     * @return Fail if it doesn't find any {@link HandSieveRecipe recipie} for the fluid, othervise succes.
+     */
     @Override
     public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, PlayerEntity playerIn, @NotNull Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
@@ -68,7 +88,7 @@ public class HandSieve extends Item {
         else if (!worldIn.isRemote) {
             InventorySieve inv = new InventorySieve();
             Fluid fluidInside = GetFluidInside(itemstack);
-            if (fluidInside == null) {
+            if (fluidInside == Fluids.EMPTY) {
                 EmptyIt(itemstack);
                 new ActionResult<>(ActionResultType.SUCCESS, itemstack);
             }
@@ -78,7 +98,7 @@ public class HandSieve extends Item {
             if (!recipe.isPresent()) {
                 EmptyIt(itemstack);
                 playerIn.sendMessage(new StringTextComponent("no recipie for this fluid"), playerIn.getUniqueID());
-                return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+                return new ActionResult<>(ActionResultType.FAIL, itemstack);
             }
             HandSieveRecipe foundRecipie = recipe.get();
             if (foundRecipie.IsSucces()) {
@@ -94,18 +114,32 @@ public class HandSieve extends Item {
     }
 
     //region stored fluid methods
+
+    /**
+     * Saves empty fluid into nbt of a given {@link HandSieve hand sieve} item.
+     */
     public static void EmptyIt(@NotNull ItemStack itemStack) {
         itemStack.getOrCreateTag().putInt(HOLDING_WATER, 0);
         itemStack.getOrCreateTag().putString(FLUID_INSIDE, "");
     }
+    /**
+     * @return True if given {@link HandSieve hand sieve} item is empty.
+     */
 
     public static boolean IsEmpty(@NotNull ItemStack itemStack) {
         return itemStack.getOrCreateTag().getInt(HOLDING_WATER) == 0;
     }
 
+    /**
+     * Lowers the amouth of fluid in given {@link HandSieve hand sieve} item by 1.
+     */
+
     public static void LowerWater(@NotNull ItemStack itemStack) {
         LowerWater(itemStack, 1);
     }
+    /**
+     * Lowers the amouth of fluid in given {@link HandSieve hand sieve} item by given number.
+     */
 
     public static void LowerWater(@NotNull ItemStack itemStack, int HowMuch) {
         itemStack.getOrCreateTag().putInt(HOLDING_WATER, itemStack.getOrCreateTag().getInt(HOLDING_WATER) - HowMuch);
@@ -113,12 +147,23 @@ public class HandSieve extends Item {
             itemStack.getOrCreateTag().putString(FLUID_INSIDE, "");
         }
     }
-    public static Fluid GetFluidInside(@NotNull ItemStack itemStack)
+
+    /**
+     * Returns fluid inside {@link HandSieve hand sieve} item. If the fluid is no longer registered.
+     */
+    public static @NotNull Fluid GetFluidInside(@NotNull ItemStack itemStack)
     {
-        return ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemStack.getOrCreateTag().getString(FLUID_INSIDE)));
+        Fluid ToReturn = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemStack.getOrCreateTag().getString(FLUID_INSIDE)));
+        if (ToReturn == null)
+        {
+            EmptyIt(itemStack);
+            return Fluids.EMPTY;
+        }
+        return ToReturn;
     }
 
     //endregion
+
     private ActionResult<ItemStack> PickUpSourceBlock(World worldIn, PlayerEntity playerIn, ItemStack itemstack) {
         BlockRayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
         if (raytraceresult.getType() != RayTraceResult.Type.BLOCK) {

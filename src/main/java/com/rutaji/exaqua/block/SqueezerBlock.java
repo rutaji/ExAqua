@@ -42,10 +42,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class squeezerBlock extends Block implements IBucketPickupHandler, ILiquidContainer {
+public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiquidContainer {
 
     //region constructor
-    public squeezerBlock(Properties p_i48440_1_) {
+    public SqueezerBlock(Properties p_i48440_1_) {
         super(p_i48440_1_);
         this.setDefaultState(this.getStateContainer().getBaseState().with(SQUEEZED,false));
     }
@@ -54,8 +54,8 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
     /**
      * Called when entity collides with this block.
      * If entity falled on this block sets block state property SQUEEZED to true and calls {@link SqueezerTileEntity#squeez()} squeez()} in tile entity.
-     * @see squeezerBlock#SetSqueezedProperty
-     * @see squeezerBlock#SQUEEZED
+     * @see SqueezerBlock#SetSqueezedProperty
+     * @see SqueezerBlock#SQUEEZED
      * @see SqueezerTileEntity#squeez()
      */
     @Override
@@ -77,14 +77,14 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
     //region model
 
     /**
-     * Sets block state property {@link squeezerBlock#SQUEEZED squeezed} to given value.
+     * Sets block state property {@link SqueezerBlock#SQUEEZED squeezed} to given value.
      */
     public void SetSqueezedProperty(World world, BlockPos pos, boolean value) {
         world.setBlockState(pos, world.getBlockState(pos).with(SQUEEZED, value));
     }
 
     /**
-     * Shape of a model when {@link squeezerBlock#SQUEEZED SQUEEZED} is false.
+     * Shape of a model when {@link SqueezerBlock#SQUEEZED SQUEEZED} is false.
      */
     public final VoxelShape SHAPE = Stream.of(
             Block.makeCuboidShape(1, 0, 1, 15, 1, 15),
@@ -97,7 +97,7 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
             Block.makeCuboidShape(4, 1, 4, 12, 4, 12)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
     /**
-     * Shape of a model when {@link squeezerBlock#SQUEEZED SQUEEZED} is true.
+     * Shape of a model when {@link SqueezerBlock#SQUEEZED SQUEEZED} is true.
      */
     public final VoxelShape SHAPE_SQUEEZED = Stream.of(
             Block.makeCuboidShape(1, 0, 1, 15, 1, 15),
@@ -129,10 +129,10 @@ public class squeezerBlock extends Block implements IBucketPickupHandler, ILiqui
     }
 
     /**
-     * @return shape of a model based on {@link squeezerBlock#SQUEEZED SQUEEZED} property.
-     * @see squeezerBlock#SQUEEZED
-     * @see squeezerBlock#SHAPE
-     * @see squeezerBlock#SHAPE_SQUEEZED
+     * @return shape of a model based on {@link SqueezerBlock#SQUEEZED SQUEEZED} property.
+     * @see SqueezerBlock#SQUEEZED
+     * @see SqueezerBlock#SHAPE
+     * @see SqueezerBlock#SHAPE_SQUEEZED
      */
     public @NotNull VoxelShape getShape(BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
     {

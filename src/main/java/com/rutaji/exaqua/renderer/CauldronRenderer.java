@@ -15,6 +15,9 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Used to render fluid in the {@link net.minecraft.block.CauldronBlock cauldron}.
+ */
 public class CauldronRenderer extends TileEntityRenderer<CauldronTileEntity> {
 
     private Minecraft minecraft = Minecraft.getInstance();

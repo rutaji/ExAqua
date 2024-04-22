@@ -11,6 +11,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Screen for {@link com.rutaji.exaqua.block.AutoSqueezerBlock AutoSqueezer} UI.
+ * This class handles graphic on clinets side. Logic is handled by {@link AutoSqueezerContainer AutoSqueezerContainer}.
+ */
 public class AutoSqueezerScreen extends ContainerScreen<AutoSqueezerContainer> {
     private final ResourceLocation GUI = new ResourceLocation(ExAqua.MOD_ID,"gui/squeezer.png");
     //region Constructor

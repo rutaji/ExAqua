@@ -13,7 +13,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.function.Supplier;
 
@@ -35,25 +34,7 @@ public class ModBlocks {
     }
     //endregion
 
-    /**
-     * Returns registered {@link SieveBlock SieveBlock} with given tier.
-     * @param tiers tier of the sive block to return.
-     * @return registered {@link SieveBlock SieveBlock} with given tier.
-     * @exception NotImplementedException if given tier isn't implemented in this method.
-     * @see SieveTiers
-     */
-    public static RegistryObject<Block> GetSIEVE(SieveTiers tiers)
-    {
-        switch (tiers)
-        {
-            case iron: return  IRONSIEVE;
-            case gold: return  GOLDSIEVE;
-            case frogium: return  FROGIUMSIEVE;
-            case diamond: return  DIAMONDSIEVE;
-        }
 
-        throw new NotImplementedException("Sieve doesn´t exist");
-    }
 
     public static void register(IEventBus eventBus){
         BLOCKS.register(eventBus);
@@ -63,7 +44,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> GOLDSIEVE =registerBlock("goldsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6).notSolid(), SieveTiers.gold));
     public static final RegistryObject<Block> FROGIUMSIEVE =registerBlock("frogiumsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6).notSolid(), SieveTiers.frogium));
     public static final RegistryObject<Block> DIAMONDSIEVE =registerBlock("diamondsieve",() -> new SieveBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6).notSolid(), SieveTiers.diamond));
-    public static final RegistryObject<Block> SQUEEZER =registerBlock("squeezer",() -> new squeezerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6).notSolid()));
+    public static final RegistryObject<Block> SQUEEZER =registerBlock("squeezer",() -> new SqueezerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(6).notSolid()));
     public static final RegistryObject<Block> F_ORE_END =registerBlock("frogium_ore_end",() -> new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(4)));
     public static final RegistryObject<Block> F_ORE_STONE =registerBlock("frogium_ore_stone",() -> new FrogiumOre(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2)));
     public static final RegistryObject<Block> F_BLOCK =registerBlock("frogium_block",() -> new FrogiumBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(4)));

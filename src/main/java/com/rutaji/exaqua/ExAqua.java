@@ -36,9 +36,16 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Main class of the mod. Used as a starting point. Called by Forge in several phases, when starting the game.
+ * Calls every class, that registers something.
+ */
 @Mod(ExAqua.MOD_ID)
 public class ExAqua
 {
+    /**
+     * Mod id is used as a part of a path for every file. Must be uniqe.
+     */
     public static final String MOD_ID = "exaqua";
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -74,6 +81,7 @@ public class ExAqua
     {
         PacketHandler.init();
     }
+
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         ModItemModelProperties.makeHandSieve(ModItems.HANDSIEVE.get());

@@ -22,7 +22,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 /**
- * Container for sieves.
+ * Container for {@link com.rutaji.exaqua.block.SieveBlock sieve} UI.
  * This class handles logic behind UI. Runs on server and client side. Communicates with tile entity directly.
  */
 public class SieveContainer extends Container {
@@ -122,7 +122,7 @@ public class SieveContainer extends Container {
     @Override
     public boolean canInteractWith(@NotNull PlayerEntity player){
         return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(),TILEENTITY.getPos()),
-                player, ModBlocks.GetSIEVE(GetTier()).get());
+                player, SieveTiers.GetSIEVE(GetTier()).get());
     }
     //region player inventory
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

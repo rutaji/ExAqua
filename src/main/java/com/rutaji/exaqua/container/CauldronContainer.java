@@ -21,7 +21,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 /**
- * Container for Cauldron UI.
+ * Container for  {@link com.rutaji.exaqua.block.CraftingCauldron Cauldron} UI.
  * This class handles logic behind UI. Runs on server and client side. Communicates with tile entity directly.
  */
 public class CauldronContainer extends Container {

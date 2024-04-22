@@ -3,6 +3,7 @@ package com.rutaji.exaqua.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.rutaji.exaqua.ExAqua;
+import com.rutaji.exaqua.container.AutoSqueezerContainer;
 import com.rutaji.exaqua.container.CauldronContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -11,6 +12,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Screen for {@link com.rutaji.exaqua.block.CraftingCauldron Cauldron} UI.
+ * This class handles graphic on clinets side. Logic is handled by {@link CauldronContainer CauldronContainer}.
+ */
 public class CauldronScreen extends ContainerScreen<CauldronContainer> {
     private final ResourceLocation GUI = new ResourceLocation(ExAqua.MOD_ID,"gui/cauldron.png");
     //region Constructor

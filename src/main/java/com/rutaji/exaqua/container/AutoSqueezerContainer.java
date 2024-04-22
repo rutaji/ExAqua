@@ -21,7 +21,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Container for AutoSqueezer UI.
+ * Container for {@link com.rutaji.exaqua.block.AutoSqueezerBlock AutoSqueezer} UI.
  * This class handles logic behind UI. Runs on server and client side. Communicates with tile entity directly.
  */
 
