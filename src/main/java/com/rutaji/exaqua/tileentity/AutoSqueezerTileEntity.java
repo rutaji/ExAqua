@@ -32,6 +32,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+/**
+ * Tile entity for {@link com.rutaji.exaqua.block.AutoSqueezerBlock auto squeezer block}.
+ */
 public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankTile, ITickableTileEntity ,IMYEnergyStorageTile{
 
     //region Constructor
@@ -61,6 +64,10 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     }
     //endregion
     //region nbt
+
+    /**
+     * Reads data from NBT.
+     */
     @Override
     public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
@@ -69,6 +76,9 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
         super.read(state,nbt);
     }
 
+    /**
+     *Writes data to NBT.
+     */
     @Override
     public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
@@ -76,12 +86,19 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
         nbt = GetEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
-    @Override //server send on chung load
+    /**
+     * Writes data to NBT. Just calls {@link AutoSqueezerTileEntity#write write}.
+     * Used to send chunks to a client.
+     */
+    @Override
     public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
-    //clients receives getUpdateTag
+    /**
+     * Reads data from NBT. Just calls {@link AutoSqueezerTileEntity#read read}.
+     * Used to update chunks on a client.
+     */
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT nbt){
         read(state,nbt);
@@ -89,12 +106,22 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     //endregion
     //region Energy
     private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(9000,this::EnergyChangePacket);
+
+    /**
+     * @return energy storage in this tile entity.
+     * @see MyEnergyStorage
+     */
     @Override
     public MyEnergyStorage GetEnergyStorage() {
         return this.MY_ENERGY_STORAGE;
     }
 
 
+    /**
+     * Called every time {@link MyEnergyStorage energy storage} in tile entity changes.
+     * Send changes to client from server.
+     * @see MyEnergyPacket
+     */
     public void EnergyChangePacket()
     {
         if(world != null && !world.isRemote) {
@@ -104,6 +131,12 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
 
     //endregion
 
+    /**
+     * Returns capabilities for Energy, fluid and items.
+     * For CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, returns {@link com.rutaji.exaqua.Fluids.WaterFluidTankCapabilityAdapter WaterFluidTankCapabilityAdapter}.
+     * For CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, returns {@link ItemStackHandler ItemStackHandler}.
+     * For CapabilityEnergy.ENERGY, returns {@link com.rutaji.exaqua.Energy.EnergyStorageAdapter EnergyStorageAdapter}.
+     */
     @Override
     public <T> LazyOptional<T> getCapability(@Nullable Capability<T> cap, @Nullable Direction side){
         if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
@@ -119,6 +152,10 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     private int GetDefaultMaxCraftingTime(){return ServerModConfig.AutoSqueezerTimeForRecipie.get();}
     private int CraftingCooldown = GetDefaultMaxCraftingTime();
     private int getDefaultRFConsumtion(){return ServerModConfig.AutoSqueezerRFperTick.get();}
+
+    /**
+     * Called every tick. Calls {@link AutoSqueezerTileEntity#craft }.
+     */
     @Override
     public void tick()
     {
@@ -134,6 +171,10 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
         }
 
     }
+
+    /**
+     * Handles crafting.
+     */
     public void craft() {
 
         if(!world.isRemote() && !Tank.IsFull()) {
@@ -156,6 +197,12 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
             });
         }
     }
+
+    /**
+     * Called every time {@link MyLiquidTank liquid tank} in tile entity changes.
+     * Send changes to client from server.
+     * @see MyFluidStackPacket
+     */
     @Override
     public void TankChange()
     {
@@ -164,9 +211,12 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
         }
 
     }
-    //region Liquid
-    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange);
+    private MyLiquidTank Tank = new MyLiquidTank(this::TankChange);
 
+    /**
+     * @return liquid tank in this tile entity.
+     * @see MyLiquidTank
+     */
     @Override
     public MyLiquidTank GetTank() {
         return this.Tank;

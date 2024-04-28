@@ -36,6 +36,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+/**
+ * Tile entity for {@link com.rutaji.exaqua.block.CraftingCauldron cauldron}.
+ */
 public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile, ITickableTileEntity {
     public CauldronTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -63,12 +66,21 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
 
     //endregion
     //region Liquid
-    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange,1000,e->true);
 
+    private MyLiquidTank Tank = new MyLiquidTank(this::TankChange,1000,e->true);
+    /**
+     * @return liquid tank in this tile entity.
+     * @see MyLiquidTank
+     */
     @Override
     public MyLiquidTank GetTank() {
         return this.Tank;
     }
+    /**
+     * Called every time {@link MyLiquidTank liquid tank} in tile entity changes.
+     * Send changes to client from server.
+     * @see MyFluidStackPacket
+     */
     @Override
     public void TankChange() {
         if(world != null &&!world.isRemote) {
@@ -78,31 +90,46 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
     //endregion
     //endregion
     //region nbt
+    /**
+     * Reads data from NBT.
+     */
     @Override
     public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         Tank.readFromNBT(nbt);
         super.read(state,nbt);
     }
-
+    /**
+     *Writes data to NBT.
+     */
     @Override
     public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         nbt = Tank.writeToNBT(nbt);
         return super.write(nbt);
     }
-    @Override //server send on chung load
+    /**
+     * Writes data to NBT. Just calls {@link CauldronTileEntity#write write}.
+     */
+    @Override
     public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
-    //clients receives getUpdateTag
+    /**
+     * Reads data from NBT. Just calls {@link CauldronTileEntity#read read}.
+     */
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT nbt){
         read(state,nbt);
     }
     //endregion
 
+    /**
+     * Returns capabilities for Energy, fluid and items.
+     * For CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, returns {@link com.rutaji.exaqua.Fluids.WaterFluidTankCapabilityAdapter WaterFluidTankCapabilityAdapter}.
+     * For CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, returns {@link ItemStackHandler ItemStackHandler}.
+     */
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
@@ -112,6 +139,9 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
         }
         return super.getCapability(cap,side);
     }
+    /**
+     * Called every tick. Calls {@link CauldronTileEntity#craft } and checks for rain.
+     */
     @Override
     public void tick() {
         craft();
@@ -134,7 +164,10 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
     private final int  CraftCooldownMax = 50;
     private int CraftCooldown = CraftCooldownMax;
     private CauldronRecipe RecipieOnCooldown;
-    private void craft()
+    /**
+     * Handles crafting.
+     */
+    public void craft()
     {
         if(!world.isRemote())
         {
@@ -216,7 +249,11 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
     }
     //endregion
 
-    public CauldronTemperature GetTemp()
+    /**
+     * @return calculates and returns temperature.
+     */
+
+    public @NotNull CauldronTemperature GetTemp()
     {
         BlockState blockState = world.getBlockState(pos.add(0,-1,0));
         Block block = blockState.getBlock();

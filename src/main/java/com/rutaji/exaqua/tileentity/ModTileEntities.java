@@ -7,7 +7,9 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
+/**
+ * Registry for all modded tile entities.
+ */
 public class ModTileEntities {
     //region registr
     public static DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
