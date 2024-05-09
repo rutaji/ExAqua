@@ -161,7 +161,7 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
         return false;
     }
     /**
-     * Adds 1 bucket of fluid into tile entity and returns true.
+     * Adds 1 bucket of fluid into tile entity and returns true. If fluid is not source, no fluid will be recieved and returns false;
      * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} block cannot store fluids and returns false.
      * @return true if successfully stored fluid, otherwise false.
      */
@@ -169,11 +169,12 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
     public boolean receiveFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IMyLiquidTankTile)
+        if (fluidStateIn.isSource() && tileEntity instanceof IMyLiquidTankTile)
         {
             ((IMyLiquidTankTile)tileEntity).GetTank().AddBucket(fluidStateIn.getFluid());
+            return true;
         }
-        return true;
+        return false;
     }
     //endregion
 

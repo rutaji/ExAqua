@@ -158,7 +158,7 @@ public class SieveRecipe implements ISieveRecipe {
     }
 
     /**
-     * @return serializer for this recipe.
+     * serializer for this recipe.
      */
     public static class SieveRecipeType implements IRecipeType<SieveRecipe> {
         @Override

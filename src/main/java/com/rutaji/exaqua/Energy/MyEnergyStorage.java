@@ -1,5 +1,6 @@
 package com.rutaji.exaqua.Energy;
 
+import com.rutaji.exaqua.config.ServerModConfig;
 import com.rutaji.exaqua.others.MyDelegate;
 import mekanism.api.energy.IEnergyContainer;
 import net.minecraft.nbt.CompoundNBT;
@@ -34,10 +35,12 @@ public class MyEnergyStorage extends EnergyStorage implements Capability.IStorag
 
     /**
      * Drains energy, but only if there is enough. Returns true if the energy was drain. If there wasn't enough energy nothing is drained and returns false.
+     * Always return True if {@link ServerModConfig#RequireElectricity server config RequireElectricity} is False.
      * @param energy amount of energy to be drained in FE
      * @return true if energy was drained. False if no energy was drain.
      */
     public boolean TryDrainEnergy(int energy){
+        if(!ServerModConfig.RequireElectricity.get()) {return true;}
         if (HasEnoughEnergy(energy))
         {
             extractEnergy(energy,false);

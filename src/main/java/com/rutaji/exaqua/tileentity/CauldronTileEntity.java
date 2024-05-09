@@ -184,9 +184,10 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
             //region crafting recipie
             {
                 InventoryCauldron inv = GetInventory();
-                if(RecipieOnCooldown.matches(inv,world))
+                if(RecipieOnCooldown.matches(inv,world) &&
+                  !(RecipieOnCooldown.OUTPUT_ITEM == ItemStack.EMPTY && RecipieOnCooldown.OUTPUT_FLUID != Fluids.EMPTY && RecipieOnCooldown.INPUT_FLUID == Fluids.EMPTY && Tank.IsFull()))
                 {
-                    if(RecipieOnCooldown.OUTPUT_FLUID != Fluids.EMPTY)//add fluid output
+                    if(RecipieOnCooldown.OUTPUT_FLUID != Fluids.EMPTY)
                     {
                         if(RecipieOnCooldown.INPUT_FLUID == Fluids.EMPTY){Tank.fill(new FluidStack(RecipieOnCooldown.OUTPUT_FLUID, RecipieOnCooldown.AMOUNT_OUTPUT), IFluidHandler.FluidAction.EXECUTE);}
                         else if(Tank.getFluid().getFluid() == RecipieOnCooldown.INPUT_FLUID){Tank.ChangeFluidKeepAmount(RecipieOnCooldown.OUTPUT_FLUID);}
