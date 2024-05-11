@@ -3,7 +3,8 @@ package com.rutaji.exaqua.integration.jei;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
-import com.rutaji.exaqua.data.recipes.SieveRecipie;
+import com.rutaji.exaqua.data.recipes.CauldronRecipe;
+import com.rutaji.exaqua.data.recipes.SieveRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -18,7 +19,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
+/**
+ * Adds jei UI for recipe of exaqua:sieve.
+ * @see SieveRecipe
+ */
+public class SieveRecipeCategory implements IRecipeCategory<SieveRecipe>{
     public final static ResourceLocation UID = new ResourceLocation(ExAqua.MOD_ID,"sieve");
     public final static ResourceLocation TEXTURE = new ResourceLocation(ExAqua.MOD_ID,"gui/sievejei.png");
 
@@ -41,8 +46,8 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
     }
 
     @Override
-    public @NotNull Class<? extends SieveRecipie> getRecipeClass() {
-        return SieveRecipie.class;
+    public @NotNull Class<? extends SieveRecipe> getRecipeClass() {
+        return SieveRecipe.class;
     }
 
     @Override
@@ -67,7 +72,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
 
 
     @Override
-    public void setIngredients(SieveRecipie recipe, IIngredients ingredients) {
+    public void setIngredients(SieveRecipe recipe, IIngredients ingredients) {
         FluidStack f = recipe.INPUTFLUID.copy();
         f.setAmount(1000);
         ingredients.setInput(VanillaTypes.FLUID,f);
@@ -79,7 +84,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, SieveRecipie recipe, @NotNull IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, SieveRecipe recipe, @NotNull IIngredients ingredients) {
         recipeLayout.getFluidStacks().init(0,true,92,8);
 
         int x = X;
@@ -96,7 +101,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipie>{
 
     }
     @Override
-    public void draw(SieveRecipie recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(SieveRecipe recipe, @NotNull MatrixStack matrixStack, double mouseX, double mouseY)
     {
         int x = X;
         int y = Y;

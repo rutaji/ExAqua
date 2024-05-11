@@ -13,7 +13,9 @@
 8.4 refactor cauldron and its recipies
 
 TODO:
-changed itemstack to Ingridient in squeezer => something broke
+refactor containers => duplicated code
+use only 1 random
+refactor blocks => duplicated code
 
 change UI
 add entities

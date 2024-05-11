@@ -17,6 +17,9 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/**
+ * Registry for fluids  from this mod.
+ */
 public class ModFluids {
 
     //region register

@@ -2,6 +2,9 @@ package com.rutaji.exaqua.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+/**
+ * Loads serer config from ExAqua-server.toml file.
+ */
 public final class ServerModConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
@@ -11,6 +14,8 @@ public final class ServerModConfig {
     public static final ForgeConfigSpec.ConfigValue<Integer> AutoSqueezerTimeForRecipie;
     public static final ForgeConfigSpec.ConfigValue<Integer> HandSieveBucketUse;
 
+    public static final ForgeConfigSpec.ConfigValue<Boolean> RequireElectricity;
+
     static {
         BUILDER.push("Config for ExAqua");
 
@@ -19,6 +24,7 @@ public final class ServerModConfig {
         AutoSqueezerRFperTick = BUILDER.comment("RF per tick the AutoSquuzer consumes while running.").define("AutoSqueezer RF",50);
         AutoSqueezerTimeForRecipie =  BUILDER.comment("Number of tick it takes AutoSqueezer to craft one recipie.").define("AutoSqueezer crafting time",20);
         HandSieveBucketUse = BUILDER.comment("Number of uses Handsieve get for 1 bucket of fluid.").define("Hand sieve uses per bucket",20);
+        RequireElectricity = BUILDER.comment("If false all machines run without energy.").define("Require electricity",Boolean.TRUE);
 
         BUILDER.pop();
         SPEC = BUILDER.build();

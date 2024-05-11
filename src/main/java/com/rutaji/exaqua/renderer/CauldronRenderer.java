@@ -2,27 +2,23 @@ package com.rutaji.exaqua.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.rutaji.exaqua.tileentity.CauldronEntity;
+import com.rutaji.exaqua.tileentity.CauldronTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
-public class CauldronRenderer extends TileEntityRenderer<CauldronEntity> {
+/**
+ * Used to render fluid in the {@link net.minecraft.block.CauldronBlock cauldron}.
+ */
+public class CauldronRenderer extends TileEntityRenderer<CauldronTileEntity> {
 
     private Minecraft minecraft = Minecraft.getInstance();
 
@@ -33,7 +29,7 @@ public class CauldronRenderer extends TileEntityRenderer<CauldronEntity> {
 
 
     @Override
-    public void render(@NotNull CauldronEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(@NotNull CauldronTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
         FluidStack fluidToRender = tileEntityIn.GetTank().GetFluidstack();
         if (fluidToRender.isEmpty()){return;}
         FluidAttributes attributes = fluidToRender.getFluid().getAttributes();

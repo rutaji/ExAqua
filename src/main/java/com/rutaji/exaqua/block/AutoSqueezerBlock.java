@@ -2,7 +2,7 @@ package com.rutaji.exaqua.block;
 
 import com.rutaji.exaqua.container.AutoSqueezerContainer;
 import com.rutaji.exaqua.tileentity.AutoSqueezerTileEntity;
-import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
+import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,12 +38,15 @@ import java.util.stream.Stream;
 public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, ILiquidContainer {
 
     //region constructor
-    public AutoSqueezerBlock(AbstractBlock.Properties p_i48440_1_) {
-        super(p_i48440_1_);
+    public AutoSqueezerBlock(AbstractBlock.Properties properties) {
+        super(properties);
     }
     //endregion
 
     //region model
+    /**
+     * Shape of a model.
+     */
     public final VoxelShape SHAPE = Stream.of(
             Block.makeCuboidShape(1, 0, 1, 15, 1, 15),
             Block.makeCuboidShape(1, 1, 1, 2, 10, 2),
@@ -56,11 +59,26 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
 
 
+    /**
+     * @return {@link AutoSqueezerBlock#SHAPE Shape} of a model.
+     */
     public @NotNull VoxelShape getShape(@NotNull BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
     {
         return SHAPE;
     }
     //endregion
+
+    /**
+     * Called when player interacts with a block. Opens UI.
+     * @param state block state of interacted block.
+     * @param worldIn world of interacted block.
+     * @param pos position of interacted block.
+     * @param player player which interacted with the block.
+     * @param handIn hand of the player.
+     * @param hit ray trace result.
+     * @return success if no exception was thrown.
+     * @exception IllegalStateException if block's tile entity isn't instance of {@link AutoSqueezerTileEntity AutoSqueezerTileEntity}.
+     */
     @Override
     public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit) {
         if(!worldIn.isRemote()) {
@@ -77,6 +95,11 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
         return ActionResultType.SUCCESS;
     }
     //region UI
+
+    /**
+     * Creates container provider, that provides {@link AutoSqueezerContainer AutoSqueezerContainer}
+     * @return {@link AutoSqueezerContainer AutoSqueezerContainer} provider.
+     */
     private INamedContainerProvider createContainerProvider(World worldIn, BlockPos pos) {
         return new INamedContainerProvider() {
             @Override
@@ -92,10 +115,19 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     }
     //endregion
     //region tile entity
+
+    /**
+     * @return true.
+     */
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
     }
+
+    /**
+     * Returns tile entity of this block, {@link AutoSqueezerTileEntity AutoSqueezerTileEntity}. All tile entities all registered in {@link ModTileEntities ModTileEntities}.
+     * @return tile entity of this block.
+     */
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -103,37 +135,53 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     }
     //endregion
     //region bucket implementation
+
+    /**
+     * Picks up one bucket of fluid from the block. If block doesn't contain any fluid returns empty. If block contains less than one bucket returns empty.
+     * If the block doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} returns false.
+     * @return picked up fluid. Can be empty.
+     */
     @Override
     public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IMyLiquidTankTIle){
-            if(((IMyLiquidTankTIle) tileEntity).GetTank().getFluidAmount() >= 1000){
-                return ((IMyLiquidTankTIle) tileEntity).GetTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
+        if (tileEntity instanceof IMyLiquidTankTile){
+            if(((IMyLiquidTankTile) tileEntity).GetTank().getFluidAmount() >= 1000){
+                return ((IMyLiquidTankTile) tileEntity).GetTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
             }
             return Fluids.EMPTY;
         }
         return Fluids.EMPTY;
     }
 
+    /**
+     * Returns true if block can contained provided fluid. If tile entity of this block doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} always returns false.
+     * @return true if block can contained provided fluid.
+     */
     @Override
     public boolean canContainFluid(IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IMyLiquidTankTIle)
+        if (tileEntity instanceof IMyLiquidTankTile)
         {
-            return  ((IMyLiquidTankTIle)tileEntity).GetTank().isFluidValid(new FluidStack(fluidIn,1000));
+            return  ((IMyLiquidTankTile)tileEntity).GetTank().isFluidValid(new FluidStack(fluidIn,1000));
         }
         return false;
     }
 
+    /**
+     * Adds 1 bucket of fluid into tile entity and returns true. If fluid is not source, no fluid will be recieved and returns false;
+     * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} block cannot store fluids and returns false.
+     * @return true if successfully stored fluid, otherwise false.
+     */
     @Override
     public boolean receiveFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof IMyLiquidTankTIle)
+        if (fluidStateIn.isSource() && tileEntity instanceof IMyLiquidTankTile)
         {
-            ((IMyLiquidTankTIle)tileEntity).GetTank().AddBucket(fluidStateIn.getFluid());
+            ((IMyLiquidTankTile)tileEntity).GetTank().AddBucket(fluidStateIn.getFluid());
+            return true;
         }
-        return true;
+        return false;
     }
     //endregion
 }

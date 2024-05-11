@@ -10,9 +10,15 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
+/**
+ * {@link com.rutaji.exaqua.item.HandSieve hand sieve} has 17 textures. Each texture is represented with float value 0 and 2.
+ * This class help to choose and set texture.
+ * Each texture is represented with object of class {@link Color Color}.
+ */
 public class ColorsToFloat {
 
     /**
+     * Textures and their property value
      * Empty: 0F
      * Blue: 0.1F
      * Lava: 0.2F
@@ -31,6 +37,13 @@ public class ColorsToFloat {
      * Brown: 1.5F
      * Green: 1.6F
      * Unknown: 2F
+     */
+
+    /**
+     * List of all textures, except lava texture. Lava texture is reserve only for lava.
+     * When fluid that doesn't have it's texture set in {@link ColorsToFloat#NameToColor NameToColor} is encountered, the closest color from this list is choosen.
+     * @see ColorsToFloat#NameToColor
+     * @see ColorsToFloat#ComputeColor
      */
     public static List<Color> Colors =  Arrays.asList(
             new Color("blue",0.1f,208),
@@ -54,6 +67,9 @@ public class ColorsToFloat {
     public static float EMPTY = 0F;
     public static float LAVA = 0.2F;
     public static float UNKNOWN = 2f;
+    /**
+     * Holds pairs of fluids and textures. Textures are represented by their property value.
+     */
     public static Hashtable<String,Float> NameToColor = new Hashtable<String,Float>(){
         {put("",EMPTY);}
         {put("minecraft:water",0.1F);}
@@ -62,9 +78,10 @@ public class ColorsToFloat {
     };
 
     /**
-     *
-     * @param s String of resourceLocation(mod::fluidName) that is contained in
-     * @return Constant that refers to texture
+     * Returns property from {@link ColorsToFloat#NameToColor }. If the fluid isn't in {@link ColorsToFloat#NameToColor } it calls {@link ColorsToFloat#ComputeColor}
+     * returns the texture.
+     * @param s fluid that is contained in hand sieve.
+     * @return constant that refers to texture.
      */
     public static float Get(String s)
     {
@@ -76,6 +93,11 @@ public class ColorsToFloat {
 
 
     }
+
+    /**
+     * Takes fluid and finds the closest texture to that color, according to hsv. Then adds the fluid and its color to {@link ColorsToFloat#NameToColor NameToColor}.
+     * @return returns color of the fluid.
+     */
     public static float ComputeColor(Fluid fluid)
     {
         FluidAttributes fluidAttributes = fluid.getAttributes();

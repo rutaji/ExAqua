@@ -4,6 +4,9 @@ import com.rutaji.exaqua.item.ModItems;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
+/**
+ *  Item group for all modded items.
+ */
 public class CustomItemGroup {
     public static final ItemGroup EX_AQUA_GROUP = new ItemGroup("ExAquaModTab") {
         @Override

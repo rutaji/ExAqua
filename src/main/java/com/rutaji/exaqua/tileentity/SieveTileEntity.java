@@ -2,10 +2,10 @@ package com.rutaji.exaqua.tileentity;
 
 import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
-import com.rutaji.exaqua.block.SieveTiers;
+import com.rutaji.exaqua.data.recipes.SieveRecipe;
+import com.rutaji.exaqua.others.SieveTiers;
 import com.rutaji.exaqua.data.recipes.InventorySieve;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
-import com.rutaji.exaqua.data.recipes.SieveRecipie;
 import com.rutaji.exaqua.networking.MyEnergyPacket;
 import com.rutaji.exaqua.networking.MyFluidStackPacket;
 import com.rutaji.exaqua.networking.PacketHandler;
@@ -31,8 +31,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
-
-public class SieveTileEntity extends TileEntity implements ITickableTileEntity,IMyLiquidTankTIle,IMYEnergyStorageTile {
+/**
+ * Tile entity for {@link com.rutaji.exaqua.block.SieveBlock sieve block}.
+ */
+public class SieveTileEntity extends TileEntity implements ITickableTileEntity, IMyLiquidTankTile,IMYEnergyStorageTile {
 
     //region Items
     private final int NUMBER_OF_INVENTORY_SLOTS =8;
@@ -55,6 +57,9 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
     //endregion
     //region nbt
+    /**
+     * Reads data from NBT.
+     */
     @Override
     public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
@@ -63,6 +68,9 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
         GetEnergyStorage().deserializeNBT(nbt);
         super.read(state,nbt);
     }
+    /**
+     *Writes data to NBT.
+     */
     @Override
     public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
@@ -71,12 +79,19 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
         nbt = GetEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
-    @Override //server send on chung load
+    /**
+     * Writes data to NBT. Just calls {@link SieveTileEntity#write write}.
+     * Used to send chunks to a client.
+     */
+    @Override
     public @NotNull CompoundNBT getUpdateTag(){
         CompoundNBT nbt = new CompoundNBT();
         return write(nbt);
     }
-    //clients receives getUpdateTag
+    /**
+     * Reads data from NBT. Just calls {@link SieveTileEntity#read read}.
+     * Used to update chunks on a client.
+     */
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT nbt){
         read(state,nbt);
@@ -95,12 +110,22 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     //endregion
     //region Energy
     private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(9000,this::EnergyChangePacket);
+
+    /**
+     * @return energy storage in this tile entity.
+     * @see MyEnergyStorage
+     */
     @Override
     public MyEnergyStorage GetEnergyStorage() {
         return this.MY_ENERGY_STORAGE;
     }
 
 
+    /**
+     * Called every time {@link MyEnergyStorage energy storage} in tile entity changes.
+     * Send changes to client from server.
+     * @see MyEnergyPacket
+     */
     public void EnergyChangePacket()
     {
         if(world != null && !world.isRemote) {
@@ -110,6 +135,12 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
 
     //endregion
 
+    /**
+     * Returns capabilities for Energy, fluid and items.
+     * For CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, returns {@link com.rutaji.exaqua.Fluids.WaterFluidTankCapabilityAdapter WaterFluidTankCapabilityAdapter}.
+     * For CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, returns {@link ItemStackHandler ItemStackHandler}.
+     * For CapabilityEnergy.ENERGY, returns {@link com.rutaji.exaqua.Energy.EnergyStorageAdapter EnergyStorageAdapter}.
+     */
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side){
         if(cap == CapabilityEnergy.ENERGY){
@@ -122,6 +153,9 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
         }
         return super.getCapability(cap,side);
     }
+    /**
+     * Called every tick. Calls {@link SieveTileEntity#craft }.
+     */
     @Override
     public void tick() {
         if (!world.isRemote) {
@@ -132,6 +166,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     //region Tiers
     public SieveTiers GetTier(){return  tier;}
     public SieveTiers tier = SieveTiers.error;
+    public void SetTier(SieveTiers tier){this.tier = tier;}
     //endregion
     //region crafting
     private boolean crafting = false;
@@ -139,12 +174,14 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     private int craftingTime;
     private int craftingTimeDone;
     private int rf;
+    /**
+     * Handles crafting.
+     */
     public void craft() {
 
         if(!world.isRemote())
         {
 
-            //Tank.setStack(new FluidStack(Fluids.WATER,50));
             if (Tank.getFluidAmount() == 0 && !crafting) {
                 return;
             }
@@ -153,12 +190,12 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
                 inv.setFluidStack(Tank.GetFluidstack());
                 inv.setTier(GetTier());
 
-                Optional<SieveRecipie> recipe = world.getRecipeManager()
+                Optional<SieveRecipe> recipe = world.getRecipeManager()
                         .getRecipe(ModRecipeTypes.SIEVE_RECIPE, inv, world);
 
                 recipe.ifPresent(iRecipe -> {
 
-                    if (iRecipe instanceof SieveRecipie) {
+                    if (iRecipe instanceof SieveRecipe) {
                         Tank.drain(iRecipe.INPUTFLUID.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                         ItemTocraft = iRecipe.getRandomItemStack();
                         craftingTime = 0;
@@ -215,11 +252,21 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity,I
     }
     //endregion
     //region IMyLiquidTankTile
-    public MyLiquidTank Tank = new MyLiquidTank(this::TankChange,5000,e->true);
+
+    private MyLiquidTank Tank = new MyLiquidTank(this::TankChange,5000,e->true);
+    /**
+     * @return liquid tank in this tile entity.
+     * @see MyLiquidTank
+     */
     @Override
     public MyLiquidTank GetTank() {
         return this.Tank;
     }
+    /**
+     * Called every time {@link MyLiquidTank liquid tank} in tile entity changes.
+     * Send changes to client from server.
+     * @see MyFluidStackPacket
+     */
     @Override
     public void TankChange()
     {
