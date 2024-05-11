@@ -1,0 +1,16 @@
+com.rutaji.exaqua
+com.rutaji.exaqua.block
+com.rutaji.exaqua.config
+com.rutaji.exaqua.container
+com.rutaji.exaqua.data.recipes
+com.rutaji.exaqua.Energy
+com.rutaji.exaqua.Fluids
+com.rutaji.exaqua.integration.jei
+com.rutaji.exaqua.item
+com.rutaji.exaqua.item.armor
+com.rutaji.exaqua.networking
+com.rutaji.exaqua.others
+com.rutaji.exaqua.renderer
+com.rutaji.exaqua.screen
+com.rutaji.exaqua.tileentity
+com.rutaji.exaqua.util

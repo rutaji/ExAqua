@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
+/**
+ * Material for modded armor.
+ */
 public enum FrogiumArmorMaterial implements IArmorMaterial {
 
     FROGIUM("frogium", 18, new int[] { 1, 2, 2, 1 }, 1,

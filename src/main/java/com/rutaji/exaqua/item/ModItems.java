@@ -12,6 +12,9 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/**
+ * Registry of all modded items.
+ */
 public class ModItems {
 
     //region register

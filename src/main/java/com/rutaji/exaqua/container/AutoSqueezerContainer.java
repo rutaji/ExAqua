@@ -1,8 +1,9 @@
 package com.rutaji.exaqua.container;
 
+import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
-import com.rutaji.exaqua.tileentity.AutoSqueezerTileEntity;
-import com.rutaji.exaqua.tileentity.IMyLiquidTankTIle;
+import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
+import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -19,40 +20,82 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Container for {@link com.rutaji.exaqua.block.AutoSqueezerBlock AutoSqueezer} UI.
+ * This class handles logic behind UI. Runs on server and client side. Communicates with tile entity directly.
+ */
+
 public class AutoSqueezerContainer extends Container {
-    @NotNull private  final  TileEntity TILEEMTITY;
+    @NotNull private  final  TileEntity TILEENTITY;
     private final PlayerEntity PLAYERENTITY;
     private final IItemHandler PLAYERINVENTORY;
 
-    public AutoSqueezerContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
+    /**
+     * @param windowId id.
+     * @param world world of the interacted block.
+     * @param pos position of the interacted block.
+     * @param playerInventory inventory of the player opening the UI.
+     * @param playerEntity player opening the UI.
+     */
+    public AutoSqueezerContainer(int windowId, @NotNull World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity playerEntity){
         super(ModContainers.AUTO_SQUEEZER_CONTAINER.get(),windowId);
-        this.TILEEMTITY = world.getTileEntity(pos);
+        this.TILEENTITY = world.getTileEntity(pos);
         this.PLAYERENTITY = playerEntity;
         this.PLAYERINVENTORY = new InvWrapper(playerInventory);
 
         layoutPlayerInventorySlots(8,86);
-        TILEEMTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> addSlot(new SlotItemHandler(h,0,80,43)));
+        TILEENTITY.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> addSlot(new SlotItemHandler(h,0,80,43)));
 
     }
+    //region Get
+    /**
+     * Returns amount of fluid in tile entity. Returns -1 if tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile}.
+     * @return amount of fluid in tile entity.
+     */
     public int GetLiquidAmount()
     {
-        if (TILEEMTITY instanceof IMyLiquidTankTIle){
-            return ((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluidAmount();
+        if (TILEENTITY instanceof IMyLiquidTankTile){
+            return ((IMyLiquidTankTile) TILEENTITY).GetTank().getFluidAmount();
         }
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement ImyLiquidTankTile.",this,TILEENTITY);
         return -1;
     }
+    /**
+     * Returns translated name of the fluid inside tile entity. Returns "Empty" if tile entity is empty.
+     * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} returns "Cannot store fluids!".
+     * @return translated name of the fluid inside tile entity.
+     */
     public String GetLiquid()
     {
-        if (TILEEMTITY instanceof IMyLiquidTankTIle){
-            if(((IMyLiquidTankTIle) TILEEMTITY).GetTank().isEmpty()){return "Empty";}
-            return new TranslationTextComponent(((IMyLiquidTankTIle) TILEEMTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
+        if (TILEENTITY instanceof IMyLiquidTankTile){
+            if(((IMyLiquidTankTile) TILEENTITY).GetTank().isEmpty()){return "Empty";}
+            return new TranslationTextComponent(((IMyLiquidTankTile) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
-        return "Doesnt have a container";
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMyLiquidTankTile.",this,TILEENTITY);
+        return "Cannot store fluids!";
     }
 
+    /**
+     * Returns amount of energy stored in tile entity (in FE). Returns -1 if tile entity doesn't implement {@link IMYEnergyStorageTile IMYEnergyStorageTile}.
+     * @return returns amount of energy stored in tile entity (in FE).
+     */
+    public long GetEnergyAmount(){
+        if (TILEENTITY instanceof IMYEnergyStorageTile){
+            return (long)(((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().getEnergyStored());
+        }
+        ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMYEnergyStorageTile.",this,TILEENTITY);
+        return -1;
+    }
+    //endregion
+
+    /**
+     * Returns true if player can interact with the block that is connected with this container.
+     * @param player player trying to interact.
+     * @return true if player can interact with the block that is connected with this container.
+     */
     @Override
     public boolean canInteractWith(@NotNull PlayerEntity player){
-        return  isWithinUsableDistance(IWorldPosCallable.of(TILEEMTITY.getWorld(), TILEEMTITY.getPos()),
+        return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(), TILEENTITY.getPos()),
                                                             player, ModBlocks.AUTO_SQUEEZER.get());
     }
     //region inventory
@@ -122,8 +165,6 @@ public class AutoSqueezerContainer extends Container {
         return copyOfSourceStack;
     }
 
-    public String GetEnergyAmount() {
-        return String.valueOf (((AutoSqueezerTileEntity)TILEEMTITY).GetEnergyStorage().getEnergyStored());
-    }
+
     //endregion
 }

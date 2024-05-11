@@ -10,7 +10,13 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/**
+ * Registry for all containers from this mod.
+ */
 public class ModContainers {
+    /**
+     * register containing all containers
+     */
     public static DeferredRegister<ContainerType<?>> CONTAINERS
             = DeferredRegister.create(ForgeRegistries.CONTAINERS, ExAqua.MOD_ID);
 
@@ -43,7 +49,9 @@ public class ModContainers {
                 return new AutoSqueezerContainer(windowId, world, pos, inv, inv.player);
             })));
 
-
+    /**
+     * Registers all modded containers. Called from {@link ExAqua ExAqua} at a start of the game.
+     */
     public static void register(IEventBus eventBus) {
         CONTAINERS.register(eventBus);
     }

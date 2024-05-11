@@ -13,6 +13,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
+/**
+ * Stores fluid in tile entities. These tile entities implement {@link com.rutaji.exaqua.tileentity.IMyLiquidTankTile IMyLiquidTankTile}.
+ */
 public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFluidHandler>/*,IFluidHandler*/  {
 
     // region Constructor
@@ -21,10 +24,14 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
     }
     public MyLiquidTank(MyDelegate m, int capacity, Predicate<FluidStack> validator) {
         super(capacity,validator);
-        Onchange = m;
+        OnChange = m;
     }
     //endregion
 
+    /** Returns {@link WaterFluidTankCapabilityAdapter WaterFluidTankCapabilityAdapter} that translates this class into IFluidTank and IFluidHandler from Forge.
+     * Used for comunication with other mods.
+     * @return {@link WaterFluidTankCapabilityAdapter WaterFluidTankCapabilityAdapter} wrapped around this energy storage.
+     */
     public ICapabilityProvider getCapabilityProvider() {
         return new ICapabilityProvider() {
             @Override
@@ -36,22 +43,43 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
             }
         };
     }
-    public MyDelegate Onchange;
+    /** Delegate run every time stored fluid changes.
+     * Used to send changes from server to client.
+     */
+    public MyDelegate OnChange;
+
+    /**
+     * @return stored fluid.
+     */
 
     public @NotNull FluidStack GetFluidstack(){return fluid;}
 
+    /**
+     * @return true, if storage is full.
+     */
     public boolean IsFull()
     {
         return getFluidAmount() >= getCapacity();
     }
 
+    /**
+     * @return number from 0 to 1 representing how full the storage is. 0 is empty. 1 is full.
+     */
     public float GetFullness(){return getFluidAmount()/(float)getCapacity();}
 
 
+    /**
+     * Called every time stored fluid changes by {@link MyLiquidTank#setFluid  setEnergy}.
+     * Executes {@link MyLiquidTank#OnChange OnChange} to send change to a client.
+     */
     @Override
     public void onContentsChanged() {
-        Onchange.Execute();
+        OnChange.Execute();
     }
+
+    /**
+     * Sets stored fluid to given fluid.
+     */
     @Override
     public void setFluid(FluidStack stack)
     {
@@ -59,14 +87,26 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
         onContentsChanged();
     }
 
-    public void AddBucket(Fluid fluid)
+    /**
+     * Adds 1 bucket of given fluid into the storage. Returns how much (in mB) fluid was added.
+     * @return how much (in mB) fluid was added.
+     */
+
+    public int AddBucket(Fluid fluid)
     {
-        fill(new FluidStack(fluid ,1000),FluidAction.EXECUTE);
+        return fill(new FluidStack(fluid ,1000),FluidAction.EXECUTE);
     }
 
+    /**
+     * @return true, if tank is empty.
+     */
     public boolean IsEmpty() {
         return getFluid().isEmpty();
     }
+
+    /**
+     * Changes fluid stack stored to given fluid, but keeps the amount.
+     */
     public void ChangeFluidKeepAmount(Fluid fluid)
     {
         FluidStack fluidStack = new FluidStack(fluid,getFluidAmount());
