@@ -1,0 +1,29 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:molten_iron",
+      "amount": 200
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:shears"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "minecraft:iron_hoe"},
+      "weight": 2
+    },
+    {
+      "item": { "item": "minecraft:iron_sword"},
+      "weight": 3
+    },
+    {
+      "item": { "item": "minecraft:iron_ingot","count": 2},
+      "weight": 1
+    }
+  ],
+  "time": 30,
+  "rf": 10,
+  "tier":"iron"
+}

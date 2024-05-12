@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.rutaji.exaqua.ExAqua;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -190,9 +192,10 @@ public class HandSieveRecipe implements IHandSieveRecipe {
         @Override
         public @NotNull HandSieveRecipe read(@NotNull ResourceLocation recipeId, JsonObject json) {
 
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("fluid").getAsString()));
-            if(fluid == null){
-                ExAqua.LOGGER.error("Error in {}. Fluid not found: {}",recipeId.getPath(),json.get("fluid").getAsString());
+            String fluidString = json.get("fluid").getAsString();
+            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidString));
+            if(fluid == Fluids.EMPTY && !Objects.equals(fluidString, "empty")){
+                ExAqua.LOGGER.error("Error in {}. Fluid not found: {}",recipeId.getPath(),fluidString);
                 throw new JsonSyntaxException("Error in "+ recipeId.getPath() + ". Fluid not found: "+ json.get("fluid").getAsString());
             }
 

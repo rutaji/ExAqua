@@ -1,0 +1,29 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:blood",
+      "amount": 50
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:bone"},
+      "weight": 4
+    },
+    {
+      "item": { "item": "minecraft:rotten_flesh"},
+      "weight": 3
+    },
+    {
+      "item": { "item": "minecraft:ender_pearl"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "minecraft:string"},
+      "weight": 2
+    }
+  ],
+  "time": 30,
+  "rf": 40,
+  "tier":"iron"
+}

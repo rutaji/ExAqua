@@ -1,0 +1,21 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:molten_iron",
+      "amount": 400
+    },
+  "outputs": [
+    {
+      "item": {"item": "tconstruct:hopper"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "titanium:iron_gear"},
+      "weight": 3
+    }
+  ],
+  "time": 40,
+  "rf": 10,
+  "tier":"gold"
+}

@@ -1,0 +1,29 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:slime",
+      "amount": 250
+    },
+  "outputs": [
+    {
+      "item": {"item": "tconstruct:earth_slime_sling"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "minecraft:slime_ball"},
+      "weight": 20
+    },
+    {
+      "item": { "item": "tconstruct:ender_slime_ball"},
+      "weight": 6
+    },
+    {
+      "item": { "item": "minecraft:slime_ball","count": 2},
+      "weight": 8
+    }
+  ],
+  "time": 70,
+  "rf": 50,
+  "tier":"frogium"
+}

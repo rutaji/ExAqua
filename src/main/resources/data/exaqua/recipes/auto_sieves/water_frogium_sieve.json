@@ -1,0 +1,25 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "minecraft:water",
+      "amount": 12
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:lapis_lazuli", "count": 2},
+      "weight": 11
+    },
+    {
+      "item": { "item": "minecraft:redstone", "count": 3},
+      "weight": 8
+    },
+    {
+      "item": { "item": "exaqua:frogium_dust"},
+      "weight": 1
+    }
+  ],
+  "time": 6,
+  "rf": 40,
+  "tier":"frogium"
+}

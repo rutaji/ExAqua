@@ -19,6 +19,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Handles recipe of type exaqua:cauldron.
@@ -143,7 +144,7 @@ public class CauldronRecipe implements ICauldronRecipe {
             if(json.has("input_fluid"))
             {
                 InputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("input_fluid").getAsString()));
-                if (InputF == null)
+                if (InputF == Fluids.EMPTY && !Objects.equals(json.get("input_fluid").getAsString(), "empty"))
                 {
                     ExAqua.LOGGER.error("error in" + this + "fluid not found:" + json.get("input_fluid").getAsString());
                     throw new JsonSyntaxException("Error in "+ this + ". Fluid not found: "+ json.get("input_fluid").getAsString());
@@ -161,7 +162,7 @@ public class CauldronRecipe implements ICauldronRecipe {
             if(json.has("output_fluid"))
             {
                 outputF = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(json.get("output_fluid").getAsString()));
-                if (outputF == null)
+                if (outputF == Fluids.EMPTY && !Objects.equals(json.get("output_fluid").getAsString(), "empty"))
                 {
                     ExAqua.LOGGER.error("error in" + this + "fluid not found:" + json.get("output_fluid").getAsString());
                     throw new JsonSyntaxException("Error in "+ this + ". Fluid not found: "+ json.get("output_fluid").getAsString());

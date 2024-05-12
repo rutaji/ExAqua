@@ -1,0 +1,25 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:molten_ender",
+      "amount": 100
+    },
+  "outputs": [
+    {
+      "item": {"item": "end_stone","count": 6},
+      "weight": 71
+    },
+    {
+      "item": {"item": "end_stone","count": 2},
+      "weight": 56
+    },
+    {
+      "item": { "item": "elytra"},
+      "weight": 1
+    }
+  ],
+  "time": 60,
+  "rf": 50,
+  "tier":"frogium"
+}
