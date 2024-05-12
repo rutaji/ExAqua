@@ -1,0 +1,23 @@
+{
+  "type": "exaqua:handsieve",
+  "success": 10,
+  "fluid": "tconstruct:molten_ender",
+  "outputs": [
+    {
+      "item": {"item": "minecraft:chorus_fruit"},
+      "weight": 4
+    },
+    {
+      "item": {"item": "minecraft:shulker_shell"},
+      "weight": 1
+    },
+    {
+      "item": {"item": "minecraft:end_stone","count": 2},
+      "weight": 2
+    },
+    {
+      "item": {"item": "exaqua:frogium_dust"},
+      "weight": 1
+    }
+  ]
+}

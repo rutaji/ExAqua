@@ -1,0 +1,7 @@
+{
+  "type": "exaqua:cauldron",
+  "input_fluid": "tconstruct:blazing_blood",
+  "input_item": {"item": "skeleton_head"},
+  "Output_item": {"item": "tconstruct:blaze_head"},
+  "amount_input": 1000
+}

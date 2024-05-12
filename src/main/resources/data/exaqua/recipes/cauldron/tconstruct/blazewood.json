@@ -1,0 +1,7 @@
+{
+  "type": "exaqua:cauldron",
+  "input_fluid": "tconstruct:blazing_blood",
+  "input_item": { "item": "crimson_planks"},
+  "Output_item": {"item": "tconstruct:blazewood"},
+  "amount_input": 200
+}

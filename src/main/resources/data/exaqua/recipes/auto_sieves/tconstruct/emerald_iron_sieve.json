@@ -1,0 +1,29 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:molten_emerald",
+      "amount": 200
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:white_wool"},
+      "weight": 4
+    },
+    {
+      "item": { "item": "minecraft:bell"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "minecraft:orange_wool"},
+      "weight": 2
+    },
+    {
+      "item": { "item": "minecraft:stick","count": 16},
+      "weight": 2
+    }
+  ],
+  "time": 30,
+  "rf": 40,
+  "tier":"iron"
+}

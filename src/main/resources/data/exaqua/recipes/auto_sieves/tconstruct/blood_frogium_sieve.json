@@ -1,0 +1,29 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:blood",
+      "amount": 50
+    },
+  "outputs": [
+    {
+      "item": { "item": "minecraft:trident"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "minecraft:feather","count": 2},
+      "weight": 4
+    },
+    {
+      "item": { "item": "minecraft:leather"},
+      "weight": 2
+    },
+    {
+      "item": { "item": "minecraft:slime_ball"},
+      "weight": 3
+    }
+  ],
+  "time": 30,
+  "rf": 40,
+  "tier":"frogium"
+}

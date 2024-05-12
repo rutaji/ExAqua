@@ -18,6 +18,10 @@
     {
       "item": { "item": "minecraft:gold_ore"},
       "weight": 1
+    },
+    {
+      "item": {"item": "exaqua:frogium_dust"},
+      "weight": 1
     }
   ]
 }

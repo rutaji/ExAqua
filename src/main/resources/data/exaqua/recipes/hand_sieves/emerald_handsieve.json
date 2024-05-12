@@ -1,0 +1,19 @@
+{
+  "type": "exaqua:handsieve",
+  "success": 30,
+  "fluid": "tconstruct:molten_emerald",
+  "outputs": [
+    {
+      "item": {"item": "minecraft:compass"},
+      "weight": 2
+    },
+    {
+      "item": {"item": "minecraft:stick","count": 16},
+      "weight": 1
+    },
+    {
+      "item": {"item": "minecraft:book","count": 4},
+      "weight": 1
+    }
+  ]
+}

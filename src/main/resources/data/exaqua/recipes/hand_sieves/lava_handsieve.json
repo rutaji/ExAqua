@@ -1,0 +1,19 @@
+{
+  "type": "exaqua:handsieve",
+  "success": 10,
+  "fluid": "minecraft:lava",
+  "outputs": [
+    {
+      "item": {"item": "minecraft:glowstone_dust"},
+      "weight": 3
+    },
+    {
+      "item": {"item": "minecraft:quartz"},
+      "weight": 5
+    },
+    {
+      "item": {"item": "minecraft:blaze_powder"},
+      "weight": 2
+    }
+  ]
+}

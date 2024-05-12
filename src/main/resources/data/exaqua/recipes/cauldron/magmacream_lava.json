@@ -1,0 +1,7 @@
+{
+  "type": "exaqua:cauldron",
+  "input_fluid": "lava",
+  "input_item": {"item": "slime_ball"},
+  "Output_item": {"item": "magma_cream"},
+  "amount_input": 200
+}

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 /**
  * Handles recipe of type exaqua:sieve.
@@ -188,9 +189,9 @@ public class SieveRecipe implements ISieveRecipe {
             int FluidtAmount = InputJson.get("amount").getAsInt();
 
             Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid));
-            if(f == null){
+            if(f == Fluids.EMPTY && !Objects.equals(OutputFluid, "empty")){
                 ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + OutputFluid);
-                throw new JsonSyntaxException("Error in "+ recipeId.getPath() + ". Fluid not found: "+ json.get("fluid").getAsString());}
+                throw new JsonSyntaxException("Error in "+ recipeId.getPath() + ". Fluid not found: "+ OutputFluid);}
             FluidStack Input = new FluidStack(f ,FluidtAmount);
 
 
