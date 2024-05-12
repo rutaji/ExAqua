@@ -1,0 +1,25 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "minecraft:lava",
+      "amount": 50
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:wither_rose"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "minecraft:soul_sand"},
+      "weight": 3
+    },
+    {
+      "item": { "item": "minecraft:glowstone_dust","count": 3},
+      "weight": 12
+    }
+  ],
+  "time": 25,
+  "rf": 45,
+  "tier":"frogium"
+}

@@ -1,0 +1,21 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:molten_ender",
+      "amount": 100
+    },
+  "outputs": [
+    {
+      "item": {"item": "end_stone"},
+      "weight": 3
+    },
+    {
+      "item": { "item": "end_rod"},
+      "weight": 1
+    }
+  ],
+  "time": 40,
+  "rf": 10,
+  "tier":"gold"
+}

@@ -1,0 +1,25 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "minecraft:water",
+      "amount": 200
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:diamond"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "minecraft:emerald"},
+      "weight": 2
+    },
+    {
+      "item": { "item": "iron_ore","count": 5},
+      "weight": 3
+    }
+  ],
+  "time": 60,
+  "rf": 120,
+  "tier":"diamond"
+}

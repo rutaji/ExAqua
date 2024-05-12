@@ -1,0 +1,37 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "minecraft:lava",
+      "amount": 50
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:quartz","count": 4},
+      "weight": 8
+    },
+    {
+      "item": {"item": "minecraft:quartz","count": 16},
+      "weight": 1
+    },
+    {
+      "item": {"item": "minecraft:quartz","count": 5},
+      "weight": 3
+    },
+    {
+      "item": { "item": "minecraft:glowstone_dust","count": 3},
+      "weight": 12
+    },
+    {
+      "item": { "item": "minecraft:glowstone_dust","count": 5},
+      "weight": 6
+    },
+    {
+      "item": { "item": "minecraft:glowstone_dust","count": 1},
+      "weight": 9
+    }
+  ],
+  "time": 40,
+  "rf": 95,
+  "tier":"diamond"
+}

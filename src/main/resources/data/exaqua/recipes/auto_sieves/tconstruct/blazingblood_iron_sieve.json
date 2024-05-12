@@ -1,0 +1,21 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:blazing_blood",
+      "amount": 100
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:blaze_powder"},
+      "weight": 4
+    },
+    {
+      "item": { "item": "minecraft:blaze_rod"},
+      "weight": 3
+    }
+  ],
+  "time": 30,
+  "rf": 40,
+  "tier":"iron"
+}

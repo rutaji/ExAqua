@@ -22,6 +22,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Handles recipe of type exaqua:squeezer.
@@ -124,7 +125,7 @@ public class SqueezerRecipe implements ISqueezerRecipe {
             int OutputAmount = output1.get("amount").getAsInt();
 
             Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(OutputFluid));
-            if(f == null){
+            if(f == Fluids.EMPTY && !Objects.equals(OutputFluid, "empty")){
                 ExAqua.LOGGER.error("error in" + recipeId.getPath() + "fluid not found:" + OutputFluid);
                 f= Fluids.EMPTY;}
             FluidStack output = new FluidStack( f,OutputAmount);

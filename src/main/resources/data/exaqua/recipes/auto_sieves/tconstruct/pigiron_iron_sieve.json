@@ -1,0 +1,21 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "tconstruct:molten_pig_iron",
+      "amount": 100
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:porkchop","count": 3},
+      "weight": 5
+    },
+    {
+      "item": { "item": "minecraft:iron_bars","count": 2},
+      "weight": 3
+    }
+  ],
+  "time": 33,
+  "rf": 50,
+  "tier":"iron"
+}

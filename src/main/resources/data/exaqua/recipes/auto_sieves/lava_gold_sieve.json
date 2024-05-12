@@ -1,0 +1,25 @@
+ {
+  "type": "exaqua:sieve",
+  "input":
+    {
+      "fluid": "minecraft:lava",
+      "amount": 20
+    },
+  "outputs": [
+    {
+      "item": {"item": "minecraft:netherrack"},
+      "weight": 4
+    },
+    {
+      "item": { "item": "minecraft:soul_sand"},
+      "weight": 1
+    },
+    {
+      "item": { "item": "minecraft:soul_soil"},
+      "weight": 2
+    }
+  ],
+  "time": 3,
+  "rf": 45,
+  "tier":"gold"
+}
