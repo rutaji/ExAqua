@@ -20,17 +20,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CauldronRenderer extends TileEntityRenderer<CauldronTileEntity> {
 
-    private Minecraft minecraft = Minecraft.getInstance();
-
     public CauldronRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
 
-
     @Override
     public void render(@NotNull CauldronTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        FluidStack fluidToRender = tileEntityIn.GetTank().GetFluidstack();
+        FluidStack fluidToRender = tileEntityIn.getTank().GetFluidstack();
         if (fluidToRender.isEmpty()){return;}
         FluidAttributes attributes = fluidToRender.getFluid().getAttributes();
         ResourceLocation fluidStill = attributes.getStillTexture();
@@ -45,7 +42,7 @@ public class CauldronRenderer extends TileEntityRenderer<CauldronTileEntity> {
 
         matrixStackIn.push();
 
-        Float YLevel = tileEntityIn.GetTank().GetFullness() * 0.94f +0.06f;
+        Float YLevel = tileEntityIn.getTank().GetFullness() * 0.94f +0.06f;
         add(builder, matrixStackIn, .19f, YLevel, .81f, sprite.getMinU(), sprite.getMaxV(), r, g, b, a);
         add(builder, matrixStackIn, .81f, YLevel, .81f, sprite.getMaxU(), sprite.getMaxV(), r, g, b, a);
         add(builder, matrixStackIn, .81f, YLevel, .19f, sprite.getMaxU(), sprite.getMinV(), r, g, b, a);

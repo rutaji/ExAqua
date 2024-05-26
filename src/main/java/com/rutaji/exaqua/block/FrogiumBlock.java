@@ -25,11 +25,10 @@ public class FrogiumBlock extends Block {
      * @param player player which interacted with the block.
      * @param handIn hand of the player.
      * @param hit ray trace result.
-     * @return succes if player ins't null, otherwise fail.
+     * @return succes.
      */
-    public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World worldIn, @NotNull BlockPos pos, PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit)
+    public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit)
     {
-        if (player == null){return ActionResultType.FAIL;}
         player.addPotionEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 15*20, 0));
         player.addPotionEffect(new EffectInstance(Effects.CONDUIT_POWER, 70*20, 0));
         return ActionResultType.SUCCESS;

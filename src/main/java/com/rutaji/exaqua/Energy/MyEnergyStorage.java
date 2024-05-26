@@ -1,7 +1,7 @@
 package com.rutaji.exaqua.Energy;
 
 import com.rutaji.exaqua.config.ServerModConfig;
-import com.rutaji.exaqua.others.MyDelegate;
+import com.rutaji.exaqua.others.IMyDelegate;
 import mekanism.api.energy.IEnergyContainer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -20,27 +20,27 @@ import org.jetbrains.annotations.Nullable;
 public class MyEnergyStorage extends EnergyStorage implements Capability.IStorage<IEnergyContainer>{
     private static final String NBTCONSTANT = "energystorage";
     //region Constructor
-    public MyEnergyStorage(int capacity, MyDelegate onChange, int maxRecieve, int maxExtract){
+    public MyEnergyStorage(int capacity, IMyDelegate onChange, int maxRecieve, int maxExtract){
         super(capacity,maxRecieve,maxExtract);
         this.OnChange = onChange;
     }
-    public MyEnergyStorage(int capacity, MyDelegate onChange){
+    public MyEnergyStorage(int capacity, IMyDelegate onChange){
         this(capacity,onChange,9999999,999999);
     }
     //endregion
     /** Delegate run every time stored energy changes.
      * Used to send changes from server to client.
      */
-    public MyDelegate OnChange;
+    public IMyDelegate OnChange;
 
     /**
      * Drains energy, but only if there is enough. Returns true if the energy was drain. If there wasn't enough energy nothing is drained and returns false.
-     * Always return True if {@link ServerModConfig#RequireElectricity server config RequireElectricity} is False.
+     * Always return True if {@link ServerModConfig#REQUIRE_ELECTRICITY server config RequireElectricity} is False.
      * @param energy amount of energy to be drained in FE
      * @return true if energy was drained. False if no energy was drain.
      */
     public boolean TryDrainEnergy(int energy){
-        if(!ServerModConfig.RequireElectricity.get()) {return true;}
+        if(!ServerModConfig.REQUIRE_ELECTRICITY.get()) {return true;}
         if (HasEnoughEnergy(energy))
         {
             extractEnergy(energy,false);

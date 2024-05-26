@@ -1,9 +1,7 @@
 package com.rutaji.exaqua.block;
 
-import com.rutaji.exaqua.container.AutoSqueezerContainer;
 import com.rutaji.exaqua.container.SieveContainer;
 import com.rutaji.exaqua.others.SieveTiers;
-import com.rutaji.exaqua.tileentity.AutoSqueezerTileEntity;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
 import com.rutaji.exaqua.tileentity.ModTileEntities;
 import com.rutaji.exaqua.tileentity.SieveTileEntity;
@@ -140,8 +138,8 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
     public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTile){
-            if(((IMyLiquidTankTile) tileEntity).GetTank().getFluidAmount() >= 1000){
-                return ((IMyLiquidTankTile) tileEntity).GetTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
+            if(((IMyLiquidTankTile) tileEntity).getTank().getFluidAmount() >= 1000){
+                return ((IMyLiquidTankTile) tileEntity).getTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
             }
             return Fluids.EMPTY;
         }
@@ -156,7 +154,7 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTile)
         {
-            return  ((IMyLiquidTankTile)tileEntity).GetTank().isFluidValid(new FluidStack(fluidIn,1000));
+            return  ((IMyLiquidTankTile)tileEntity).getTank().isFluidValid(new FluidStack(fluidIn,1000));
         }
         return false;
     }
@@ -171,7 +169,7 @@ public class SieveBlock extends Block implements ILiquidContainer, IBucketPickup
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (fluidStateIn.isSource() && tileEntity instanceof IMyLiquidTankTile)
         {
-            ((IMyLiquidTankTile)tileEntity).GetTank().AddBucket(fluidStateIn.getFluid());
+            ((IMyLiquidTankTile)tileEntity).getTank().AddBucket(fluidStateIn.getFluid());
             return true;
         }
         return false;

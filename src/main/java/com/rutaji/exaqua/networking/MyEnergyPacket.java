@@ -44,7 +44,7 @@ public class MyEnergyPacket
     public void handle(Supplier<NetworkEvent.Context> context) {
         TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
         if ( tileEntity instanceof IMYEnergyStorageTile) {
-            ((IMYEnergyStorageTile)tileEntity).GetEnergyStorage().setEnergy(EnergyInPacket);
+            ((IMYEnergyStorageTile)tileEntity).getEnergyStorage().setEnergy(EnergyInPacket);
             context.get().setPacketHandled(true);
         }
     }

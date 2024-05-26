@@ -3,7 +3,6 @@ package com.rutaji.exaqua.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.rutaji.exaqua.ExAqua;
-import com.rutaji.exaqua.container.CauldronContainer;
 import com.rutaji.exaqua.container.SieveContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -33,20 +32,20 @@ public class SieveScreen extends ContainerScreen<SieveContainer> {
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
 
 
-        DrawLiquid(i,j,matrixStack);
+        drawLiquid(i,j,matrixStack);
         drawRF(i,j,matrixStack);
 
     }
-    private void DrawLiquid(int i,int j,MatrixStack matrixStack){
-        String liguid = container.GetLiquid();
+    private void drawLiquid(int i, int j, MatrixStack matrixStack){
+        String liguid = container.getLiquid();
         Minecraft.getInstance().fontRenderer.drawString(matrixStack,liguid , i +87 - font.getStringWidth(liguid)/2 , j+10, 0x111111);
-        String toDraw = container.GetLiquidAmount() +" mB";
+        String toDraw = container.getLiquidAmount() +" mB";
         if(!liguid.equals("Empty")) {Minecraft.getInstance().fontRenderer.drawString(matrixStack,toDraw, i +87 - font.getStringWidth(toDraw)/2 , j+20, 0x111111);}
 
 
     }
     private void drawRF(int i,int j,MatrixStack matrixStack){
-        String toDraw = container.GetEnergyAmount()  + " RF";
+        String toDraw = container.getEnergyAmount()  + " RF";
         Minecraft.getInstance().fontRenderer.drawString(matrixStack,toDraw , i +24 - font.getStringWidth(toDraw)/2 , j+40, 0x111111);
     }
 

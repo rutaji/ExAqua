@@ -3,7 +3,6 @@ package com.rutaji.exaqua.integration.jei;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.rutaji.exaqua.ExAqua;
 import com.rutaji.exaqua.block.ModBlocks;
-import com.rutaji.exaqua.data.recipes.CauldronRecipe;
 import com.rutaji.exaqua.data.recipes.SieveRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -116,7 +115,7 @@ public class SieveRecipeCategory implements IRecipeCategory<SieveRecipe>{
         }
         x = X;
         y = Y;
-        HELPER.createDrawableIngredient(new ItemStack(recipe.TIER.GetSymbol())).draw(matrixStack,10,10);
+        HELPER.createDrawableIngredient(new ItemStack(recipe.TIER.getSymbol())).draw(matrixStack,10,10);
         String s;
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, recipe.INPUTFLUID.getAmount() + " mb" , 110 , 18, 0x111111);
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, recipe.RF + " rf/t" , 110 , 28, 0x111111);

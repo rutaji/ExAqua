@@ -145,8 +145,8 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
     public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTile){
-            if(((IMyLiquidTankTile) tileEntity).GetTank().getFluidAmount() >= 1000){
-                return ((IMyLiquidTankTile) tileEntity).GetTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
+            if(((IMyLiquidTankTile) tileEntity).getTank().getFluidAmount() >= 1000){
+                return ((IMyLiquidTankTile) tileEntity).getTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
             }
             return Fluids.EMPTY;
         }
@@ -162,7 +162,7 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTile)
         {
-            return  ((IMyLiquidTankTile)tileEntity).GetTank().isFluidValid(new FluidStack(fluidIn,1000));
+            return  ((IMyLiquidTankTile)tileEntity).getTank().isFluidValid(new FluidStack(fluidIn,1000));
         }
         return false;
     }
@@ -178,7 +178,7 @@ public class AutoSqueezerBlock extends Block implements IBucketPickupHandler, IL
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (fluidStateIn.isSource() && tileEntity instanceof IMyLiquidTankTile)
         {
-            ((IMyLiquidTankTile)tileEntity).GetTank().AddBucket(fluidStateIn.getFluid());
+            ((IMyLiquidTankTile)tileEntity).getTank().AddBucket(fluidStateIn.getFluid());
             return true;
         }
         return false;

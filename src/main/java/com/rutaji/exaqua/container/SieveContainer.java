@@ -1,7 +1,6 @@
 package com.rutaji.exaqua.container;
 
 import com.rutaji.exaqua.ExAqua;
-import com.rutaji.exaqua.block.ModBlocks;
 import com.rutaji.exaqua.others.SieveTiers;
 import com.rutaji.exaqua.tileentity.IMYEnergyStorageTile;
 import com.rutaji.exaqua.tileentity.IMyLiquidTankTile;
@@ -66,10 +65,10 @@ public class SieveContainer extends Container {
      * Returns amount of fluid in tile entity. Returns -1 if tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile}.
      * @return amount of fluid in tile entity.
      */
-    public int GetLiquidAmount()
+    public int getLiquidAmount()
     {
         if (TILEENTITY instanceof IMyLiquidTankTile){
-            return ((IMyLiquidTankTile) TILEENTITY).GetTank().getFluidAmount();
+            return ((IMyLiquidTankTile) TILEENTITY).getTank().getFluidAmount();
         }
         ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement ImyLiquidTankTile.",this,TILEENTITY);
         return -1;
@@ -79,11 +78,11 @@ public class SieveContainer extends Container {
      * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} returns "Cannot store fluids!".
      * @return translated name of the fluid inside tile entity.
      */
-    public String GetLiquid()
+    public String getLiquid()
     {
         if (TILEENTITY instanceof IMyLiquidTankTile){
-            if(((IMyLiquidTankTile) TILEENTITY).GetTank().isEmpty()){return "Empty";}
-            return new TranslationTextComponent(((IMyLiquidTankTile) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
+            if(((IMyLiquidTankTile) TILEENTITY).getTank().isEmpty()){return "Empty";}
+            return new TranslationTextComponent(((IMyLiquidTankTile) TILEENTITY).getTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
         ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMyLiquidTankTile.",this,TILEENTITY);
         return "Cannot store fluids!";
@@ -93,9 +92,9 @@ public class SieveContainer extends Container {
      * Returns amount of energy stored in tile entity (in FE). Returns -1 if tile entity doesn't implement {@link IMYEnergyStorageTile IMYEnergyStorageTile}.
      * @return returns amount of energy stored in tile entity (in FE).
      */
-    public long GetEnergyAmount(){
+    public long getEnergyAmount(){
         if (TILEENTITY instanceof IMYEnergyStorageTile){
-            return (long)(((IMYEnergyStorageTile) TILEENTITY).GetEnergyStorage().getEnergyStored());
+            return (long)(((IMYEnergyStorageTile) TILEENTITY).getEnergyStorage().getEnergyStored());
         }
         ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMYEnergyStorageTile.",this,TILEENTITY);
         return -1;
@@ -105,7 +104,7 @@ public class SieveContainer extends Container {
      * Returns Sieve Tier of the block. Returns SieveTiers.error if tile entity doens't implement SieveTileEntity.
      * @return Sieve Tier of the block.
      */
-    public SieveTiers GetTier()
+    public SieveTiers getTier()
     {
         if(TILEENTITY instanceof SieveTileEntity){
            return  ((SieveTileEntity) TILEENTITY).GetTier();
@@ -122,7 +121,7 @@ public class SieveContainer extends Container {
     @Override
     public boolean canInteractWith(@NotNull PlayerEntity player){
         return  isWithinUsableDistance(IWorldPosCallable.of(TILEENTITY.getWorld(),TILEENTITY.getPos()),
-                player, SieveTiers.GetSIEVE(GetTier()).get());
+                player, SieveTiers.getSIEVE(getTier()).get());
     }
     //region player inventory
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

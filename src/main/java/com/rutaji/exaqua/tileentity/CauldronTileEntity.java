@@ -67,13 +67,13 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
     //endregion
     //region Liquid
 
-    private MyLiquidTank Tank = new MyLiquidTank(this::TankChange,1000,e->true);
+    private MyLiquidTank Tank = new MyLiquidTank(this::tankChange,1000, e->true);
     /**
      * @return liquid tank in this tile entity.
      * @see MyLiquidTank
      */
     @Override
-    public MyLiquidTank GetTank() {
+    public MyLiquidTank getTank() {
         return this.Tank;
     }
     /**
@@ -82,7 +82,7 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
      * @see MyFluidStackPacket
      */
     @Override
-    public void TankChange() {
+    public void tankChange() {
         if(world != null &&!world.isRemote) {
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.GetFluidstack(), pos));
         }
@@ -145,20 +145,20 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
     @Override
     public void tick() {
         craft();
-        GetRain();
+        getRain();
     }
-    private void GetRain()
+    private void getRain()
     {
-        if (!world.isRemote() && CanCollectRain() ) {
-            if( world.rand.nextInt(ServerModConfig.CauldronRainMaxBound.get()) == 0)
+        if (!world.isRemote() && canCollectRain() ) {
+            if( world.rand.nextInt(ServerModConfig.CAULDRON_RAIN_MAX_BOUND.get()) == 0)
             {
                 Tank.fill(new FluidStack(Fluids.WATER,20), IFluidHandler.FluidAction.EXECUTE);
             }
         }
     }
-    private boolean CanCollectRain()
+    private boolean canCollectRain()
     {
-        return ServerModConfig.CauldronRainMaxBound.get() > 0 && world.isRaining() && world.canSeeSky(pos) && world.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN;
+        return ServerModConfig.CAULDRON_RAIN_MAX_BOUND.get() > 0 && world.isRaining() && world.canSeeSky(pos) && world.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN;
     }
     //region crefting region
     private final int  CraftCooldownMax = 50;
@@ -173,7 +173,7 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
         {
             if ( RecipieOnCooldown == null)
             {
-                InventoryCauldron inv = GetInventory();
+                InventoryCauldron inv = getInventory();
                 Optional<CauldronRecipe> recipe = world.getRecipeManager()
                         .getRecipe(ModRecipeTypes.CAULDRON_RECIPE, inv, world);
                 if(recipe.isPresent()){RecipieOnCooldown = recipe.get();CraftCooldown = CraftCooldownMax;}
@@ -183,7 +183,7 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
             } else
             //region crafting recipie
             {
-                InventoryCauldron inv = GetInventory();
+                InventoryCauldron inv = getInventory();
                 if(RecipieOnCooldown.matches(inv,world) &&
                   !(RecipieOnCooldown.OUTPUT_ITEM == ItemStack.EMPTY && RecipieOnCooldown.OUTPUT_FLUID != Fluids.EMPTY && RecipieOnCooldown.INPUT_FLUID == Fluids.EMPTY && Tank.IsFull()))
                 {
@@ -202,7 +202,7 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
                     }
                     if(RecipieOnCooldown.OUTPUT_ITEM != ItemStack.EMPTY)
                     {
-                        AddToInventory(RecipieOnCooldown.OUTPUT_ITEM);
+                        addToInventory(RecipieOnCooldown.OUTPUT_ITEM);
                     }
                     markDirty();
                 }
@@ -211,18 +211,18 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
             //endregion
         }
     }
-    private InventoryCauldron GetInventory()
+    private InventoryCauldron getInventory()
     {
         InventoryCauldron inv = new InventoryCauldron();
         for (int i = 0; i < ITEM_STACK_HANDLER.getSlots(); i++) {
             inv.setInventorySlotContents(i, ITEM_STACK_HANDLER.getStackInSlot(i));
         }
         inv.setFluid(Tank.getFluid().getFluid());
-        inv.setTemp(this.GetTemp());
+        inv.setTemp(this.getTemp());
         inv.amount = Tank.getFluidAmount();
         return inv;
     }
-    private void AddToInventory(ItemStack itemStack)
+    private void addToInventory(ItemStack itemStack)
     {
         ItemStack result = ITEM_STACK_HANDLER.insertItem(0, RecipieOnCooldown.OUTPUT_ITEM.copy(), false);
         if (result != ItemStack.EMPTY) {
@@ -254,7 +254,7 @@ public class CauldronTileEntity extends TileEntity implements IMyLiquidTankTile,
      * @return calculates and returns temperature.
      */
 
-    public @NotNull CauldronTemperature GetTemp()
+    public @NotNull CauldronTemperature getTemp()
     {
         BlockState blockState = world.getBlockState(pos.add(0,-1,0));
         Block block = blockState.getBlock();
