@@ -54,10 +54,10 @@ public class CauldronContainer extends Container {
      * @return temperature of tile entity.
      * @see CauldronTemperature
      */
-    public CauldronTemperature GetTemp()
+    public CauldronTemperature getTemp()
     {
         if (TILEENTITY instanceof CauldronTileEntity){
-            return ((CauldronTileEntity) TILEENTITY).GetTemp();
+            return ((CauldronTileEntity) TILEENTITY).getTemp();
         }
         return CauldronTemperature.neutral;
     }
@@ -66,10 +66,10 @@ public class CauldronContainer extends Container {
      * Returns amount of fluid in tile entity. Returns -1 if tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile}.
      * @return amount of fluid in tile entity.
      */
-    public int GetLiquidAmount()
+    public int getLiquidAmount()
     {
         if (TILEENTITY instanceof IMyLiquidTankTile){
-            return ((IMyLiquidTankTile) TILEENTITY).GetTank().getFluidAmount();
+            return ((IMyLiquidTankTile) TILEENTITY).getTank().getFluidAmount();
         }
         ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement ImyLiquidTankTile.",this,TILEENTITY);
         return -1;
@@ -79,11 +79,11 @@ public class CauldronContainer extends Container {
      * If tile entity doesn't implement {@link IMyLiquidTankTile IMyLiquidTankTile} returns "Cannot store fluids!".
      * @return translated name of the fluid inside tile entity.
      */
-    public String GetLiquid()
+    public String getLiquid()
     {
         if (TILEENTITY instanceof IMyLiquidTankTile){
-            if(((IMyLiquidTankTile) TILEENTITY).GetTank().isEmpty()){return "Empty";}
-            return new TranslationTextComponent(((IMyLiquidTankTile) TILEENTITY).GetTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
+            if(((IMyLiquidTankTile) TILEENTITY).getTank().isEmpty()){return "Empty";}
+            return new TranslationTextComponent(((IMyLiquidTankTile) TILEENTITY).getTank().getFluid().getFluid().getAttributes().getTranslationKey()).getString();
         }
         ExAqua.LOGGER.warn("Error in {} .Tile entity {} doesn't implement IMyLiquidTankTile.",this,TILEENTITY);
         return "Cannot store fluids!";

@@ -18,8 +18,8 @@ import org.apache.commons.lang3.NotImplementedException;
  * This tier is passed into its tile entity and used in {@link com.rutaji.exaqua.data.recipes.SieveRecipe#matches matching recipies}.
  * If you want to add new tier you just have to implement it in 2 motheds in this class.
  * Value error is used to indicate something went wrong insted of null.
- * @see SieveTiers#GetSIEVE
- * @see SieveTiers#GetSymbol()
+ * @see SieveTiers#getSIEVE
+ * @see SieveTiers#getSymbol()
  */
 public enum SieveTiers {
     error,
@@ -32,7 +32,7 @@ public enum SieveTiers {
      * @return Item used as a symbol for this tier.
      * @exception NotImplementedException if tier is not implemented in this method.
      */
-    public Item GetSymbol()
+    public Item getSymbol()
     {
         switch (this)
         {
@@ -51,7 +51,7 @@ public enum SieveTiers {
      * @exception NotImplementedException if given tier isn't implemented in this method.
      * @see SieveTiers
      */
-    public static RegistryObject<Block> GetSIEVE(SieveTiers tiers)
+    public static RegistryObject<Block> getSIEVE(SieveTiers tiers)
     {
         switch (tiers)
         {

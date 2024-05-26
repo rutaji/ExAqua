@@ -9,7 +9,7 @@ public interface IMYEnergyStorageTile {
     /**
      * @return reference to energy storage.
      */
-    MyEnergyStorage GetEnergyStorage();
+    MyEnergyStorage getEnergyStorage();
 
     /**
      * Method used for syncing client with the server.
@@ -17,6 +17,6 @@ public interface IMYEnergyStorageTile {
      * @see MyEnergyStorage#OnChange
      * @see com.rutaji.exaqua.networking.MyEnergyPacket
      */
-    void EnergyChangePacket();
+    void energyChangePacket();
 
 }

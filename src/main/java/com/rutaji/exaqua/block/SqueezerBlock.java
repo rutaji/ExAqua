@@ -59,7 +59,7 @@ public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiqui
      * @see SqueezerTileEntity#squeez()
      */
     @Override
-    public void onEntityCollision(@NotNull BlockState state, net.minecraft.world.World worldIn, @NotNull BlockPos pos, Entity entity) {
+    public void onEntityCollision(@NotNull BlockState state, net.minecraft.world.@NotNull World worldIn, @NotNull BlockPos pos, @NotNull Entity entity) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         double speed = entity.getMotion().y;
         if(speed < -0.1 && tileEntity instanceof SqueezerTileEntity){
@@ -79,7 +79,7 @@ public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiqui
     /**
      * Sets block state property {@link SqueezerBlock#SQUEEZED squeezed} to given value.
      */
-    public void SetSqueezedProperty(World world, BlockPos pos, boolean value) {
+    public void SetSqueezedProperty(@NotNull World world, BlockPos pos, boolean value) {
         world.setBlockState(pos, world.getBlockState(pos).with(SQUEEZED, value));
     }
 
@@ -118,7 +118,7 @@ public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiqui
     public static final BooleanProperty SQUEEZED = BooleanProperty.create("squeezed");
 
     @Override
-    public void fillStateContainer(StateContainer.Builder builder){builder.add(SQUEEZED);}
+    public void fillStateContainer(StateContainer.@NotNull Builder builder){builder.add(SQUEEZED);}
 
     /**
      * @return default block state for this block.
@@ -134,7 +134,7 @@ public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiqui
      * @see SqueezerBlock#SHAPE
      * @see SqueezerBlock#SHAPE_SQUEEZED
      */
-    public @NotNull VoxelShape getShape(BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
+    public @NotNull VoxelShape getShape(@NotNull BlockState blockState, @NotNull IBlockReader worlIn, @NotNull BlockPos pos, @NotNull ISelectionContext context)
     {
         if(blockState.get(SQUEEZED)){
            return SHAPE_SQUEEZED;
@@ -155,7 +155,7 @@ public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiqui
      * @exception IllegalStateException if block's tile entity isn't instance of {@link AutoSqueezerTileEntity AutoSqueezerTileEntity}.
      */
     @Override
-    public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit) {
+    public @NotNull ActionResultType onBlockActivated(@NotNull BlockState state, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity player, @NotNull Hand handIn, @NotNull BlockRayTraceResult hit) {
         if(!worldIn.isRemote()) {
             if(state.get(SQUEEZED))
             {
@@ -216,11 +216,11 @@ public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiqui
      * @return picked up fluid. Can be empty.
      */
     @Override
-    public @NotNull Fluid pickupFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public @NotNull Fluid pickupFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTile){
-            if(((IMyLiquidTankTile) tileEntity).GetTank().getFluidAmount() >= 1000){
-                return ((IMyLiquidTankTile) tileEntity).GetTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
+            if(((IMyLiquidTankTile) tileEntity).getTank().getFluidAmount() >= 1000){
+                return ((IMyLiquidTankTile) tileEntity).getTank().drain(1000, IFluidHandler.FluidAction.EXECUTE).getFluid();
             }
             return Fluids.EMPTY;
         }
@@ -231,11 +231,11 @@ public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiqui
      * @return true if block can contained provided fluid.
      */
     @Override
-    public boolean canContainFluid(IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
+    public boolean canContainFluid(@NotNull IBlockReader worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Fluid fluidIn) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof IMyLiquidTankTile)
         {
-            return  ((IMyLiquidTankTile)tileEntity).GetTank().isFluidValid(new FluidStack(fluidIn,1000));
+            return  ((IMyLiquidTankTile)tileEntity).getTank().isFluidValid(new FluidStack(fluidIn,1000));
         }
         return false;
     }
@@ -246,12 +246,12 @@ public class SqueezerBlock extends Block implements IBucketPickupHandler, ILiqui
      * @return true if successfully stored fluid, otherwise false.
      */
     @Override
-    public boolean receiveFluid(IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
+    public boolean receiveFluid(@NotNull IWorld worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull FluidState fluidStateIn) {
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (fluidStateIn.isSource() && tileEntity instanceof IMyLiquidTankTile)
         {
-            ((IMyLiquidTankTile)tileEntity).GetTank().AddBucket(fluidStateIn.getFluid());
+            ((IMyLiquidTankTile)tileEntity).getTank().AddBucket(fluidStateIn.getFluid());
             return true;
         }
         return false;

@@ -1,0 +1,238 @@
+\documentclass[FM,Proj,bw]{tulthesis}
+
+\usepackage[FM,RP]{tulpack/tul}
+\usepackage{fancyhdr}
+\usepackage{graphicx} 
+\usepackage{ifthen}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage{tabularray}
+
+%citace
+\usepackage[backend=biber, style=iso-numeric]{biblatex}
+\usepackage[utf8]{inputenc}
+\addbibresource{zdroje.bib}
+
+\TULtitle{Tvorba módu pro hru Minecraft}{Creating a mod for Minecraft}
+\TULprogramme{B0613A140005}{Informační technologie}{Information Technology}
+\TULbranch{}{Aplikovaná informatika}{Applied Informatics}
+\TULauthor{Jiří Růta}
+\TULsupervisor{Ing. Jana Vitvarová}
+\TULyear{2024} \TULid{identifikační kód}
+
+
+
+\begin{document}
+
+\ThesisStart{male}
+
+\begin{acknowledgement}
+		Tímto bych rád poděkoval vedoucí svého bakalářského projektu Ing. Janě Vitvarové za podporu při zpracování této práce.
+\end{acknowledgement}
+
+% Abstrakt česky
+	\begin{abstractCZ}
+		Mód je software, který upravuje nebo rozšiřuje jiný již existující software. Módy jsou často sdíleny jako otevřený software. V tomto bakalářském projektu se zaměřuji na vytváření módu pro hru Minecraft napsaný v programovacím jazyku Java.
+  
+    Vytvořený mód přidává síta, kterými může hráč přesívat tekutiny na rudy, lis který drtí předměty na tekutiny a kotlík ve kterém může hráč kombinovat tekutiny a předměty. Mód je kompatibilní s ostatními populárními módy.
+
+    Výsledkem práce je vydání módu na stránku curseforge.com. 
+	\end{abstractCZ}
+	
+	% Klíčová slova česky
+	\begin{keywordsCZ}
+		Minecraft, mód, Java, Otevřený software
+	\end{keywordsCZ}
+	\vspace{2cm}
+	
+	% Abstrakt anglicky
+	\begin{abstractEN}
+		Mod is a software that is used to modify different already existing software. Mods are often shares as a open source software. This bachelor project focuses on rocess of creating a mod for game Minecraft written in programing language Java .
+
+        Created mod adds sieves, which can player use to sift liquids into ores, a press that crushes items into liquids and a cauldron in which the player can combine liquids and items. The mod is compatible with other popular mods.
+
+        The result of this work is the release of the mod on curseforge.com.
+	\end{abstractEN}
+	
+	% Klíčová slova anglicky
+	\begin{keywordsEN}
+		Minecraft, modding, Java, open source
+	\end{keywordsEN}
+	
+	% Obsah
+	\tableofcontents
+	
+	% Seznam obrázků
+	\listoffigures
+        %seznam tabulek
+        \listoftables
+
+ %začátek textu
+
+\chapter{Minecraft}
+Ve hře Minecraft se celý svět skládá z bloků. Hráč tyto bloky může vykopat a poté je položit, anebo z nich vyrobit vybavení.
+\par
+Na začátku hry hráč vykope dřevo. Poté otevře uživatelské rozhraní svého inventář. Zde jsou všechny předměty, která má hráč u sebe. Kromě toho je zde uživatelské rozhraní ve kterém hráč může vyrábět předměty. Hráč si vyrobí dřevěnou sekeru, která mu umožní kopat dřeva rychleji.
+\par
+Hráč může vykopat každý blok ve hře. Vykopaný blok se mu poté přidá do inventáře. Doba kopání závisí na druhu bloku a na vybavení hráče.
+\par
+Hráčův inventář obsahuje všechny předměty, které má u sebe. Hráč si může otevřít uživatelské rozhraní svého inventáře kdykoli chce. Inventář ve hře Minecraft je rozdělen na políčka. Každé políčko může obsahovat pouze jeden druh předmětu a pouze omezené množství.
+\par
+Součástí uživatelské rozhraní hráčova inventáře je i uživatelské rozhraní pro výrobu nových předmětů. Hráč v něm může vyrábět nové vybavení anebo bloky z věcí v jeho inventáři. Některé bloky mohou hráči povolit vyrobit si věci, které bez nich nemohl. Například pec umožní hráči předělat surovou rudu na ingoty.  
+
+\chapter{Minecraft z programátorské stránky}
+\section{Blok}
+Minecraft server musí mít v paměti minimálně 1382400 bloků pro každého hráče připojeného na serveru. Každý blok je v paměti skladován jako odkaz na jeho objekt v registru bloků a odkaz na jeho \textit{blockstate}.\cite{cooper2000java} V registru bloků jsou uchovávané všechny neměnné vlastnosti a v \textit{blockstate} uchovává všechny vlastnosti které se pro blok mohou měnit. 
+\par Při startu hry se pro každý druh bloku zaregistruje objekt třídy \textit{Block} do registru. Tento objekt je neměnný. Veškeré instance daného bloku odkazují na tento jeden objekt. Jelikož je tento objekt společný pro všechny instance, pokud chceme ukládat data specifická pro jeden blok musíme použít \textit{blockstate} anebo\textit{ tile entity}.
+\par \textit{Blockstate} je neměnná třída obsahující pouze proměnné. Pro každou kombinaci proměnných je vygenerován singleton. Každý blok odkazuje na jeden ze singletonů. \textit{Blockstate} šetří paměť, tím že dovoluje několika blokům držet pouze jednu proměnou (odkaz na \textit{blockstate}) místo několika. Například máme blok lampy. Každý blok lampy odkazuje na stejný objekt v registru bloků, ale pokud chceme určit zdali je lampa zapnutá musíme se podívat na který \textit{blockstate} odkazuje.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{tulpack/lamp.drawio.png}
+    \caption{Příklad \textit{blockstate}}
+    \label{Příklad blocstate}
+\end{figure}
+
+\par Pokud potřebujeme v bloku skladovat velké množství proměnných, můžeme využít \textit{tile entity}. Objekt třídy \textit{tile entity} je samostatný pro každý blok.
+Například blok bedna umožňuje hráči odložit si předměty. Které předměty jsou uloženy v bedně je uloženo v \textit{tile entity}. Bedna také odkazuje na blockstate, který udává kterým směrem je otočena. A každá bedna také odkazuje na svůj objekt v registru bloků. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{chest.png}
+    \caption{Příklad vztahů}
+    \label{Příklad vztahů}
+\end{figure}
+
+\section{Předměty a recepty}
+Inventář ve hře Minecraft je rozdělen na políčka. Každé políčko může obsahovat pouze jeden druh předmětu a pouze omezené množství. V programu je každé políčko reprezentováno objektem \textit{itemstack}. 
+\par Třída \textit{itemstack}  obsahuje 2 důležité proměnné, jaký předmět obsahuje (odkaz na jeho třídu) a jeho množství. Třída obsahuje převážně metody na porovnávání objektů \textit{Itemstack} mezi sebou, předávání informací o předmětu, ukládání a načítání dat.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{itemstack.drawio.png}
+    \caption{ItemStack vztahy}
+    \label{ItemStack vztahy}
+\end{figure}
+\par Každý druh předmětu má svůj singleton, který dědí třídu \textit{Item}. Ten je registrovaný do registru předmětů při spuštění hry. Tato třída obsahuje proměnné a metody pro daný předmět. Například obsahuje metodu "onUse", která je volána pokud se hráč pokusí použít předmět. Jelikož je tato třída společná pro všechny předměty pokud chceme ukládat data specifická pro jeden předmět musíme použít \textit{NBT}. \textit{Named binary tag}, zkráceně \textit{NBT},  je systém pro ukládání dat jako pár klíče a hodnoty.
+\par Velká část hry  Minecraft je vytváření nových předmětů z těch které už hráč vlastní. Z čeho se předměty vyrábějí je zapsáno v JSON souborech ve složce \textit{resources/data/id/ recipes}.
+\par Ve hře je několik druhů receptů, každý druh receptu má svojí třídu implementující rozhraní \textit{IRecipie}. Každý JSON soubor ve složce s recepty má hodnotu "type", která říká kterou třídou ho má hra přečíst. Při zapnutí se načtou veškeré recepty z JSON souborů a pro každý JSON soubor se vytvoří jeden objekt třídy implementující \textit{IRecipie}. Tyto objekty obsahují veškerá data z JSON souborů a implementují metody na porovnání zdali je možné recept vyrobit.    
+\section{Klient a Server}
+Kód hry Minecraft  vždy běží dvakrát, jednou jako server a jednou jako klient. I když hráč hraje sám na vlastním počítači, Minecraft pořád běží rozdělen na stranu serveru a klienta. Na obou stranách běží stejný kód. Na rozlišení se používá metoda "\textit{world.isRemote}", která vrací \textit{true} pokud kód běží na klientu. Některé operace musí běžet pouze na jedné straně a druhou stranu upozornit pomocí paketů.
+\par Například vytváření nových předmětů se musí provádět na serveru, jinak je možné že server nebude o předmětu vědět a když se ho hráč pokusí použít tak nebude fungovat, protože o něm server neví. Na druhou stranu, vykreslování grafiky se musí provádět pouze na klientu, jelikož server nemá soubory potřebné k vykreslení grafiky, pokus o vykreslování na serveru vyústí v chybu a pád programu na straně serveru. 
+\par Většina módu je dělaná, aby běžela na klientu a serveru, ale je možné udělat mód co běží pouze na jedné straně. V takovém případě stačí aby byl mód nainstalovaný na straně na které běží. Samozřejmě mód který běží jenom na serveru, anebo jenom na klientu je omezený v tom co může dělat. Na kterých stranách musí být mód nainstalován je napsáno v souboru \textit{resources/META-INF/mods.toml}.
+\par Některé bloky nebo předměty otevřou hráči uživatelské rozhraní. Například když hráč klikne na pec, otevře se mu uživatelské rozhraní ve kterém může odložit předměty do pece, aby je pec předělala na jiné. Uživatelské rozhraní se ve hře Minecraft skládá ze dvou částí: \textit{Container} a \textit{Screen}.
+\par \textit{Container} obstarává logiku a data. Komunikuje s ostatními částmi hry. Běží na serveru i na  klientu.
+\par \textit{Screen} určuje jak bude uživatelské rozhraní vypadat. Zobrazuje text a obrázky. Komunikuje pouze s \textit{Container}. Může obsahovat logiku, ale měla by být jen okolo grafiky v uživatelském rozhraní. Běží pouze na klientu.\cite{Forge}
+
+\chapter{Vytváření modu}
+    Minecraft v základu nepovolujeme módování, pokud chceme vytvořit mód musíme použít zavaděč módů, který se pustí při startu hry a načte kód módu do hry za pomoci \textit{Java Class Loader}. Zavaděč umožňuje přidat nové objekty do příslušných registrů, kde s nimi může komunikovat základní hra i veškeré módy.  Zavaděče módu také poskytují vývojářům módů události, které jsou volány během hry a vývojáři na ně mohou reagovat.Existují 2 zavaděče módu \textit{Forge} a \textit{Fabric}. Tyto zavaděče nemohou být spuštěny společně.\cite{watson2019re}
+ \par   \textit{Forge} se zaměřuje na kompatibilitu mezi módy. \textit{Forge} má větší množství událostí a jsou k němu zabalené abstraktní třídy a rozhraní pro většinu věcí, které vývojáři módu často implementují. Díky tomu mají vývojáři normalizované rozhraní, která mohou používat ke komunikaci s ostatními módy. \textit{Forge} je také starší, takže většina módů je dělaná pro \textit{Forge}.
+\par  \textit{Fabric} se zaměřuje na výkon. \textit{Fabric} má menší API a na rozdíl od \textit{Forge} načítá pouze kód který je potřeba. \textit{Fabric} také dovoluje upravovat soubory základní hry. 
+\par Z pohledu hráče jsou zavaděče pouze omezení, které omezuje jaké módy hráč může využívat společně.
+\par Pro svůj mód jsem si vybral \textit{Forge}, jelikož se v něm jednodušeji řeší kompatibilita mezi ostatními módy a více módu je dělaných pro \textit{Forge}.
+\par Hra Minecraft vyšla v roce 2009, od té doby vyšlo 20 velkých aktualizací. Hráči mohou hrát jakoukoli verzi. Jelikož se s každou verzí hry Minecraft se mění kód základní hry, musí se pro každou verzi udělat nová verze zavaděče módu. Módy napsané pro jednu verzi hry Minecraft nejsou kompatibilní s ostatními verzemi. Proto se při verzování módu udává hned za verzí módu verze hry Minecraft pro kterou je napsán. Například mód\textit{ Ex Aqua 0.4 - 1.16.5}  je mód pro verzi 1.16.5 hry Minecraft a verze samotného módu je 0.4 . Některé módy jsou dělané na více verzí hry Minecraft a jejich autor je pravidelně předělává na nové verze. Když je mód hodně populární, ale autor ho nechce předělat na ostatní verze hry Minecraft, často se najde jiný programátor který udělá podobný mód na jiné verze, proto pro staré populární módy je často několik neoficiálních pokračování.   
+\par Před vytvářením módu je potřeba se rozhodnout pro jakou verzi hry Minecraft a pro jaký zavaděč bude programátor mód vyvíjet. Oba zavaděče nabízejí šablonu na stažení. Šablona obsahuje \textit{Gradle} soubory, které stáhnou všechny soubory potřebné pro zavaděč a také celý zdrojový kód vybrané verze 
+hry Minecraft. 
+\par Minecraft je produkt společnosti Microsoft. Microsoft dovoluje používat zdrojové kódy jejich hry pro vývoj módů, dokud vývojář šíří pouze svůj mód a nešíří zdrojové kódy hry Minecraft. Vývojář je vlastníkem svého kódu, ale nesmí mód prodávat. Může žádat o peněžní dary. Oba zavaděče nijak právně neomezují vývojáře.
+\par Po přípravě šablony si vývojář musí zvolit id pro svůj mód. Id je textový řetězec, který nesmí obsahovat speciální znaky kromě „\textit{\_}“.  Tento textový řetězec bude použit jako část cesty k souborům módu a také pro identifikaci módu. 
+\par Všechny módy dodržují stejnou hierarchii souborů. Mód je rozdělen na složku \textit{java} a složku \textit{resources}.  Pod složkou \textit{java} se nachází složka se jménem autora a pod ní složka pojmenovaná jako id módu, v ní se nachází veškerý Java kód. Ve složce \textit{resources} jsou ostatní soubory rozděleny na \textit{assets} a \textit{data}. Složka \textit{assets} obsahuje soubory, které by měli být potřebné pouze na klientu, zatímco složka \textit{data} obsahuje soubory potřebné na klientu a serveru. Ve složkách \textit{assets} a \textit{data} se vždy nachází složka pojmenovaná po id módu.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.2\linewidth]{hiearchie souborů.png}
+    \caption{Hierarchie souborů}
+    \label{Hierarchie souborů}
+\end{figure}
+\par Ve složce \textit{resources/assets/id/blocksates} se nachází JSON soubory, které říkají jaký model má být pro blok použit na základě jeho \textit{blockstate} proměnných. Pro každý blok je jeden tento soubor. Jméno tohoto souboru odpovídá jménu pod kterým je blok registrován v registru bloků. Ve složce  \textit{resources/assets/id/models} jsou JSON soubory  obsahují modely pro bloky a předměty. Soubor také obsahuje odkazy na textury použité v modelu. Textury se nacházejí ve složce \textit{resources/assets/id/textures}. Ve složce \textit{resources/assets/id/lang} je JSON soubor pro každý jazyk, obsahující klíč a jeho překlad. Ve  složce \textit{resources/assets/id/gui} je uložena grafika využitá v uživatelském rozhraní.
+\par Ve složce \textit{resources/data/id/recipes} se nacházejí JSON soubory receptů. Každý soubor obsahuje předměty potřebné jako vstup a předměty které budou vytvořeny jako výstup receptu.
+Ve složce \textit{resources/data/id/loot\_tables} jsou uložené JSON soubory ze kterých se načítá jaký předmět by měl být vytvořeny při různých situacích, jako je zničení bloku nebo zabití zvířete. Fungují hodně podobně jako recepty, ale používají se v jiných případech.
+\par V souboru \textit{resources/META-INF/mods.toml} jsou informace o módu jako jeho jméno, verze, popis a autor. Hlavně v něm je seznam závislostí a pro jakou verzi hry Minecraft je mód napsaný. Je v něm napsáno zdali musí být mód nainstalován na straně klienta a serveru.  \cite{Forge}
+
+\chapter{Můj mód z pohledu hráče}
+\par Módy často přidávají bloky které představují různé stroje, jako třeba elektrická pec anebo Hydraulický lis. Tyto bloky většinou mají vlastní inventář do kterého vloží hráč předměty a stroj z nich vyrobí jiné. Tyto stroje většinou potřebují elektřinu, aby fungovali, což je věc která se v základní hře nevyskytuje a je exkluzivní pouze pro módy.
+ \par   Těmto módům se říká technické módy. Dobrý technický mód funguje s ostatními technickými módy. Například pokud mód přidává generátor tak mělo být možno z generátoru odvádět elektřinu i kabely z cizího módu a napájet s ní stroje z cizích módů. 
+ \par   Můj mód přidává několik strojů. Přidává síta, lis a kotlík. Síto přesívá tekutiny na rudy. Lis drtí předměty na tekutiny. V kotlíku může hráč kombinovat tekutiny a předměty, aby získal nové tekutiny. Všechny fungují s trubkami a kabely z populárních technických módů. Také obsahuje přímou podporu pro populární mód JEI. Mód je volně dostupný pro stažení na stránce \textit{curseforge.com} a jeho zdrojový kód je ve veřejném GitHub repositáři pod GPL licencí.
+\par Můj mód je inspirován módem\textit{ Ex Nihilo}. Jedná se o populárním mód vydaný v roce 2014. Tento mód přidává síta ve která přesívají hlínu na rudy a sud ve kterém může hráč kombinovat tekutiny a předměty, aby získal nové tekutiny. Tyto bloky nepotřebují elektřinu.
+ \par Tento mód je neudržovaný a funguje pouze pro velmi starou verzi hry Minecraft, ale má několik neoficiálních pokračování. 
+ \par \textit{Ex Nihilo 2} je jediné oficiální pokračování k módu \textit{ Ex Nihilo} od jeho autora. Bylo vydáno roku 2015, ale od roku 2016 je opuštěné. Obsahově je podobné původnímu \textit{Ex Nihilo}, ale některé věci chybí, mód zůstal nedodělán.
+ \par \textit{Ex Nihilo Omnia} je neoficiální pokračování vydané 4.9. 2016. Tento mód přidává vše co původní \textit{ Ex Nihilo} pouze s malými úpravami a obsahem navíc. Tento mód dostal svoji poslední aktualizaci v roce 2019.
+\textit{Ex Nihilo Adscensio} je neoficiální pokračování vydané 29.11 2016. Tento mód je první který přidal více úrovní sít. Poslední aktualizaci dostal 6.5 2017.
+\par \textit{Ex Nihilo Creatio} je fork \textit{Ex Nihilo Adscensio}. Je to první mód který přidává sivky, které hráč musí napájet elektřinou, ale za odměnu vyrábějí bez hráčovi přítomnosti. Mód byl vydán 14.8. 2017 a poslední aktualizace byla vydána 27.8 2019.
+\par    \textit{Ex Nihilo: Sequentia} začalo jako  \textit{Ex Nihilo Creatio} předělané na vyšší 
+verze hry Minecraft. Tento mód obsahuje veškerý obsah ze všech předchozích \textit{Ex Nihilo} inspirovaných módů. Byl vydán 4.8. 2020 a je stále podporován. Má několik módů které dodávají další obsah k tomuto módu anebo přidávají kompatibilitu s ostatními módy. 
+\par    \textit{Fabricae Ex Nihilo} neoficiální pokračování módu  \textit{Ex Nihilo} pro zavaděč Fabric. Vydáno 21.3. 2022 a stále aktualizováno.
+
+
+\begin{table}[]
+\caption{Seznam podobných módů}
+\begin{tabular}{lllr}
+\hline
+\multicolumn{1}{|l|}{jméno módu} & \multicolumn{1}{l|}{podporované minecraft verze} & \multicolumn{1}{l|}{zavaděč} & \multicolumn{1}{l|}{počet stažení} \\ \hline
+Ex Nihilo                        & 1.6 a 1.7                                        & Forge                        & 8 058 815                          \\
+Ex Nihilo 2                      & 1.8                                              & Forge                        & 61 152                             \\
+Ex Nihilo Omnia                  & 1.10 a 1.12                                      & Forge                        & 2 611 291                          \\
+Ex Nihilo Adscensio              & 1.10                                             & Forge                        & 6 236 591                          \\
+Ex Nihilo: Creatio               & 1.12                                             & Forge                        & 15 638 553                         \\
+Ex Nihilo: Sequentia             & 1.15 až 1.20 (nejnovější)                        & Forge                        & 6 761 281                          \\
+Fabricae Ex Nihilo               & 1.18 až 1.20 (nejnovější)                        & Fabric                       & 168 881                            \\
+Ex Aqua                          & 1.16                                             & Forge                        & 432                               
+\end{tabular}
+\end{table}
+\par Dalším populárním módem který by měl každým dobrý mód podporovat je JEI. Tento mód přidává uživatelské rozhraní , ve kterém může hráč procházet seznam všech předmětů ve hře, zobrazovat si proces jejich výroby a jejich využití. Jedná se o nejpopulárnější mód s více jak 300 miliony stažení. 
+\par Tyto data jsou z ze stránky \textit{curseforge.com} a z GitHub repositářů vybraných módů.  \cite{curseforge} \cite{github}
+  \begin{comment}   
+zmínit jei anebo ho odstanit ze 4 kapitoly
+zmínit vydání na curse forge a dostupnost na githubu + dokumentace
+\end{comment}
+
+\begin{comment}
+    Můj mod je inspirován \textit{Ex Nihilo} módem. \textit{Ex Nihilo} je populární mód, který umožnuje získávat hráčům předměty z ničeho, skrz automatizaci a recyklaci. \textit{Ex Nihilo} je často používán společně s jinými módy v žánru \textit{skyblock}. V tomto žánru se hráč nachází na malém ostrově tvořeného z malého množství základních bloků. Jeho cílem je využít jeho omezené zdroje k získání nových zdrojů a rozšíření ostrovu. Většinou ostrov obsahuje hlínu a strom, který hráč může pokácet a poté znovu zasadit, čímž získá teoreticky nekonečné množství dřeva a listí. Ex Nihilo přidává do hry kompostér a sívky. Kompostér umožnuje hráči předělat listí na hlínu, Sívky umožnují hráči přesívat hlínu na rudy.
+\end{comment}
+
+
+\chapter{Můj mód z pohledu programátora}
+\begin{comment}
+    V této kapitole jsem popsal veškerý třídy které jsem napsal abych přidal síto do do hry.
+\end{comment}
+\par Při programování síta jsem nejdříve vytvořil třídu \textit{SieveBlock}, která dědí ze třídy \textit{Block}. Tato třída obsahuje neměnná data a také propojuje blok s jeho\textit{ tile entity} (\textit{SieveTileEntity}) a uživatelským rozhraní. Tuto třídu jsem zaregistroval do registru bloků.
+\par Při registraci vyžaduje každý blok unikátní jméno. Toto jméno je pak použito k vyhledání modelu a textur ve složce \textit{resources}. Model pro síto a ostatní bloky jsem vytvořil v modelovacím programu Blockbench a textury jsem maloval v programu Aseprite.
+\begin{comment}
+   dopsat něco o modelu. něco jako tohle =>
+
+    \par    Začal jsem tím že jsem do hry přidal blok pro sivku. Nejprve jsem vytvořil třídu pro blok která dědí ze třídy  \textit{Block}. Poté jsem  registroval objekt s touto třídou do registru bloků. Registrace vyžaduje jméno pro tento objekt a  konstruktor třídy \textit{Block}. Podle jména hra pak vyhledává stejnojmenné soubory v podsložkách \textit{resources}.  Pro blok je potřeba přidat soubor do složek : \textit{blockstates}, \textit{models} a \textit{textures}. Do složky \textit{blockstates} přidám JSON soubor který obsahuje, který model má být použit v závislosti na proměnných v \textit{blockstate}.  Do složky model přidám JSON soubor, který obsahuje model bloku a odkaz na jeho textury. Soubor také může dědit z ostatních souborů, pomocí parametru \textit{parent}. Pro model krychle je zde před připravený soubor \textit{cube_all}. Ve složce \textit{textures} se nacházejí všechny textury.
+
+    Tímto jsem přidal do hry blok, ten ale nemá žádné funkce.
+
+     \par   Pro upravení modelu bloku je potřeba přepsat metodu \textit{getShape} ve třídě bloku, aby vracela model sestavený z kvádrů a také upravit soubor ve složce \textit{models}. K vytvoření modelů pro moje blocky jsem použil program \textit{Blockbench}.
+\end{comment}
+\par Třída \textit{SieveTileEntity} je implementace\textit{ tile entity} pro blok síta.Obsahuje data unikátní pro každé síto, jako předměty, tekutiny a elektřinu v sítu. Pro tyto data jsem napsal metody k ukládání a načítání dat z NBT\textit{ (named binary tags)}. 
+
+\par \textit{Tile entity} také spravuje přesívání tekutin na předměty v sítu. Každý herní cyklus zkontroluje zdali má dostatek tekutin a energie na přesívání a pokud ano tak zmenší množství elektřiny a tekutiny a přidá do svého inventáře předměty podle receptů.
+\par Recepty jsou JSON soubory udávající výsledky výroby a její podmínky. Pro jejich čtení a práci s nimi jsem napsal samostatnou třídu \textit{SieveRecipe}.Jedna instance této třídy představuje jeden recept. Tato třída čte data z JSON souborů, porovnává inventář zdali vyhovuje receptu, čte a zapisuje data do paketů. Ke každému druhu receptu jsem napsal třídu, která překládá daný recept pro JEI mód a přidá mu uživatelské rozhraní.
+\begin{comment}   
+\par    Dále jsem k bloku přidal \textit{tile entity}. Nejprve jsem vytvořil třídu dědící od třídy \textit{TileEntity}. V této třídě jsem přepsal metody k ukládání a načítání dat z nbt. Poté jsem \textit{tile entity} registroval. Při registraci se předá registru constructor pro tileentity a odkaz na všechny registrované bloky kterým tileentity patří. Poté přepíšu ve třídách těch bloků metodu na vrácení \textit{tile entity} a propojení bloku a tile entity je kompletní. 
+
+\par   Dále jsem chtěl aby v\textit{ tile entity} bylo možné vyrábět předměty, k tomu jsem potřeboval recept který bude uvádět co bude potřeba jako vstup do stroje a co vyjde jako výstup. Vytvořil jsem třídu \textit{SieveRecipe} implementující interface \textit{ISieveRecipe}. Tato třída přečte data z JSON souboru a poté vytvoří jednu svoji instanci pro každý úspěšně načtený soubor. Jedna instance této třídy představuje jeden recept. Tato třída obsahuje metody které určí zdali jsou všechny potřebné ingredience a vrátí předmět, který má být vyroben.
+\par    Ke každému druhu receptu jsem musel napsat třídu která překládá daný recept pro jei mód a přidat mu UI.
+\end{comment}
+\par Skladování tekutin obstarává třída \textit{MyLiquidTank} která dědí ze třídy \textit{FluidTank} z Forge knihovny. Implementoval jsem všechny její metody a přidal pár vlastních abych zabránil duplikaci kódu. Aby mohli s touto třídou komunikovat i ostatní cizí módy vytvořil jsem třídu \textit{WaterFluidTankCapabilityAdapter} která slouží jako adaptér. Tato třída překládá mojí třídu  \textit{MyLiquidTank} na \textit{ IFluidTank} což je rozhraní zabudované v Forge. Toto rozhraní je používané většinou módů pro komunikaci. Testoval jsem tento kód s nejznámějšími módy a se všemi fungoval.
+\par Jelikož potřebuji synchronizovat \textit{MyLiquidTank} mezi server a klientem vytvořil jsem si třídu  \textit{MyFluidStackPacket} která je poslána ze serveru klientovy a obsahuje momentální stav daného \textit{MyLiquidTank}. Odesílání a přijímaní tohoto paketu je implementováno ve třídě MyLiquidTank.
+\par Skladování elektřiny je podobně vyřešeno ve třídě \textit{MyEnergyStorage} která dědí z \textit{EnergyStorage} z Forge knihovny. Pro komunikaci s ostatními módy jsem vytvořil třídu \textit{EnergyStorageAdapter} který překládá \textit{MyEnergyStorage} na IEnergyStorage z Forge knihovny. Synchronizace mezi server a klientem je řešena odesíláním a přijímáním třídy MyEnergyPacket z  \textit{MyEnergyStorage}.
+\begin{comment}
+\par    Chtěl jsem v tile entity skladovat tekutity tak jsem si vytvořil novou třídu  \textit{MyLiquidTank} která dědila ze třídy \textit{FluidTank}. Implementoval jsem všechny její metody a přidal pár vlastních abych zabránil duplikacy kódu. Objekt této třídy jsem poté přidal do své\textit{ tile entity}. Pro práci s ním jsem vytvořil interface \textit{IMyLiquidTankTile}. 
+\end{comment}
+\begin{comment}
+ \par   Poté jsem to samé udělal pro \textit{MyEnergyStorage}. Vytvořil jsem  \textit{IMYEnergyStorageTile} pro \textit{tile entity} obsahující  \textit{MyEnergyStorage}.  Vytvořil jsem \textit{MyEnergyPacket} pro synchronizaci klienta a servru. Vytvořil jsem \textit{EnergyStorageAdapter} který překládá \textit{MyEnergyStorage} na IEnergyStorage z Forge pro komunikaci s ostatními módy.
+ \end{comment}
+ \begin{comment}
+        \par    Poté jsem měl\textit{ tile entity} která je schopná skladovat tekutiny, elekřinu a předměty
+\end{comment}
+\par \textit{SieveContainer} je třída která obstarává logickou část uživatelského rozhraní. Slouží jako most mezi \textit{SieveTileEntity} a \textit{SieveScreen}. Tato třída umožňuje hráči interagovat s inventářem síta. Bere informace přímo z \textit{SieveTileEntity} a předává je pro \textit{SieveScreen}.  \textit{SieveScreen} je poté vykreslí do uživatelského rozhraní.
+Podobným postupem jsem naprogramoval i ostatní předměty v módu.
+
+
+\chapter*{Seznam použité literatury}
+\addcontentsline{toc}{chapter}{Seznam použité literatury}
+\printbibliography[heading=none]
+
+
+
+\end{document}

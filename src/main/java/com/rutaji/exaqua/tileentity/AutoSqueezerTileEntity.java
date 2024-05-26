@@ -72,7 +72,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     public void read(@NotNull BlockState state, CompoundNBT nbt){
         ITEM_STACK_HANDLER.deserializeNBT(nbt.getCompound("inv"));
         Tank.readFromNBT(nbt);
-        GetEnergyStorage().deserializeNBT(nbt);
+        getEnergyStorage().deserializeNBT(nbt);
         super.read(state,nbt);
     }
 
@@ -83,7 +83,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     public @NotNull CompoundNBT write(CompoundNBT nbt){
         nbt.put("inv", ITEM_STACK_HANDLER.serializeNBT());
         nbt = Tank.writeToNBT(nbt);
-        nbt = GetEnergyStorage().serializeNBT(nbt);
+        nbt = getEnergyStorage().serializeNBT(nbt);
         return super.write(nbt);
     }
     /**
@@ -105,14 +105,14 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     }
     //endregion
     //region Energy
-    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(9000,this::EnergyChangePacket);
+    private final MyEnergyStorage MY_ENERGY_STORAGE = new MyEnergyStorage(9000,this::energyChangePacket);
 
     /**
      * @return energy storage in this tile entity.
      * @see MyEnergyStorage
      */
     @Override
-    public MyEnergyStorage GetEnergyStorage() {
+    public MyEnergyStorage getEnergyStorage() {
         return this.MY_ENERGY_STORAGE;
     }
 
@@ -122,10 +122,10 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
      * Send changes to client from server.
      * @see MyEnergyPacket
      */
-    public void EnergyChangePacket()
+    public void energyChangePacket()
     {
         if(world != null && !world.isRemote) {
-            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.GetEnergyStorage().getEnergyStored(), pos));
+            PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyEnergyPacket(this.getEnergyStorage().getEnergyStored(), pos));
         }
     }
 
@@ -149,9 +149,9 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
         }
         return super.getCapability(cap,side);
     }
-    private int GetDefaultMaxCraftingTime(){return ServerModConfig.AutoSqueezerTimeForRecipie.get();}
-    private int CraftingCooldown = GetDefaultMaxCraftingTime();
-    private int getDefaultRFConsumtion(){return ServerModConfig.AutoSqueezerRFperTick.get();}
+    private int getDefaultMaxCraftingTime(){return ServerModConfig.AUTO_SQUEEZER_TIME_FOR_RECIPIE.get();}
+    private int CraftingCooldown = getDefaultMaxCraftingTime();
+    private int getDefaultRFConsumtion(){return ServerModConfig.AUTO_SQUEEZER_R_FPER_TICK.get();}
 
     /**
      * Called every tick. Calls {@link AutoSqueezerTileEntity#craft }.
@@ -161,7 +161,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
     {
         if(CraftingCooldown > 0 )
         {
-           if( GetEnergyStorage().TryDrainEnergy(getDefaultRFConsumtion()))
+           if( getEnergyStorage().TryDrainEnergy(getDefaultRFConsumtion()))
            {
                CraftingCooldown--;
            }
@@ -192,7 +192,7 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
                 ITEM_STACK_HANDLER.extractItem(0, 1, false);
 
                 this.Tank.fill(output, IFluidHandler.FluidAction.EXECUTE);
-                CraftingCooldown = GetDefaultMaxCraftingTime();
+                CraftingCooldown = getDefaultMaxCraftingTime();
                 markDirty();
             });
         }
@@ -204,21 +204,21 @@ public class AutoSqueezerTileEntity extends TileEntity implements IMyLiquidTankT
      * @see MyFluidStackPacket
      */
     @Override
-    public void TankChange()
+    public void tankChange()
     {
         if(world != null &&!world.isRemote) {
             PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), new MyFluidStackPacket(Tank.GetFluidstack(), pos));
         }
 
     }
-    private MyLiquidTank Tank = new MyLiquidTank(this::TankChange);
+    private MyLiquidTank Tank = new MyLiquidTank(this::tankChange);
 
     /**
      * @return liquid tank in this tile entity.
      * @see MyLiquidTank
      */
     @Override
-    public MyLiquidTank GetTank() {
+    public MyLiquidTank getTank() {
         return this.Tank;
     }
 

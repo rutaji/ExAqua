@@ -1,6 +1,6 @@
 package com.rutaji.exaqua.Fluids;
 
-import com.rutaji.exaqua.others.MyDelegate;
+import com.rutaji.exaqua.others.IMyDelegate;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -19,10 +19,10 @@ import java.util.function.Predicate;
 public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFluidHandler>/*,IFluidHandler*/  {
 
     // region Constructor
-    public MyLiquidTank(MyDelegate m) {
+    public MyLiquidTank(IMyDelegate m) {
         this(m,3000, e -> true);
     }
-    public MyLiquidTank(MyDelegate m, int capacity, Predicate<FluidStack> validator) {
+    public MyLiquidTank(IMyDelegate m, int capacity, Predicate<FluidStack> validator) {
         super(capacity,validator);
         OnChange = m;
     }
@@ -46,7 +46,7 @@ public class MyLiquidTank extends FluidTank /*implements Capability.IStorage<IFl
     /** Delegate run every time stored fluid changes.
      * Used to send changes from server to client.
      */
-    public MyDelegate OnChange;
+    public IMyDelegate OnChange;
 
     /**
      * @return stored fluid.

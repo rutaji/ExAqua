@@ -1,5 +1,5 @@
 package com.rutaji.exaqua.others;
 
-public interface MyDelegate {
+public interface IMyDelegate {
     void Execute();
 }

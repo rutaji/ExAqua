@@ -1,6 +1,5 @@
 package com.rutaji.exaqua.tileentity;
 
-import com.rutaji.exaqua.Energy.MyEnergyStorage;
 import com.rutaji.exaqua.Fluids.MyLiquidTank;
 import com.rutaji.exaqua.data.recipes.ModRecipeTypes;
 import com.rutaji.exaqua.data.recipes.SqueezerRecipe;
@@ -163,7 +162,7 @@ public class SqueezerTileEntity extends TileEntity implements IMyLiquidTankTile,
      * @see MyFluidStackPacket
      */
     @Override
-    public void TankChange()
+    public void tankChange()
     {
 
         if(world != null &&!world.isRemote) {
@@ -172,13 +171,13 @@ public class SqueezerTileEntity extends TileEntity implements IMyLiquidTankTile,
 
     }
     //region Liquid
-    private MyLiquidTank Tank = new MyLiquidTank(this::TankChange);
+    private MyLiquidTank Tank = new MyLiquidTank(this::tankChange);
     /**
      * @return liquid tank in this tile entity.
      * @see MyLiquidTank
      */
     @Override
-    public MyLiquidTank GetTank() {
+    public MyLiquidTank getTank() {
         return this.Tank;
     }
 

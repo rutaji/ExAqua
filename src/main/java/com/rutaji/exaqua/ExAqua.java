@@ -95,7 +95,7 @@ public class ExAqua
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLUID.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(ModFluids.MUD_FLOWING.get(), RenderType.getTranslucent());
 
-        if (ClientModConfig.CauldronRenderEntity.get())
+        if (ClientModConfig.CAULDRON_RENDER_ENTITY.get())
         {
             ClientRegistry.bindTileEntityRenderer(ModTileEntities.CAULDRON_ENTITY.get(), CauldronRenderer::new);
         }
